@@ -1,11 +1,11 @@
 ---
-permalink: /guides/collection-microprofile/
+permalink: /guides/stack-microprofile/
 layout: guide-markdown
 title: Developing cloud native microservice applications with the Eclipse MicroProfile application stack
 duration: 40 minutes
 releasedate: 2020-01-27
 description: Explore how to use the Eclipse MicroProfile application stack to create, run, update, deploy, and deliver cloud native microservices. 
-tags: ['Java', 'MicroProfile', 'Collection']
+tags: ['Java', 'MicroProfile', 'Stack']
 guide-category: stacks
 ---
 

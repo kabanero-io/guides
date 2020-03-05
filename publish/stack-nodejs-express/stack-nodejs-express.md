@@ -1,11 +1,11 @@
 ---
-permalink: /guides/collection-nodejs-express/
+permalink: /guides/stack-nodejs-express/
 layout: guide-markdown
 title: Developing microservice apps with the Node.js Express application stack
 duration: 40 minutes
 releasedate: 2019-11-25
 description: Learn how to create, run, update, deploy, and deliver a simple cloud native application using the Node.js Express application stack.
-tags: ['stack', 'Node.js']
+tags: ['Stack', 'Node.js']
 guide-category: stacks
 ---
 

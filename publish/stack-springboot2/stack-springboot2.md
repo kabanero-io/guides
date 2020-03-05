@@ -1,11 +1,11 @@
 ---
-permalink: /guides/collection-springboot2/
+permalink: /guides/stack-springboot2/
 layout: guide-markdown
 title: Developing cloud native microservices with the Spring Boot application stack
 duration: 40 minutes
 releasedate: 2020-01-27
 description: Explore how to use the Spring Boot application stack to create, run, update, deploy, and deliver cloud native microservices.
-tags: ['Java', 'Spring Boot', 'Spring', 'Tomcat', 'Collection']
+tags: ['Java', 'Spring Boot', 'Spring', 'Tomcat', 'Stack']
 guide-category: stacks
 ---
 <!-- Note:
