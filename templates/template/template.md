@@ -18,8 +18,8 @@ permalink: /guides/appsody-getting-started/
 :page-duration: 40 minutes
 :page-releasedate: 2019-09-19
 :page-description: Explore how to use the Appsody CLI to create, run, update, deploy, and deliver cloud native microservices.
-:page-tags: ['Appsody', 'Java', 'MicroProfile', 'Collection']
-:page-guide-category: collections
+:page-tags: ['Appsody', 'Java', 'MicroProfile', 'Stack']
+:page-guide-category: stacks
 = Your Guide Title
 ```
 
@@ -32,8 +32,8 @@ title: Your Guide Title
 duration: 40 minutes
 releasedate: 2019-09-19
 description: Explore how to use the Appsody CLI to create, run, update, deploy, and deliver cloud native microservices.
-tags: ['Appsody', 'Java', 'MicroProfile', 'Collection']
-guide-category: collections
+tags: ['Appsody', 'Java', 'MicroProfile', 'Stack']
+guide-category: stacks
 ---
 ```
 
