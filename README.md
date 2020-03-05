@@ -13,7 +13,11 @@ Each new guide should be self-contained in its own directory. The directory's na
 
 ## Structure
 
+- `archive`
+   - Guides that are considered obsolete. Archived guides will never be published.
 - `draft`
    - All draft guides. These will not be published. You no longer need to append `draft-guide` to the guide's name.
 - `publish`
    - Guides that will be published.
+- `templates`
+   - Guide templates available to be used for new guides to follow. Templates are never published.
