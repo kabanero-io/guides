@@ -1,0 +1,150 @@
+---
+permalink: /guide/using-kAppNav/
+---
+:page-layout: guide
+:page-duration: 25 minutes
+:page-releasedate: 2019-10-18
+:page-description: Learn how to organize cloud native microservices into a single view
+:page-guide-category: basic
+:page-tags: ['kAppNav']
+= Using Kubernetes Application Navigator (kAppNav)
+
+// Copyright 2019 IBM Corporation and others
+
+== What you will learn
+
+You will install a Node.js application to represent a cloud native microservice.  Then, you will define an application to provide a single view of the deployed Kubernetes resources of your microservice.
+
+== Before you begin
+
+It is important to understand that Kubernetes is a highly flexible system. Many names, labels, and resources are defined and used by convention. Depending on the development tools you use, some names, labels, and resources can vary. kAppNav relies on matching these names, labels, and resources to define and display your application. Because kAppNav does this matching, you need to understand how your application is deployed, what resources are used, and the names that are used. The steps that are described in these instructions work for any Kubernetes environment, but the exact names, labels, and resource kinds can vary based on your application and environment.
+
+== Prerequisites
+
+* You must have **one** of the following setups:
+** https://kabanero.io/operations/kabanero-foundation-install/[Kabanero Foundation] installed which includes kAppNav.
+** Or https://github.com/kappnav/README[kAppNav] installed separately on a Kubernetes deployment or Minishift cluster.
+
+== Create a simple Node.js application
+
+. Log into your OpenShift console
+
+. From the Service Catalog, create a new Node.js project
+
+. Select a Node.js project from the catalog ...
++
+image::/img/guide/guide-using-kAppNav-okd-service-catalog.png[link="/img/guide/guide-using-kAppNav-okd-service-catalog.png" alt="Select a Node.js project from the catalog"]
++
+- OR - search for a Node.js project.
++
+image::/img/guide/guide-using-kAppNav-okd-service-catalog-search.png[link="/img/guide/guide-using-kAppNav-okd-service-catalog-search.png" alt="Search the catalog for a Node.js project"]
++
+. Follow the project creation dialog box to create a new project.
++
+image::/img/guide/guide-using-kAppNav-node.js-new-project.png[link="/img/guide/guide-using-kAppNav-node.js-new-project.png" alt="Create a new project dialog box"]
+
+. Create the Node.js application.
+
+.. Add to Project: Create Project
+.. Project Name: 'my-node-project' (this will be the application's namespace)
+.. Project Display Name: 'My Node Project'
+.. Application Name: 'my-node-app'
+.. Git Repository: Click 'Try Sample Repository'
+.. Click Create
++
+image::/img/guide/guide-using-kAppNav-node.js-project-configure.png[link="/img/guide/guide-using-kAppNav-node.js-project-configure.png" alt="Configure the new node.js project in the dialog box"]
++
+. Close the dialog box and navigate to the newly created **My Node Project**.
++
+image::/img/guide/guide-using-kAppNav-node.js-project-successful.png[link="/img/guide/guide-using-kAppNav-node.js-project-successful.png" alt="Dialog displays that the node.js project was created successfully"]
++
+. Navigate to the "My Node Project" project view. Wait, if necessary, for the build to complete.
++
+image::/img/guide/guide-using-kAppNav-mynodeproject-project-view.png[link="/img/guide/guide-using-kAppNav-mynodeproject-project-view.png" alt="Page displays project view of My Node Project"]
++
+. When the build is complete and the pod is deployed, access the application's URL.
++
+image::/img/guide/guide-using-kAppNav-mynodeproject-application-url.png[link="/img/guide/guide-using-kAppNav-mynodeproject-application-url.png" alt="Page displays link to access application's url"]
++
+The application is now deployed and receiving traffic.
++
+image::/img/guide/guide-using-kAppNav-mynodeproject-application-deployed.png[link="/img/guide/guide-using-kAppNav-mynodeproject-application-deployed.png" alt="Page displays message indicating that the application has been deployed"]
+
+== Add the application in kAppNav
+To display the application in kAppNav, you can create an Application Custom Resource to group the Kubernetes resources that belong to the deployed microservice.
+
+. Find the kAppNav 'kappnav-ui-service' route and click its hostname to open up the kAppNav main page.
++
+image::/img/guide/guide-using-kAppNav-ui.png[link="/img/guide/guide-using-kAppNav-ui.png" alt="Page displays user interface for create custom resource"]
++
+. Click the **Create Application** button.
++
+image::/img/guide/guide-using-kAppNav-create-application.png[link="/img/guide/guide-using-kAppNav-create-application.png" alt="Click the create application button"]
++
+. On the General tab, specify the application name and namespace.
+** The **Name** value can be anything and does not need to match the name of the application.
+** The **Namespace** value must be the same namespace as the projects that make up the application.
+
++
+image::/img/guide/guide-using-kAppNav-namespace.png[link="/img/guide/guide-using-kAppNav-namespace.png" alt="Enter details in the kAppNav user interface for application name and namespace"]
++
+. On the **Selectors** tab, specify the application label and value.
+**  The **Label** credential name is a label name provided by convention.
+** The **Value** credential is the application name provided when the application was created.
+
++
+image::/img/guide/guide-using-kAppNav-app-label.png[link="/img/guide/guide-using-kAppNav-app-label.png" alt="Enter details in the kAppNav user interface for application label and value"]
++
+. On the Kinds tab, specify **Pod** and **DeploymentConfig** as resource kinds in the **resources** group.
++
+image::/img/guide/guide-using-kAppNav-resource-kinds.png[link="/img/guide/guide-using-kAppNav-resource-kinds.png" alt="Specify resource kinds the resources group"]
++
+. Click **Create**.
+** The application is created. The status can display as **Unknown** for a few moments until a change to **Normal** displays.
+The **Unknown** status occurs while kAppNav is interrogating the resources to determine the overall status.
+
++
+image::/img/guide/guide-using-kAppNav-created-application-view.png[link="/img/guide/guide-using-kAppNav-created-application-view.png" alt="Page displays the view of a successfully created application"]
++
+. Navigate into the **my-node-app** application view to see the details and components that define the application.
++
+image::/img/guide/guide-using-kAppNav-mynodeapp-application-view.png[link="/img/guide/guide-using-kAppNav-mynodeapp-application-view.png" alt="Page displays the view of the mynodeapp application view where you can view fields containing the details that define the application"]
+
+== Edit the Application Custom Resource through the GUI
+By editing the Application Custom Resource , you can add additional resources, such as services and routes, to the application components. 
+
+. Navigate into the application.
+
+. From the action menu, select Edit to modify the Application Custom Resource as a JSON file.
++
+image::/img/guide/guide-using-kAppNav-edit-json.png[link="/img/guide/guide-using-kAppNav-edit-json.png" alt="Edit the JSON file to modify the application custom resource."]
++
+. Add additional Kinds to the componentKinds list and click **Save**.
++
+image::/img/guide/guide-using-kAppNav-additional-kinds.png[link="/img/guide/guide-using-kAppNav-additional-kinds.png" alt="Edit the JSON file to additional kinds to the componentKinds list."]
++
+. kAppNav automatically updates the **my-node-app** application view to show the added resources. The status of the new resources can display as unknown for a few moments until a normal status displays.
++
+image::/img/guide/guide-using-kAppNav-mynodeapp-application-view-update.png[link="/img/guide/guide-using-kAppNav-mynodeapp-application-view-update.png" alt="Edit the JSON file to additional kinds to the componentKinds list."]
+
+== Understand the fields in an Application Custom Resource
+Before adding an application to kAppNav, read and understand how the following Application Custom Resource Definition is used. See the https://github.com/kubernetes-sigs/application[Kubernetes Application SIG].
+
+image::/img/guide/guide-using-kAppNav-application-custom-resource.png[link="/img/guide/guide-using-kAppNav-application-custom-resource.png" alt="Example of application custom resource"]
+
+Field definitions:::
+
+metadata.name:: 
+The display name of your application in kAppNav as well as the name of the application resource. The name must be unique within the namespace.
+
+metadata.namespace:: 
+The namespace of your application.
+
+spec.componentKinds.group:: 
+The value for the group can be any value. This value does not have a use.
+
+spec.componentKinds.kind:: 
+The kind value must be capitalized in order to follow the correct syntax for type references. The resource kinds originate from the underlying application deployment. Depending on how the application is deployed, different resources may be available. 
+
+spec.selector.matchLabels::
+The `matchLabels` serve to help find existing label name=value pairs which exist on the application and its resources. The `app` label is a convention and is usually applied to all resources for the same application.

@@ -1,0 +1,3 @@
+prometheus.io/path: /metrics
+prometheus.io/port: '9080'
+prometheus.io/scrape: 'true'

@@ -1,0 +1,128 @@
+== Pre-requisites
+
+You need to install the following pre-requisites to
+complete this tutorial:
+
+[.tab_link.mac_link]
+`*MAC*`
+
+[.tab_link.windows_link]
+`*WINDOWS*`
+
+[.tab_content.mac_section]
+--
+- https://appsody.dev/docs/getting-started/installation[Appsody]
+ifdef::include-codewind[]
+- https://code.visualstudio.com/[Visual Studio Code]
+endif::[]
+- https://docs.docker.com/docker-for-mac/[Docker Desktop]
+
+--
+
+[.tab_content.windows_section]
+--
+- Windows 10 Professional or Windows 10 Enterprise.
+- https://appsody.dev/docs/getting-started/installation[Appsody]
+ifdef::include-codewind[]
+- https://code.visualstudio.com/[Visual Studio Code]
+endif::[]
+- https://docs.docker.com/docker-for-windows/[Docker Desktop]
+- Follow the instructions in the
+link:docker-windows-aad[Special notes about Docker Desktop on Windows
+10] to ensure your Docker installation can successfully write content to
+volumes mounted into containers.
+- https://www.cygwin.com/[Cygwin], ensuring your Cygwin home directory *matches your Windows home directory*, as described in https://ryanharrison.co.uk/2015/12/01/cygwin-change-home-directory.html[this blog entry]. 
+--
+
+=== Enable Kubernetes 
+
+Docker Desktop contains a standalone Kubernetes cluster for development purposes.
+You will need to enable Kubernetes as this is disabled by default in Docker Desktop. 
+
+[.tab_link.mac_link]
+`*MAC*`
+
+[.tab_link.windows_link]
+`*WINDOWS*`
+
+[.tab_content.mac_section]
+Open the "Preferences" dialog, switch to the "Kubernetes" tab, and select the "Enable Kubernetes" 
+option, as described in the 
+https://docs.docker.com/docker-for-mac/#kubernetes[Docker Destop for Mac] page.
+
+[.tab_content.windows_section]
+Open the "Settings" dialog, switch to the "Kubernetes" tab, and select the "Enable Kubernetes" 
+option, as described in the 
+https://docs.docker.com/docker-for-windows/#kubernetes[Docker Destop for Windows] page.
+
+
+ifdef::include-codewind[]
+=== Installing the Codewind Extension for Visual Studio Code
+
+https://www.eclipse.org/codewind/[Eclipse Codewind] provides a set of extensions to IDEs for doing
+cloud-native application development. They enable a full developer/debug
+cycle with an incremental build where all the code is built and run
+inside a container. This means that the likelihood of issues due to
+different development, build and production environments is vastly
+reduced.
+
+Although Codewind is an Eclipse project, it’s not limited to the Eclipse
+IDE and in this tutorial, you will use Codewind inside Visual Studio
+Code.
+
+Codewind requires Docker, so before you begin, ensure your Docker
+install is complete and running.
+
+To install the "Codewind Extension" for "Visual Studio Code", you have
+two options.
+
+. Install using the *Install* button on
+https://marketplace.visualstudio.com/items?itemName=IBM.codewind[this
+page].
+. Manually launch Visual Studio Code, navigate to the *Extensions* view,
+search for *Codewind*, and install the extension from here.
+endif::[] 
+
+
+ifdef::include-codewind[]
+=== Sharing the Appsody Configuration between the CLI and Visual Studio Code - Optional
+
+While this is optional, it is recommended. Rather than having *Appsody
+CLI* projects stored separately to those you may create in an editor
+such as *Visual Studio Code* or *Eclipse*, updating the *Appsody*
+configuration file will enable you to work on your projects across both
+the CLI and editor.
+
+To share the Appsody configuration, follow the instructions at
+https://github.com/eclipse/codewind-appsody-extension#optional-using-the-same-appsody-configuration-between-local-cli-and-codewind[this
+repository].
+endif::[]
+
+=== Pre-requisite checks
+
+This step will ensure your environment has all the prerequisites
+installed and running.
+
+(Windows users should execute it from a Cygwin shell) :
+
+[source, role='command']
+```
+curl -sL https://github.com/gcharters/kabanero-dev-getting-started/releases/download/0.0.5/workshop-setup.sh | bash -s -- -p -l nodejs
+```
+
+
+=== Caching of large images
+
+This step will ensure your environment has all the prerequisites
+installed and running.
+
+In addition to checking prerequisites, this step will also cache large
+images into your local system. The cached content will save you valuable
+time throughout the course of this tutorial.
+
+(Windows users should execute it from a Cygwin shell) :
+
+[source, role='command']
+```
+curl -sL https://github.com/gcharters/kabanero-dev-getting-started/releases/download/0.0.5/workshop-setup.sh | bash -s -- -c -l nodejs
+```

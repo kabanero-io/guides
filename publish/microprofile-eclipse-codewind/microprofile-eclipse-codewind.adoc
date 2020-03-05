@@ -1,0 +1,216 @@
+---
+permalink: /guides/microprofile-eclipse-codewind/
+---
+:page-layout: guide
+:page-duration: 20 minutes
+:page-releasedate: 2019-10-18
+:page-description: Learn how to create, run, update, deploy, and deliver a simple cloud native application using the MicroProfile Kabanero Collection and Eclipse IDE
+:page-tags: ['Collection', 'MicroProfile', 'Eclipse', 'Java']
+:page-guide-category: collections
+= Developing with Kabanero Collections in your Eclipse IDE
+
+//	Copyright 2019 IBM Corporation and others.
+//
+//	Licensed under the Apache License, Version 2.0 (the "License");
+//	you may not use this file except in compliance with the License.
+//	You may obtain a copy of the License at
+//
+//	http://www.apache.org/licenses/LICENSE-2.0
+//
+//	Unless required by applicable law or agreed to in writing, software
+//	distributed under the License is distributed on an "AS IS" BASIS,
+//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//	See the License for the specific language governing permissions and
+//	limitations under the License.
+//
+
+[.hidden]
+NOTE: This repository contains the guide documentation source. To view
+the guide in published form, view it on the https://kabanero.io/guides/{projectid}.html[website].
+
+// =================================================================================================
+// What you'll learn
+// =================================================================================================
+
+== What you will learn
+
+**NOTE: Use this guide only for Kabanero V0.5.0 and earlier releases.**
+
+You will use the Kabanero Eclipse MicroProfile Collection in your Eclipse IDE to create and run a simple cloud native microservice Java application.
+
+Kabanero's Eclipse MicroProfile Collection contains all the components you need to develop your microservice application, including the Eclipse MicroProfile application stack and any necessary container build and deployment artifacts.
+
+// =================================================================================================
+// Prerequisites
+// =================================================================================================
+
+== Prerequisites
+
+. You must have https://docs.docker.com/get-started/[Docker] installed.
+. You must install the *Eclipse Codewind Extension* from the https://marketplace.eclipse.org/content/codewind[Eclipse Marketplace], which creates a *CODEWIND* workspace and downloads Docker images to your Docker registry.
+. (Optional) If you have an enterprise-specific Kabanero Collection Hub, you need the URL to your index file.
+
+Everything is now set up, and you're ready to create your first project!
+
+// =================================================================================================
+// Getting started
+// =================================================================================================
+
+== Getting started
+
+Kabanero brings together open source technologies that provide a framework for developing cloud native microservice
+applications. As a developer, you are likely to have a preferred IDE for writing application
+code. In this guide, we are going to develop a simple containerized microservice application that is
+based on the Eclipse MicroProfile Kabanero Collection in the Eclipse IDE.
+
+Kabanero contains Appsody, which is designed to enable applications to be built and tested inside a container.
+To access Appsody functions from your IDE, you need Eclipse Codewind, a plugin that provides a rich user interface that integrates
+seamlessly into the Eclipse IDE. Codewind also provides performance and monitoring tools to help you test and debug applications
+in containers.
+
+When you install *Eclipse Codewind*, an extension to Appsody is automatically installed as part of your
+*CODEWIND* workspace. By default, Codewind is configured to use the latest Appsody stacks that are
+available in the Appsody GitHub repository. However, those stacks are not integrated with Kabanero.
+In order to use Appsody with Kabanero you need to configure Codewind to use a Kabanero Collection Hub.
+
+== Configuring your environment to use a Kabanero Collection Hub
+
+As a developer, your enterprise architect might provide you with the URL of a Kabanero Collection Hub that your
+organisation has defined for developers to use. If not, you should clone the *public* Kabanero Collection
+Hub locally. The public collection is updated on a regular basis, so by making a copy, you avoid adopting unplanned changes.
+
+To keep things simple in this guide, you will add the latest *public* Kabanero Collection Hub repository instead of a clone of
+a Kabanero Collection Hub repository.
+
+With *Codewind* installed, make sure you have it showing in one of the Eclipse side panels. If you cannot see Codewind Explorer,
+go to the *Menu Bar* and select *Window* > *Show View* > *Other* > *Codewind Explorer* and press *OK*.
+
+Now we can edit the template sources where Codewind expects to find the Kabanero Collections. Right-click *Projects (Local)* and
+select *Manage Template Sources*. A new box appears with a list of template sources, including *Standard Codewind Templates*
+and *Appsody Stacks*.
+
+image::/img/guide/microprofile-eclipse-codewind-add-source.png[link="/img/guide/microprofile-eclipse-codewind-add-source.png" alt="Diagram shows popup to add a new Source to Codewind."]
+
+Kabanero Collections might already be showing in this list. If so, enable it with the *tick box*.
+If Kabanero Collections are not in the list, select *Add* and enter `Kabanero Collections` as a description. In the URL field,
+enter `https://github.com/kabanero-io/collections/releases/latest/download/kabanero-index.json`.
+
+*Note*: If you've been provided with a Kabanero Collection Hub URL for your organisation you can repeat the last step to add it.
+
+Uncheck all the other template sources except Kabanero Collections because those sources are not supported by the Kabanero application cluster.
+
+Codewind is now configured to use the *public* Kabanero Collection Hub.
+
+== Initializing your project
+
+In the Explorer view, right-click on **Projects** and select **Create New Project** to get a list of available Kabanero Collections.
+
+image::/img/guide/microprofile-eclipse-codewind-rightclick-project.png[link="/img/guide/microprofile-eclipse-codewind-rightclick-project.png" alt="Diagram shows popup to create a new Project."]
+
+From the **Create a new project** window, choose the *Kabanero Eclipse MicroProfile Template*, as shown in the following diagram:
+
+image::/img/guide/microprofile-eclipse-codewind-create-project.png[link="/img/guide/microprofile-eclipse-codewind-create-project.png" alt="Diagram shows popup to create a new Project."]
+
+Choose a suitable name for your project and select *Finish* to save it.
+
+Your new project is created, built, and compiled inside a container. To see the status of the build, right-click the project in *Codewind Explorer*, select *Show Log Files* and chose *Appsody.log*. The log files for the container are shown in a *Console Window*.
+
+When the application is compiled and running on localhost, the status changes from **[Stopped] [Build Successful]** to **[Running] [Build Successful]**. Right-click the project in Codewind Explorer and select *Open Application* to view the app running on your local machine.
+
+image::/img/guide/microprofile-eclipse-codewind-open-application.png[link="/img/guide/microprofile-eclipse-codewind-open-application.png" alt="Diagram shows the open application option."]
+
+*Note*: This process takes longer the first time it runs because dependencies are downloaded and installed.
+
+== Understanding the project layout
+
+Projects are created with a default set of files, which you can find in a Project Explorer in your *CODEWIND-WORKSPACE*.
+
+image::/img/guide/microprofile-eclipse-codewind-project-explorer.png[link="/img/guide/microprofile-eclipse-codewind-project-explorer.png" alt="Diagram shows the Project Explorer view.""]
+
+Show the Application by right-clicking the Project from the Codewind Explorer and selecting **Open Application**.
+
+The Eclipse browser opens to display *"Welcome to your Appsody Microservice"* on `http://127.0.0.1:<local_port_number>/`. Make a note
+of the `<local_port_number>` for your next task.
+
+== Creating and updating the application
+
+You are now going to create a new route that listens on `http://127.0.0.1:<local_port_number>/starter/hello`.
+
+In *Project Explorer*, right click on the `dev.appsody.starter` package located inside the `Java Resources` > `src/main/java` folder and create a new file called `HelloResource`.
+
+Add the following code to this new file:
+
+```
+package dev.appsody.starter;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
+
+@Path("/")
+public class HelloResource {
+    @GET
+    @Path("hello")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String helloWorld() {
+        return "Hello World!";
+    }
+}
+```
+
+Save the changes.
+
+Codewind watches for file changes and automatically recompiles your application. Point your browser to
+`http://127.0.0.1:<local_port_number>/starter/hello` to see your new route, which displays **Hello World!**.
+
+This code is creating a new path on `/hello` to return a String to the browser saying *Hello World!*. The starter part of the full URL comes from the `StarterApplication.java` file, which specifies that all routes should begin with `/starter`.
+
+== Testing and debugging the application
+
+You can perform a number of operations through the Eclipse Explorer interface
+that help you develop, test, and debug your application locally. Right-click on your project to see a
+list of available tasks:
+
+image::/img/guide/microprofile-eclipse-codewind-rightclick-options.png[link="/img/guide/microprofile-eclipse-codewind-rightclick-options.png" alt="Diagram shows the right click options"]
+
+- you can disable the automated build of your project and build it on demand
+- you can restart your application in run mode or debug mode
+- you can view the available logs to troubleshoot issues
+- you can find information about the running app in **Open Project Overview**. Eclipse displays information about your project, including the location, status, and any ports in use. The output is similar to the
+following screenshot:
+
+image::/img/guide/microprofile-eclipse-codewind-project-overview.png[link="/img/guide/microprofile-eclipse-codewind-project-overview.png" alt="Diagram shows the Project Overview page."]
+
+- you can stop the application, by clicking the *Disable project* button.
+
+At some stage in development, you might want to do some local
+performance testing. As well as checking whether your code runs cleanly, Codewind
+provides application metrics and performance monitoring. For more information about
+developing applications with Eclipse Codewind, see the
+https://www.eclipse.org/codewind/mdteclipsegettingstarted.html[Codewind
+documentation].
+
+When you’ve finished unit testing your microservice application on your local system, the next stage in the
+process is to test the microservice in the context of the overall system. To test the application as part of
+the system, you must deploy the system and then the new application, which requires access to a Kubernetes or Knative environment.
+
+
+// =================================================================================================
+// Deploying your application
+// =================================================================================================
+
+== Deploying your application
+
+If your responsibilities include deploying your microservice application on Kubernetes or Knative, additional pre-requisites apply.
+For example, you must install the Appsody CLI and configure Kubernetes on your local system. The steps required to
+deploy an application to Kubernetes or Knative are covered in
+https://kabanero.io/guides/collection-microprofile/[Developing cloud native microservices with the Eclipse MicroProfile Collection and Appsody CLI].
+
+If deploying your microservice application as part of the overall system is handled by another team in your organisation,
+your role in the deployment process ends by delivering your changes to a GitHub repository. Here, your operations team can
+automate the deployment of your microservice application to a kubernetes or Knative test environment by implementing Tekton
+webhooks that trigger Tekton pipelines.
+
+Want to learn about Tekton? Using Tekton pipelines to deploy microservice applications is covered in a different guide.

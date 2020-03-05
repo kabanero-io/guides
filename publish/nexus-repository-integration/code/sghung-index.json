@@ -1,0 +1,10 @@
+[
+  {
+      "displayName": "My Custom Eclipse MicroProfile®",
+      "description": "My Custom Eclipse MicroProfile on Open Liberty & OpenJ9 using Maven",
+      "language": "java",
+      "projectType": "appsodyExtension",
+      "projectStyle": "Appsody",
+      "location": "https://github.com/sghung/appsodystacks/releases/latest/download/my-java-microprofile.v0.2.21.templates.default.tar.gz"
+  }
+]

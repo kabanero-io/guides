@@ -1,0 +1,10 @@
+name: My Node.js Express
+version: 0.2.10
+description: My Express web framework for Node.js
+license: Apache-2.0
+language: nodejs
+maintainers:
+  - name: Steven Hung
+    email: sghung@ca.ibm.com
+    github-id: sghung
+default-template: simple

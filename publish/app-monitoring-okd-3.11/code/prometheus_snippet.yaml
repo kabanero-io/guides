@@ -1,0 +1,7 @@
+serviceMonitorNamespaceSelector:
+  matchLabels:
+    prometheus: monitoring
+serviceMonitorSelector:
+  matchExpressions:
+    - key: k8s-app
+      operator: Exists

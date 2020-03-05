@@ -1,0 +1,294 @@
+== Developing Cloud-native applications - Codewind
+
+=== Using a Custom Appsody Stack from Codewind
+
+By default, Codewind has integration for the Kabanero stacks, which are 
+based on the stacks released by the Appsody project. 
+
+It is worth looking at the Codewind configuration to understand how to
+eventually include references to custom stacks, such as the one we will 
+be building in this workshop.
+
+In order to include additional stacks to the list of stacks available
+inside Codewind, you can add them through the template sources panel.
+Right-click the Projects icon in the Codewind section of the Visual Code
+Studio Explorer and select "Manage Template Sources":
+
+Make sure you have "Kabanero Collections" enabled and "Appsody Stacks"
+disabled, otherwise you may see stacks with the same name and descriptions
+in the list of stack options when creating a new Codewind project.
+
+.Codewind template sources 
+image::/img/guide/kab-workshop-codewind-template-sources.png[link="/img/guide/kab-workshop-codewind-template-sources.png" alt="Codewind template sources"]
+
+You’re now ready to use the Kabanero collections from within Codewind.
+
+=== Creating a new Codewind Project
+
+We’ve seen how the Appsody CLI helps create, build and deploy projects
+based on stacks and templates. Let’s now see how Codewind augments the
+Appsody experience with tools for cloud-native development.
+
+We’re going to start by creating a new Node.js project. These first
+steps are the same for all the supported project types.
+
+To get started with writing the project, hover over the *Projects* entry
+underneath *Codewind* in *Visual Studio Code* and press the *+* icon to
+create a new project.
+
+.New Codewind project 
+image::/img/guide/kab-workshop-new-project.png[link="/img/guide/kab-workshop-new-project.png" alt="New Codewind project"]
+
+
+You should see a list of project types you can create. Select the
+`+Kabanero Collections+` group, then select `Kabanero Node.js Express simple template`.
+
+.New Node.js Express project 
+image::/img/guide/kab-workshop-codewind-new-nodejs.png[link="/img/guide/kab-workshop-codewind-new-nodejs.png" alt="New Node.js Express project"]
+
+In the next field give the project a name, e.g `+kabanero-node-project+`
+
+Press `+Enter+` to create the project. Codewind will prompt you for the parent location of the folder about to be created for the project. Select a folder and then click on "Select parent directory". 
+
+The project has been generated and Codewind will start to build it. To see the progress, expand `+Codewind+` -> `+Projects+` and right click the menu options `+Show all logs+`:
+
+After a little while you should see the following log message:
+
+[source, role="no_copy"]
+....
+[Container] 
+[Container] Running command:  npm start
+[Container] 
+[Container] > nodejs-express@0.2.8 start /project
+[Container] > node server.js
+[Container] 
+[Container] [Mon Dec  9 16:07:14 2019] com.ibm.diagnostics.healthcenter.loader INFO: Node Application Metrics 5.1.1.201912041724 (Agent Core 4.0.5)
+[Container] [Mon Dec  9 16:07:14 2019] com.ibm.diagnostics.healthcenter.mqtt INFO: Connecting to broker localhost:1883
+[Container] App started on PORT 3000
+....
+
+And the state for the project should change to `+Running+`:
+
+.Node.js Express project running
+image::/img/guide/kab-workshop-codewind-nodejs-running.png[link="/img/guide/kab-workshop-codewind-nodejs-running.png" alt="Node.js Express project running"]
+
+The generated project contains all the boiler-plate code to get started
+with developing a Node.js Express application. This is the exact same
+code we saw generated for the new Appsody project.
+
+To access the application endpoint in a browser, select the *Open App*
+icon next to the project’s name, or right-click on the project and
+select the `+Open App+` menu option. This opens up the application in
+the running container showing a welcome page for the project.
+
+.Launch Node.js Express application
+image::/img/guide/kab-workshop-codewind-launch-nodejs.png[link="/img/guide/kab-workshop-codewind-launch-nodejs.png" alt="Launch Node.js Express application"]
+
+Let’s take a look at the code. In the *Visual Studio Code Explorer* you should see
+an entry with your Codewind project name. If you don’t find
+it, right-click on the project and choose `+Add Folder to Workspace+`.
+In the workspace view, expand the project and the sub-folders to show
+all the files created from the Appsody template (Note, the template is
+not intended to be a sample as most people would end up having to delete
+the code each time, it aims to provide the starter code, server
+configuration and build to which you can add your code).
+
+The main source file is *app.js*, which serves the root path of your REST API.
+
+Let’s modify that file to add the "/resource" REST endpoint to your application:
+
+[source,node]
+----
+const app = require('express')()
+
+app.get('/', (req, res) => {
+  res.send("Hello from Appsody!");
+});
+ 
+app.get('/resource', (req, res) => {
+  res.send("Resource from Appsody!");
+});
+
+module.exports.app = app;
+----
+
+Any changes you make to your code will automatically be 
+re-deployed by *Codewind*, and viewed in your browser.
+
+If you still have the logs `+OUTPUT+` tab open you will see that the
+code is compiled and the application restarted. You should see messages
+like:
+
+[source, role="no_copy"]
+....
+[Container] > nodejs-express@0.2.8 start /project
+[Container] > node server.js
+[Container] 
+[Container] [Mon Dec  9 16:14:03 2019] com.ibm.diagnostics.healthcenter.loader INFO: Node Application Metrics 5.1.1.201912041724 (Agent Core 4.0.5)
+[Container] [Mon Dec  9 16:14:04 2019] com.ibm.diagnostics.healthcenter.mqtt INFO: Connecting to broker localhost:1883
+[Container] App started on PORT 3000
+....
+
+Point your browser at the new resource (note, `+<port>+` is the port
+number you saw when you first opened the application):
+
+[source, role="no_copy"]
+....
+http://127.0.0.1:<port>/resource
+....
+
+You should see the following response:
+
+[source, role="no_copy"]
+....
+Resource from Appsody!
+....
+
+=== Looking Inside the Container
+
+During development you may need to look inside the container to see
+what’s deployed and configured. Codwind makes this easy. Select the
+`+Open Container Shell+` option:
+
+.Open Container Shell
+image::/img/guide/kab-workshop-codewind-shell.png[link="/img/guide/kab-workshop-codewind-shell.png" alt="Open Container Shell"]
+
+The following shows the files and location where the shell opens inside
+the container. This is the root of your project.
+
+.Listing application files from container shell
+image::/img/guide/kab-workshop-codewind-shell-commands.png[link="/img/guide/kab-workshop-codewind-shell-commands.png" alt="Listing application files from container shell"]
+
+You can navigate around the various directories for the application
+and its dependencies.
+
+=== Viewing Application Metrics
+
+Let’s take a look at the application metrics built in to Codewind.
+Right-click on the application and select `+Open Application Monitor+`:
+
+This should open a page in your browser showing the metrics
+dashboard with various system resource and response time data.
+To make it more interesting,
+hit the REST endpoint a few times to see the effects. You should end up
+with a dashboard looking something like:
+
+.Codewind Application Metrics Dashboard
+image::/img/guide/kab-workshop-codewind-performance.png[link="/img/guide/kab-workshop-codewind-performance.png" alt="Codewind Application Metrics Dashboard"]
+
+The dashboard helps you understand the runtime characteristics of your
+service. Keep the dashboard open for now.
+
+=== Running Load Tests
+
+Let’s now take a look at the load testing support of Codewind.
+Right-click on the application and select
+`+Open Performance Dashboard+`:
+
+In a browser tab you should see the Codewind performance dashboard.
+Click on `+Edit load run settings+` and change the path to point to the
+REST service endpoint `+/resource+` and click `+Save+` to save
+the settings. Click `+Run Load Test+`, in the dialog, give the test a
+name `+Test 1+` and choose `+Run+`:
+
+.Edit load run settings
+image::/img/guide/kab-workshop-codewind-edit-load-test.png[link="/img/guide/kab-workshop-codewind-edit-load-test.png" alt="Edit load run settings"]
+
+When the tests are complete you should see results similar to the
+following (you may need to click refresh in the browser). Click the
+check-boxes for `+Response+`, `+Hits+`, `+CPU+` and `+Memory+`.
+
+.Load test results
+image::/img/guide/kab-workshop-codewind-performance-test.png[link="/img/guide/kab-workshop-codewind-performance-test.png" alt="Load test results"]
+
+To see the effect of the load test on the service, take a look at the
+metrics dashboard you opened earlier. You should see spikes in the
+various measures.
+
+Let’s do some development and degrade the performance of the services.
+Update the `+GET+` function in `app.js` with the following content and save the file. As
+before, the application will be automatically updated:
+
+[source,java]
+----
+app.get('/resource', (req, res) => {
+  setTimeout(function() {
+    res.send("Resource from Appsody!");
+  }, 3000);  
+});
+----
+
+In the performance dashboard, click `+Run Load Test+`, give the test
+another name, e.g. `+Test 2+`, and click `+Run+`. When the tests
+complete, you should see results similar to the following:
+
+.Load test results after performance degradation
+image::/img/guide/kab-workshop-codewind-performance-test-2.png[link="/img/guide/kab-workshop-codewind-performance-test-2.png" alt="Load test results after performance degradation"]
+
+
+We can see clearly from the chart that the response time has increased.
+Revisit the metrics dashboard and we can also see the response time
+increase:
+
+.Application metrics after performance degradation
+image::/img/guide/kab-workshop-codewind-performance-2.png[link="/img/guide/kab-workshop-codewind-performance-2.png" alt="Application metrics after performance degradation"]
+
+=== Deploy the Project to Knative or Kubernetes via the CLI
+
+The project you created is a normal Appsody project and so can be worked
+with using the Appsody CLI. As per the Appsody part of this workshop,
+deploy the application to Kubernetes using:
+
+[.tab_link.mac_link]
+`*MAC*`
+
+[.tab_link.windows_link]
+`*WINDOWS*`
+
+[.tab_content.mac_section]
+--
+[source, role='command']
+....
+cd <parent directory location>/kabanero-node-project
+appsody deploy
+....
+--
+
+[.tab_content.windows_section]
+--
+[source, role='command']
+....
+cd <parent directory location>\kabanero-node-project
+appsody deploy
+....
+--
+
+If this was successful, the output of this command should be:
+
+[source, role="no_copy"]
+....
+Deployed project running at http://localhost:<port>
+....
+
+Test the endpoint by opening:
+
+[source, role="no_copy"]
+....
+http://127.0.0.1:<port>/resource
+....
+
+You should see the following response:
+
+[source, role="no_copy"]
+....
+Resource from Appsody!
+....
+
+Congratulations! Your application is now accessible through Knative/Kubernetes.
+
+You can undeploy the application using:
+
+[source, role='command']
+....
+appsody deploy delete
+....
