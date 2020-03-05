@@ -3,17 +3,9 @@ Each guide resides in its own repository and is dynamically pulled into kabanero
 
 ## Get Started
 
-1. Create a repository for your guide in the Kabanero-io Org.
-   * **Make sure `draft-guide-` is appended to the beginning of the repo name**. `draft-` ensures it will not get published to the site. `guide-` ensures our build process will pull in the guide during build.
-   * If you need help opening a repository, create  an issue in this repository.
-1. Ensure permissions are set in repository settings
-   * `information-dev` team gets **Maintain** access
-   * `kababero-website-team` team gets **Admin** access
-1. Ensure master branch is protected
-   * Under **Settings -> Branches** (If you do not see the **Branches** button, you will need to add the README.adoc file to the repo first, then it will appear)
-      * Click **Add Rule** and enter `master` for the master branch
-         * Check the box for: `Require pull request reviews before merging`
-         * Check the box for:  `Include Administrators`
+1. Fork and clone your fork to your machine
+1. Create a directory for your guide under the `drafts` section of this repo. Name the directory the same name as your guide.
+   - Keep this name in mind. It must mach the `permalink` in the front matter explained below
 
 ### Front Matter
 
@@ -46,10 +38,8 @@ guide-category: collections
 ```
 
 * **permalink**
-   * The naming convention for `permalink` is `/guide/` followed by the GitHub repository name (do not include `guide-`)
-      * For example, the appropriate `permalink` for https://github.com/kabanero-io/guide-appsody-get-started/ would be `/guides/appsody-get-started/`
-      * This eliminates guide URL conflicts for guides as GitHub won't allow two repositories with the same name.
-
+   * The naming convention for `permalink` is `/guides/` followed by the same name of the directory you created (your guides name)
+      * For example, the appropriate `permalink` for a guide in the directory `draft/appsody-get-started` would be `/guides/appsody-get-started/`
 * **page-layout / layout**
    * The layout for the content of the guide. `guide` is the normal layout.
    * To use a layout that includes a code column on the side, use `guide-multipane` (supported only with AsciiDoc).
@@ -76,7 +66,7 @@ guide-category: collections
    ```
 
 #### Approved Tags
-* Collection
+* Stack
 * Nodejs
 * Express
 * Java
@@ -89,10 +79,10 @@ guide-category: collections
 
 #### Approved Categories
 * basic
-* collections
+* stacks
 * none
 
-More categories will be added
+More categories will be added here
 
 ### Add Images to your Guide
 
@@ -120,8 +110,8 @@ Once you have your local development environment setup you can render guides as 
 ## Render your guide
 
 1. Create a new dir called `guides` under `src/main/content/`
-1. Inside the new `guides` dir, make a new folder called `guide-name_of_your_guide`
-1. Create the `README.adoc` in that newly created folder and place your content in there.
+1. Inside the new `guides` dir, make a new folder and name it the same as the name for your guide.
+1. Create the `name_of_your_guide.adoc` (or .md) in that newly created folder and place your content in there.
 1. Copy any images that you are using in your guide to the `src/main/content/img/guide` directory.
    * Note- this is done automatically during website build, but is needed during local development.
 1. Start your local dev server and go to `https://localhost:4000/guides` to see all the guides rendered.
