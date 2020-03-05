@@ -1,5 +1,5 @@
 ---
-permalink: /guide/using-kAppNav/
+permalink: /guides/using-kAppNav/
 ---
 :page-layout: guide
 :page-duration: 25 minutes
