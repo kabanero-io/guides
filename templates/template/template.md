@@ -1,9 +1,9 @@
 # Contributing to the Kabanero.io Guides
-Each guide resides in its own repository and is dynamically pulled into kabanero.io via the build process. The content of the guide can be written in HTML, markdown, or AsciiDoc formats.  Markdown is preferred; use asciidoc only if you will be using features that you cannot do in markdown.
+Each guide resides in its own directory in this repository. This repository is dynamically pulled into kabanero.io via the build process. The content of the guide can be written in HTML, markdown, or AsciiDoc formats.  Markdown is preferred; use asciidoc only if you will be using features that you cannot do in markdown.
 
 ## Get Started
 
-1. Fork and clone your fork to your machine
+1. Fork this repo and clone your fork to your machine.
 1. Create a directory for your guide under the `drafts` section of this repo. Name the directory the same name as your guide.
    - Keep this name in mind. It must mach the `permalink` in the front matter explained below
 
