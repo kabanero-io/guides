@@ -7,7 +7,6 @@ description: Take advantage of Codewind's tools to help build high quality cloud
 tags: ['kabanero', 'appsody', 'codewind', 'microservice']
 projectid: guide-codewind
 guide-author: Kabanero
-repo-description: TBD
 ---
 
 ## Objectives
