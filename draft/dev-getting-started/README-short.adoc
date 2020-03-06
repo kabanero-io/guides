@@ -1,22 +1,3 @@
----
-permalink: /guides/dev-getting-started-short
----
-:projectid: dev-getting-started
-:page-layout: guide
-:page-duration: 15 minutes
-:page-description: Workshop content for developers getting started with Kabanero
-:page-tags: ['Appsody', 'Nodejs', 'Express']
-:page-title: Getting Started With Kabanero Development
-:linkattrs:
-
-:kabanero-collection: v0.2.0
-:workshop-quick: true
-
-
-= Getting Started With Kabanero Development
-
-include::whatis.adoc[]
-
 == What you will learn
 
 This tutorial will give you an introduction to the Kabanero developer
