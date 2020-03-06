@@ -6,20 +6,9 @@ duration: 30 minutes
 description: Take advantage of Codewind's tools to help build high quality cloud native applications regardless of which IDE or language you use.
 tags: ['kabanero', 'appsody', 'codewind', 'microservice']
 projectid: guide-codewind
-page-layout: guide-markdown
-page-duration: 30 minutes 
-page-releasedate: 02-21-2020
-page-guide-category: stacks
-page-essential: true
-page-essential-order: 1
-page-description: Take advantage of Codewind's tools to help build high quality cloud native applications regardless of which IDE or language you use. 
 guide-author: Kabanero
-page-tags: ['kabanero', 'appsody', 'codewind', 'microservice']
-page-permalink: /guides/{projectid}
 repo-description: TBD
 ---
-
-# Getting Started with Codewind and Kabanero
 
 ## Objectives
 
