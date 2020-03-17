@@ -40,7 +40,7 @@ GitHub repository for developers to use in their local development environment. 
 
 - [Docker](https://docs.docker.com/get-started/) must be installed.
 - [Appsody](https://appsody.dev/docs/getting-started/installation) must be installed.
-- You must have access to Kabanero Foundation v0.5.0 on an OpenShift Container Platform (OCP) v4.3 cluster.
+(Optional) To deploy your customized stack, you must have access to the OpenShift Container Platform (OCP) v4.3 cluster.
 
 ## Getting started
 

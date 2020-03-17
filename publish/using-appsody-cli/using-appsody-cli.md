@@ -167,7 +167,7 @@ This command runs a project in a container, where the container is linked to the
 - Navigate to `http://localhost:3000` to see the output.
     **NOTE**: The URL can be different, depending on the stack, so consult the documentation.
 
-- Edit `app.js` so that it outputs something other than "Hello from Appsody!". When you save the file, the change is detected and the container is automatically updated.
+- Edit `app.js` so that it outputs something other than `Hello from Appsody!`. When you save the file, the change is detected and the container is automatically updated.
 
 - Refresh `http://localhost:3000` to see the new message.
 
@@ -236,7 +236,7 @@ appsody build -t my-first-app
 
 **NOTE:** If your project name includes uppercase characters, these are converted to lowercase characters in the image name because uppercase characters are not accepted in image tags. Also, if your project directory includes underscore characters, these are converted to dashes (-), because certain areas of Kubernetes are not tolerant of underscore characters.
 
-When the build finishes, check that your image is available by running the `docker images` command. You should see your image at the top of the list, in a similar format to the following output:
+When the build finishes, check that your image is available by running the `docker images` command. You should see your image at the beginning of the list, in a similar format to the following output:
 
 ```
 REPOSITORY                                                                TAG                           IMAGE ID            CREATED             SIZE
