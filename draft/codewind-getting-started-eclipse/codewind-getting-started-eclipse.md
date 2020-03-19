@@ -20,7 +20,7 @@ Application stacks enable the development and optimization of containerized micr
 
 ## Developing with Eclipse 
 
-If you use Eclipse, you can use Codewind for Eclipse to develop and debug your containerized projects, using the workflow you already use today.
+You can use Codewind for Eclipse to develop and debug your containerized projects, using the workflow you already use today.
 
 ### Prerequisite
 
