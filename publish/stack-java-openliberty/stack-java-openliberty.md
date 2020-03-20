@@ -1,9 +1,9 @@
 ---
-permalink: /guides/collection-java-openliberty/
+permalink: /guides/stack-java-openliberty/
 layout: guide-markdown
 title: Developing cloud native microservice applications with the Open Liberty application stack
 duration: 40 minutes
-releasedate: 2020-01-27
+releasedate: 2020-03-20
 description: Explore how to use the Open Liberty application stack to create, run, update, deploy, and deliver cloud native microservices. 
 tags: ['Java', 'Open Liberty', 'Stack']
 guide-category: stacks
