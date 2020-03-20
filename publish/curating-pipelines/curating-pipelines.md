@@ -5,7 +5,7 @@ title: Creating and updating tasks and pipelines
 duration: 30 minutes
 releasedate: 2020-02-19
 description: Explore how to create and update tasks and pipelines
-tags: ['Pipelines, Tasks, Application stacks']
+tags: ['pipeline', 'stack']
 guide-category: pipelines
 ---
 
@@ -33,13 +33,13 @@ guide-category: pipelines
 -->
 
 <!-- # Creating and updating tasks and pipelines -->
-
+## Intro
 A default set of tasks and pipelines are provided that perform a variety of CI/CD functions.  These tasks and pipelines include validating the application stack is active on the cluster, building applications stacks using appsody, pushing the built image to an image repository, and deploying the application to the cluster. These tasks and pipelines operate with the default application stacks and operate as is for new application stacks you might create. Also, there are cases where you can update the tasks or pipelines or create new ones. This guide explains the steps you follow to make updates to tasks or pipelines and how you can update your Kabanero CR to use your new pipeline release.
 
 ## Setting up a pipelines repo
 {: #settingup}
 
-1. Clone the [pipelines repository ![External link icon](../../images/icons/launch-glyph.svg "External link icon")](https://github.com/kabanero-io/kabanero-pipelines).
+1. Clone the [pipelines repository](https://github.com/kabanero-io/kabanero-pipelines).
   
    ```shell
    git clone https://github.com/kabanero-io/kabanero-pipelines.git
@@ -51,7 +51,7 @@ A default set of tasks and pipelines are provided that perform a variety of CI/C
     cd pipelines/incubator
     ```
   
-1. Edit the existing tasks, pipelines, or trigger files as needed or add your new tasks and pipelines here. To learn more about pipelines and creating new tasks, see [the pipeline tutorial ![External link icon](../../images/icons/launch-glyph.svg "External link icon")](https://github.com/tektoncd/pipeline/blob/master/docs/tutorial.md).
+1. Edit the existing tasks, pipelines, or trigger files as needed or add your new tasks and pipelines here. To learn more about pipelines and creating new tasks, see [the pipeline tutorial](https://github.com/tektoncd/pipeline/blob/master/docs/tutorial.md).
 
 ## Creating a pipelines release from your pipelines repo
 {: #createrelease}
@@ -147,7 +147,7 @@ Use the following steps to trigger a pipeline build of your pipelines repository
       timeout: 60m
     ```
 
-1. [Create a secret ![External link icon](../../images/icons/launch-glyph.svg "External link icon")](https://github.com/tektoncd/pipeline/blob/master/docs/auth.md#basic-authentication-git) for your git account and associate it with the `pipelines-index` service account. For example:
+1. [Create a secret](https://github.com/tektoncd/pipeline/blob/master/docs/auth.md#basic-authentication-git) for your git account and associate it with the `pipelines-index` service account. For example:
     ```
     oc -n kabanero secrets link pipelines-index basic-user-pass
     ```
@@ -178,7 +178,7 @@ Use the following steps to trigger a pipeline build of your pipelines repository
 ### Updating the Kabanero CR to use the new release
 {: #update}
 
-Follow the [configuring a Kabanero CR instance](../../docs/ref/general/configuration/kabanero-cr-config.html) documentation to configure or deploy a product instance with the pipeline archive URL obtained in the previous step. Then, generate the digest of the pipelines archive contained at this URL and specify it in the Kabanero CR. You can use  a command like `sha256sum` to obtain the digest.
+Follow the [configuring a Kabanero CR instance](/docs/ref/general/configuration/kabanero-cr-config.html) documentation to configure or deploy a product instance with the pipeline archive URL obtained in the previous step. Then, generate the digest of the pipelines archive contained at this URL and specify it in the Kabanero CR. You can use  a command like `sha256sum` to obtain the digest.
 
 See the following example where the pipelines that are published in the `https://github.com/kabanero-io/kabanero-pipelines/releases/download/0.6.0/default-kabanero-pipelines.tar.gz` archive are associated with each of the stacks that exist in the stack repository.
 
