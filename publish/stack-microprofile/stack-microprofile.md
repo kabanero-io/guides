@@ -4,7 +4,7 @@ layout: guide-markdown
 title: Developing cloud native microservice applications with the Eclipse MicroProfile application stack
 duration: 40 minutes
 releasedate: 2020-01-27
-description: Explore how to use the Eclipse MicroProfile application stack to create, run, update, deploy, and deliver cloud native microservices. 
+description: Explore how to use the Eclipse MicroProfile application stack to create, run, update, deploy, and deliver cloud native microservices.
 tags: ['Java', 'MicroProfile', 'Stack']
 guide-category: stacks
 ---
@@ -201,7 +201,7 @@ Your project is now initialized.
 
 <!--
 // =================================================================================================
-// Understanding the project layout 
+// Understanding the project layout
 // =================================================================================================
 -->
 
@@ -250,7 +250,7 @@ This message indicates that the server is started and you are ready to begin dev
 
 <!--
 // Now you can create your business logic. The first thing to do is to add a REST endpoint. Navigate to the JAX-RS application endpoint to confirm that there are no JAX-RS resources //available. Go to the http://localhost:9080/starter URL. You see the following `HTTP 500` error that states that there are no provider or resource classes that are associated with the application:
-// 
+//
 // ```shell
 // Error 500: javax.servlet.ServletException: At least one provider or resource class should be specified for application class "dev.appsody.starter.StarterApplication
 // ```
@@ -293,7 +293,7 @@ Use `Ctrl+C` to stop the development environment, or run the command `appsody st
 
 <!--
 // =================================================================================================
-// Testing the application 
+// Testing the application
 // =================================================================================================
 -->
 

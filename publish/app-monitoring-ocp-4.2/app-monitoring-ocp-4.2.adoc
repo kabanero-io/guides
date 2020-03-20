@@ -157,11 +157,11 @@ Use Grafana dashboards to visualize the metrics. Perform the following steps to 
 oc project prometheus-operator
 ----
 +
-. Go to OpenShift Container Platform web console and Click on Operators > OperatorHub. Search for Grafana Operator and install it. Choose prometheus-operator under __A specific namespace on the cluster__ and subscribe.
+. Go to OpenShift Container Platform web console and click Operators > OperatorHub. Search for Grafana Operator and install it. For __A specific namespace on the cluster__, choose prometheus-operator, and subscribe.
 
-. Click on Overview and create a Grafana Data Source instance.
+. Click Overview and create a Grafana Data Source instance.
 
-. Inside the Grafana Data Source YAML file, make sure *metadata.namespace* is prometheus-operator. Set *spec.datasources.url* to the url of the target datasource. For example, inside [hotspot file=0]`grafana_datasource.yaml` file, the Prometheus service is *prometheus-operated* on port *9090*, so the url is set to __'http://prometheus-operated:9090'__.
+. In the Grafana Data Source YAML file, make sure *metadata.namespace* is prometheus-operator. Set *spec.datasources.url* to the URL of the target datasource. For example, inside [hotspot file=0]`grafana_datasource.yaml` file, the Prometheus service is *prometheus-operated* on port *9090*, so the URL is set to __'http://prometheus-operated:9090'__.
 +
 [role="code_command hotspot file=0", subs="quotes"]
 ----
@@ -169,9 +169,9 @@ Refer to the `grafana_datasource.yaml` file
 ----
 +
 
-. Click on Overview and create a Grafana instance.
+. Click Overview and create a Grafana instance.
 
-. Inside the Grafana YAML file, make sure *metadata.namespace* is prometheus-operator. You can define the match expression to select which Dashboards you are interested in under *spec.dashboardLabelSelector.matchExpressions*. For example, inside [hotspot file=1]`grafana.yaml` file, the Grafana will discover dashboards with app labels having a value of *grafana*.
+. In the Grafana YAML file, make sure *metadata.namespace* is prometheus-operator. You can define the match expression to select which Dashboards you are interested in under *spec.dashboardLabelSelector.matchExpressions*. For example, inside [hotspot file=1]`grafana.yaml` file, the Grafana will discover dashboards with app labels having a value of *grafana*.
 +
 [role="code_command hotspot file=1", subs="quotes"]
 ----
@@ -179,7 +179,7 @@ Refer to the `grafana.yaml` file
 ----
 +
 
-. Click on Overview and create a Grafana Dashboard instance.
+. Click Overview and create a Grafana Dashboard instance.
 
 . Copy [hotspot file=2]`grafana_dashboard.yaml` to Grafana Dashboard YAML file to check the Data Source is connected and Prometheus endpoints are discoverable.
 

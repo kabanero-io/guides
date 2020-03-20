@@ -190,7 +190,7 @@ Your new project is created, built, and started inside a container.
 
 <!--
 // =================================================================================================
-// Understanding the project layout 
+// Understanding the project layout
 // =================================================================================================
 -->
 
@@ -275,7 +275,7 @@ The development environment watches for file changes and automatically updates y
 
 <!--
 // =================================================================================================
-// Testing the application 
+// Testing the application
 // =================================================================================================
 -->
 

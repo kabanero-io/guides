@@ -32,20 +32,20 @@ guide-category: pipelines
 //
 -->
 
-Kabanero uses [pipelines](https://github.com/tektoncd/pipeline/tree/master/docs#usage) to illustrate a continuous input and continuous delivery (CI/CD) workflow. Kabanero provides a set of default tasks and pipelines that can be associated with application stacks.  These pipelines validate the application stack is active, build the application stack, publish the image to a container registry, scan the published image, and then deploy the application to the Kubernetes cluster. You can also create your own tasks and pipelines and customize the pre-built pipelines and tasks. All tasks and pipelines are activated by  [Kabanero's standard Kubernetes operator](https://github.com/kabanero-io/kabanero-operator).
+[Pipelines](https://github.com/tektoncd/pipeline/tree/master/docs#usage) enable a continuous input and continuous delivery (CI/CD) workflow. A set of default tasks and pipelines are provided that can be associated with application stacks.  These pipelines validate the application stack is active, build the application stack, publish the image to a container registry, scan the published image, and then deploy the application to the Kubernetes cluster. You can also create your own tasks and pipelines and customize the pre-built pipelines and tasks. All tasks and pipelines are activated by the product operator.
 
 To learn more about pipelines and creating new tasks, see [the pipeline tutorial](https://github.com/tektoncd/pipeline/blob/master/docs/tutorial.md).
 
 ## Default tasks and pipelines
 
-The default Kabanero tasks and pipelines are provided in the [Kabanero pipelines repository](https://github.com/kabanero-io/kabanero-pipelines/tree/master/pipelines/incubator).  Details of some of the primary pipelines and tasks are described below.
+The default tasks and pipelines are provided in the [pipelines repository](https://github.com/kabanero-io/kabanero-pipelines/tree/master/pipelines/incubator).  Details of some of the primary pipelines and tasks are described in the following information.
 
 
 ### The build, push and deploy pipeline
 
 - [build-deploy-pl.yaml](https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/incubator/build-deploy-pl.yaml)
 
-  This file is the primary pipeline that showcases all the tasks supplied in the Kabanero repo. It validates that the application stack is active, builds the application stack, publishes the application image to the container registry, does a security scan of the image, and conditionally deploys the application. When running the pipeline via a webhook, the pipeline leverages the triggers functionality to conditionally deploy the application only when a pull request is merged in the git repo.  Other actions that trigger the pipeline run, will validate, build, push, and scan the image.
+  This file is the primary pipeline that showcases all the tasks supplied. It validates that the application stack is active, builds the application stack, publishes the application image to the container registry, does a security scan of the image, and conditionally deploys the application. When running the pipeline via a webhook, the pipeline leverages the triggers functionality to conditionally deploy the application only when a pull request is merged in the git repo.  Other actions that trigger the pipeline run, will validate, build, push, and scan the image.
 
 ### Tasks
 
@@ -65,24 +65,25 @@ This task validates the stack is allowed to build and deploy on the cluster.  It
 
   The `image-scan-task` task will initiate a container scan of the image published by the `build-push-task` using OpenSCAP.  The results of the scan are published in the logs of the task.
   
-For more tasks and pipelines, see [the kabanero-pipelines repo](https://github.com/kabanero-io/kabanero-pipelines).
+For more tasks and pipelines, see [the pipelines repo](https://github.com/kabanero-io/kabanero-pipelines).
 
 ### Associating pipelines with applications stacks in Kabanero CRD
 
 The pipelines can be associated with an application stack in the Kabanero custom resource definition (CRD). This is an example CRD:
 
 ```yaml
-apiVersion: kabanero.io/v1alpha1
+apiVersion: kabanero.io/v1alpha2
 kind: Kabanero
 metadata:
   name: kabanero
+  namespace: kabanero
 spec:
   version: "0.6.0"
   stacks:
     repositories:
     - name: central
       https:
-        url: https://github.com/kabanero-io/collections/releases/download/0.5.0/kabanero-index.yaml
+        url: https://github.com/kabanero-io/stacks/releases/download/0.5.0/kabanero-index.yaml
     pipelines:
     - id: default
       sha256: 14d59b7ebae113c18fb815c2ccfd8a846c5fbf91d926ae92e0017ca5caf67c95
@@ -90,11 +91,11 @@ spec:
         url: https://github.com/kabanero-io/kabanero-pipelines/releases/download/0.6.0/default-kabanero-pipelines.tar.gz
 ```
 
-When the Kabanero operator activates the CRD, it associates the pipelines in the pipelines archive with each of the stacks in the stack hub.  The default pipelines are intended to work with all the stacks in the stack hub in the previous example. All of the pipeline-related resources (such as the tasks, trigger bindings, and pipelines) prefix the name of the resource with the keyword `StackId`.  When the operator activates these resources, it replaces the keyword with the name of the stack it is activating.
+When the product operator activates the CRD, it associates the pipelines in the pipelines archive with each of the stacks in the stack hub.  The default pipelines are intended to work with all the stacks in the stack hub in the previous example. All of the pipeline-related resources (such as the tasks, trigger bindings, and pipelines) prefix the name of the resource with the keyword `StackId`.  When the operator activates these resources, it replaces the keyword with the name of the stack it is activating.
 
 ### Creating and updating tasks and pipelines
 
-The default tasks and pipelines can be updated by forking the Kabanero Pipelines repo and editing the files under `pipelines/incubator`.  The easiest way to generate the archive for use by the Kabanero CRD is to run the [package.sh](https://github.com/kabanero-io/kabanero-pipelines/blob/master/ci/package.sh) script. The script generates the archive file with the necessary pipeline artifacts and a `manifest.yaml` file that describes the contents of the archive.  Copy the `package.sh` file to the root directory of your pipelines project and run it.  It generates the pipelines archive file under `ci/assests`.
+The default tasks and pipelines can be updated by forking the pipelines repo and editing the files under `pipelines/incubator`.  The easiest way to generate the archive for use by the Kabanero CRD is to run the [package.sh](https://github.com/kabanero-io/kabanero-pipelines/blob/master/ci/package.sh) script. The script generates the archive file with the necessary pipeline artifacts and a `manifest.yaml` file that describes the contents of the archive.  Copy the `package.sh` file to the root directory of your pipelines project and run it.  It generates the pipelines archive file under `ci/assests`.
 
 Alternatively, you can run the Travis build against a release of your pipelines repo, which also generates the archive file with a `manifest.yaml` file and attaches it to your release.
 
@@ -162,7 +163,7 @@ Explore how to use pipelines to build and manage application stacks.
 
 1. [Kabanero foundation](https://github.com/kabanero-io/kabanero-foundation) must be installed on a supported Kubernetes deployment.
 
-1. [A pipelines dashboard](https://github.com/tektoncd/dashboard) is installed by default with Kabanero's Kubernetes operator. To find the pipelines dashboard URL, login to your cluster and run the `oc get routes` command or in the Kabanero landing page.
+1. [A pipelines dashboard](https://github.com/tektoncd/dashboard) is installed by default with the product operator. To find the pipelines dashboard URL, login to your cluster and run the `oc get routes` command or in the product landing page.
 
 1. A persistent volume must be configured. See the following section for details.
 
@@ -192,7 +193,7 @@ Follow these steps:
 
 ### Running pipelines by using the pipelines dashboard webhook extension
 
-You can use the [pipelines dashboard webhook extension](https://github.com/tektoncd/experimental/blob/master/webhooks-extension/docs/GettingStarted.md) to drive pipelines that automatically build and deploy an application whenever you update the code in your Git repo. Events such as commits or pull requests can be set up to automatically trigger pipeline runs.
+You can use the [pipelines dashboard webhook extension](https://github.com/tektoncd/experimental/blob/master/webhooks-extension/docs/GettingStarted.md) to drive pipelines that automatically build and deploy an application whenever you update the code in your GitHub repo. Events such as commits or pull requests can be set up to automatically trigger pipeline runs.
 
 ### Running pipelines by using a script
 

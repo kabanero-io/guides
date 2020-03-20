@@ -74,7 +74,7 @@ kibana   kibana-openshift-logging.apps.host.kabanero.com                kibana  
 
 <!--
 // =================================================================================================
-// Configure Fluentd to merge JSON log message body 
+// Configure Fluentd to merge JSON log message body
 // =================================================================================================
 -->
 
@@ -120,9 +120,9 @@ See the Kibana dashboard page by using the routes URL <https://kibana-openshift-
 
 The **project.\*** index contains only a set of default fields at the start, which does not include all of the fields from the deployed application's JSON log object. Therefore, the index needs to be refreshed to have all the fields from the application's log object available to Kibana.
 
-To refresh the index, click on the **Management** option on the left pane.
+To refresh the index, click the **Management** option from the Kibana menu.
 
-Click **Index Pattern**, and find the **project.pass:[*]**  index in Index Pattern. Then, click the refresh fields button, which is on the right. After Kibana is updated with all the available fields in the **project.pass:[*]** index, import any preconfigured dashboards to view the application's logs.
+Click **Index Pattern**, and find the **project.pass:[*]**  index in Index Pattern. Then, click the refresh fields button. After Kibana is updated with all the available fields in the **project.pass:[*]** index, import any preconfigured dashboards to view the application's logs.
 
 ![Index refresh button on Kibana](/img/guide/app-logging-ocp-refresh-index.png)
 
