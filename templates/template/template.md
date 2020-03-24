@@ -38,7 +38,7 @@ guide-category: stacks
 ```
 
 * **permalink**
-   * The naming convention for `permalink` is `/guides/` followed by the same name of the directory you created (your guides name)
+   * The naming convention for `permalink` is `/guides/` followed by the same name of the directory you created (your guides name). The trailing slash `/` is needed, double check it's added.
       * For example, the appropriate `permalink` for a guide in the directory `draft/appsody-get-started` would be `/guides/appsody-get-started/`
 * **page-layout / layout**
    * The layout for the content of the guide. `guide` is the normal layout.
