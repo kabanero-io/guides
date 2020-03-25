@@ -8,11 +8,11 @@ permalink: /guides/app-monitoring-ocp4.2/
 :page-guide-category: basic
 :page-description: Learn how to monitor applications on RHOCP 4.2 with Prometheus and Grafana.
 :page-tags: ['monitoring', 'prometheus', 'grafana']
-= Application Monitoring on Red Hat OpenShift Container Platform (RHOCP) 4.2 with Prometheus and Grafana
+= Application Monitoring on Red Hat OpenShift Container Platform (RHOCP) 4.3 with Prometheus and Grafana
 
 == Introduction
 
-__The following guide has been tested with RHOCP 4.2/Kabanero 0.3.0.__
+__The following guide has been tested with RHOCP 4.2/Kabanero 0.3.0 and RHOCP 4.3/Kabanero 0.6.0.__
 
 
 For application monitoring on RHOCP, you need to set up your own Prometheus and Grafana deployments. Both Prometheus and Grafana can be set up via Operator Lifecycle Manager (OLM). 
@@ -198,3 +198,123 @@ image::/img/guide/template_grafana_dashboard.png[link="/img/guide/template_grafa
 
 . When importing your own Grafana dashboard, your dashboard should be configured under *spec.json* in Grafana Dashboard YAML file. Make sure under *"__inputs"*, the name matches with your Grafana Data Source's *spec.datasources*. For example, inside [hotspot file=2]`grafana_dashboard.yaml` file, *name* is set to "Prometheus".
 
+
+== Configure Prometheus Operator to Detect Service Monitors in Other Namespaces
+
+By default, the Prometheus Operator only watches the namespace it currently resides in, so in order to get the Prometheus Operator to detect Service Monitors created in other namespaces, you must apply the following configuration changes.
+
+Depending on whether you have installed the Prometheus Operator from OLM or if you are using the Prometheus Operator deployment from Common Services, see the following sections to configure the Prometheus Operator to detect Service Monitors outside of the monitoring namespace.
+
+=== Using the Prometheus Operator Installed from OLM
+
+. In your monitoring namespace - in this case, the monitoring namespace is `prometheus-operator` - edit the OperatorGroup to add your application's namespace `myapp` to the list of targeted namesaces to be watched. This will change the *olm.targetNamespaces* variable that the Prometheus Operator uses for detecting namespaces to include your `myapp` namespace.
++
+[role="command"]
+----
+oc edit operatorgroup
+----
++
+
++
+[source,role="no_copy"]
+----
+spec:
+  targetNamespaces:
+  - prometheus-operator
+  - myapp
+----
++
+
+. Since we have changed the `prometheus-operator` namespace's OperatorGroup to monitor more than one namespace, the operators in this namespace must have the *MultiNamespace* installMode set to *true*. Prometheus Operator installed via OLM has the *MultiNamespace* installMode set to *false* by default, disabling monitoring more than one namespace, so this must be changed to *true*.
++
+[role="command"]
+----
+oc edit csv prometheusoperator.0.32.0
+----
++
+
++
+[source,role="no_copy"]
+----
+spec:
+  installModes:
+  - supported: true
+    type: OwnNamespace
+  - supported: true
+    type: SingleNamespace
+  - supported: true
+    type: MultiNamespace
+  - supported: false
+    type: AllNamespaces
+----
++
+
+. The same goes for the Grafana Operator, the *MultiNamespace* installMode set to *true*; edit the operator using:
++
+[role="command"]
+----
+oc edit csv grafana-operator.v2.0.0 
+----
++
+
+. Edit the Prometheus instance to add the *serviceMonitorNamespaceSelector* definition. The empty brackets *{}* allow Prometheus to scrape from *all* namespaces:
++
+[role="command"]
+----
+oc edit prometheus
+----
++
+
++
+[source,role="no_copy"]
+----
+spec:
+  serviceMonitorNamespaceSelector: {}
+----
++
+
+Restart the Prometheus Operator and Grafana Operator pods to see the changes.
+
+=== Using the Prometheus Operator Deployment from Common Services
+
+. In the `kube-system` namespace, edit the existing `monitoring-prometheus-operator` deployment to add your application's namespace `myapp` to the list of namespaces to be watched:
+
++
+[role="command"]
+----
+oc edit deployment monitoring-prometheus-operator
+----
++
+
++
+[source,role="no_copy"]
+----
+spec:
+  ...
+  template:
+    ...
+    spec:
+      ...
+      containers:
+        ...
+        args: 
+        - '--namespaces=kube-system, myapp'
+----
++
+
+. Edit the Prometheus instance to add the *serviceMonitorNamespaceSelector* definition. The empty brackets *{}* allow Prometheus to scrape from *all* namespaces:
+
++
+[role="command"]
+----
+oc edit prometheus
+----
++
+
++
+[source,role="no_copy"]
+----
+spec:
+  serviceMonitorNamespaceSelector: {}
+----
++

@@ -1,7 +1,7 @@
 ---
 permalink: /guides/app-logging-ocp-4-2/
 layout: guide-markdown
-title: Application Logging with Elasticsearch, Fluentd, and Kibana
+title: Application Logging on Red Hat OpenShift Container Platform (RHOCP) 4.3 with Elasticsearch, Fluentd, and Kibana
 duration: 30 minutes
 releasedate: 2020-02-19
 description: Learn how to do application logging with Elasticsearch, Fluentd, and Kibana.
@@ -32,7 +32,7 @@ guide-category: basic
 //
 -->
 
-**The following guide has been tested with Red Hat OpenShift Container Platform (RHOCP) 4.2/Kabanero 0.3.0.**
+**The following guide has been tested with Red Hat OpenShift Container Platform (RHOCP) 4.2/Kabanero 0.3.0 and RHOCP 4.3/Kabanero 0.6.0.**
 
 Pod processes running in Kubernetes frequently produce logs. To effectively manage this log data and ensure no loss of log data occurs when a pod terminates, a log aggregation tool should be deployed on the Kubernetes cluster. Log aggregation tools help users persist, search, and visualize the log data that is gathered from the pods across the cluster. Log aggregation tools in the market today include:  EFK, LogDNA, Splunk, Datadog, IBM Operations Analytics, etc.  When considering log aggregation tools, enterprises will make choices that are inclusive of their journey to cloud, both new cloud native applications running in Kubernetes and their existing traditional IT choices.
 
@@ -46,7 +46,7 @@ One choice for application logging with log aggregation, based on open source, i
 
 ## Install cluster logging
 
-To install the cluster logging component, follow the OpenShift guide [Deploying cluster logging](https://docs.openshift.com/container-platform/4.2/logging/cluster-logging-deploying.html)
+To install the cluster logging component, follow the OpenShift guide [Deploying cluster logging](https://docs.openshift.com/container-platform/4.3/logging/cluster-logging-deploying.html)
 
 After the installation completes without any error, you can see the following pods that are running in the *openshift-logging* namespace. The exact number of pods running for each of the EFK components can vary depending on the configuration specified in the ClusterLogging Custom Resource (CR).
 
