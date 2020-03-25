@@ -225,7 +225,7 @@ spec:
 ----
 +
 
-. Since we have changed the `prometheus-operator` namespace's OperatorGroup to monitor more than one namespace, the operators in this namespace must have the *MultiNamespace* installMode set to *true*. Prometheus Operator installed via OLM has the *MultiNamespace* installMode set to *false* by default, disabling monitoring more than one namespace, so this must be changed to *true*.
+. Since we have changed the `prometheus-operator` namespace's OperatorGroup to monitor more than one namespace, the operators in this namespace must have the *MultiNamespace* installMode set to *true*. Prometheus Operator installed via OLM has the *MultiNamespace* installMode set to *false* by default, disabling monitoring for more than one namespace, so this must be changed to *true*.
 +
 [role="command"]
 ----
@@ -249,7 +249,7 @@ spec:
 ----
 +
 
-. The same goes for the Grafana Operator, the *MultiNamespace* installMode set to *true*; edit the operator using:
+. The same goes for the Grafana Operator, the *MultiNamespace* installMode should be set to *true*; edit the operator using:
 +
 [role="command"]
 ----
@@ -273,7 +273,7 @@ spec:
 ----
 +
 
-Restart the Prometheus Operator and Grafana Operator pods to see the changes.
+. Restart the Prometheus Operator and Grafana Operator pods to see the changes.
 
 === Using the Prometheus Operator Deployment from Common Services
 
