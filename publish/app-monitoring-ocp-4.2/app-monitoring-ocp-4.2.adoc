@@ -4,7 +4,7 @@ permalink: /guides/app-monitoring-ocp4.2/
 :projectid: ocp-app-monitoring
 :page-layout: guide-multipane
 :page-duration: 60 minutes
-:page-releasedate: 2020-02-02
+:page-releasedate: 2020-03-26
 :page-guide-category: basic
 :page-description: Learn how to monitor applications on RHOCP 4.2 with Prometheus and Grafana.
 :page-tags: ['monitoring', 'prometheus', 'grafana']
@@ -15,7 +15,7 @@ permalink: /guides/app-monitoring-ocp4.2/
 __The following guide has been tested with RHOCP 4.2/Kabanero 0.3.0 and RHOCP 4.3/Kabanero 0.6.0.__
 
 
-For application monitoring on RHOCP, you need to set up your own Prometheus and Grafana deployments. Both Prometheus and Grafana can be set up via Operator Lifecycle Manager (OLM). 
+For application monitoring on RHOCP, you need to set up your own Prometheus and Grafana deployments. Prometheus and Grafana can be set up via *Operator Lifecycle Manager (OLM)* or through the *Common Services* installation. If you are using the Common Services Prometheus and Grafana monitoring stack, skip to https://kabanero.io/guides/app-monitoring-ocp4.2/#configure-prometheus-operator-to-detect-service-monitors-in-other-namespaces[Configure Prometheus Operator to Detect Service Monitors in Other Namespaces].
 
 === Deploy an Application with MP Metrics Endpoint
 Prior to deploying Prometheus, ensure that there is a running application that has a service endpoint for outputting metrics in Prometheus format. 
@@ -43,11 +43,11 @@ include::code/prometheus.yaml[]
 ----
 
 
-The Prometheus Operator is an open-source project originating from CoreOS and exists as a part of their Kubernetes Operator framework. The Kubernetes Operator framework is the preferred way to deploy Prometheus on a Kubernetes system. When the Prometheus Operator is installed on the Kubernetes system, you no longer need to hand-configure the Prometheus configuration. Instead, you create CoreOS ServiceMonitor resources for each of the service endpoints that needs to be monitored: this makes daily maintenance of the Prometheus server a lot easier. An architecture overview of the Prometheus Operator is shown below:
+The Prometheus Operator is an open-source project originating from CoreOS and exists as a part of their Kubernetes Operator framework. When the Prometheus Operator is installed on the Kubernetes system, you no longer need to hand-configure the Prometheus configuration. Instead, you create CoreOS ServiceMonitor resources for each of the service endpoints that needs to be monitored: this makes daily maintenance of the Prometheus server a lot easier. An architecture overview of the Prometheus Operator is shown below:
 
 image::/img/guide/prometheusOperator.png[link="/img/guide/prometheusOperator.png" alt="Prometheus Operator"]
 
-Using Operator Lifecycle Manager (OLM), Prometheus operator can be easily installed and configured in RHOCP Web Console.
+Using Operator Lifecycle Manager (OLM), Prometheus operator can be easily installed and configured in RHOCP Web Console. 
 
 === Install Prometheus Operator Using Operator Lifecycle Manager (OLM)
 
@@ -72,7 +72,7 @@ Refer to the `service_monitor.yaml` file
 ----
 +
 
-. Create a Service Account with Cluster role and Cluster role binding to ensure you have the permission to get nodes and pods in other namespaces at the cluster scope. Refer to [hotspot file=1]`service_account.yaml`. Create the YAML file and apply it.
+. Create a Prometheus Service Account and Cluster Role, and define a Cluster Role Binding to bind the two together. This is to ensure Prometheus has cluster-wide access to the metrics endpoint on pods in other namespaces. Refer to [hotspot file=1]`service_account.yaml`. Create the YAML file and apply it.
 +
 [role=command]
 ----
@@ -190,7 +190,7 @@ Apply `grafana_dashboard.yaml` file to check
 ----
 +
 
-. Click on Networking > Routes and go to Grafana's location to see the template dashboard. You can now consume all the application metrics gathered by Prometheus on the Grafana dashboard.
+. Click on Networking > Routes and go to Grafana's location to see the sample dashboard. You can now consume all the application metrics gathered by Prometheus on the Grafana dashboard.
 
 image::/img/guide/template_grafana_dashboard.png[link="/img/guide/template_grafana_dashboard.png" alt="Template Dashboard"]
 
@@ -207,7 +207,7 @@ Depending on whether you have installed the Prometheus Operator from OLM or if y
 
 === Using the Prometheus Operator Installed from OLM
 
-. In your monitoring namespace - in this case, the monitoring namespace is `prometheus-operator` - edit the OperatorGroup to add your application's namespace `myapp` to the list of targeted namesaces to be watched. This will change the *olm.targetNamespaces* variable that the Prometheus Operator uses for detecting namespaces to include your `myapp` namespace.
+. In your monitoring namespace - in this case, the monitoring namespace is `prometheus-operator` - edit the OperatorGroup to add your application's namespace, for example, `myapp`, to the list of targeted namesaces to be watched. This will change the *olm.targetNamespaces* variable that the Prometheus Operator uses for detecting namespaces to include your `myapp` namespace.
 +
 [role="command"]
 ----
@@ -242,7 +242,7 @@ spec:
     type: OwnNamespace
   - supported: true
     type: SingleNamespace
-  - supported: true
+  - supported: true       # this line should be true
     type: MultiNamespace
   - supported: false
     type: AllNamespaces
@@ -261,7 +261,7 @@ oc edit csv grafana-operator.v2.0.0 
 +
 [role="command"]
 ----
-oc edit prometheus
+oc edit prometheuses.monitoring.coreos.com prometheus
 ----
 +
 
@@ -277,7 +277,7 @@ spec:
 
 === Using the Prometheus Operator Deployment from Common Services
 
-. In the `kube-system` namespace, edit the existing `monitoring-prometheus-operator` deployment to add your application's namespace `myapp` to the list of namespaces to be watched:
+. In the `kube-system` namespace, edit the existing `monitoring-prometheus-operator` deployment to add your application's namespace, for example `myapp`, to the list of namespaces to be watched:
 
 +
 [role="command"]
@@ -307,7 +307,7 @@ spec:
 +
 [role="command"]
 ----
-oc edit prometheus
+oc edit prometheuses.monitoring.coreos.com prometheus
 ----
 +
 
@@ -318,3 +318,8 @@ spec:
   serviceMonitorNamespaceSelector: {}
 ----
 +
+
+
+== Installation Complete
+
+You now have the Prometheus and Grafana stack installed and configured to monitor your applications. Import custom dashboards and visit the Grafana route to see your metrics visualized.
