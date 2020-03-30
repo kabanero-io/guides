@@ -15,12 +15,14 @@ permalink: /guides/app-monitoring-ocp4.2/
 __The following guide has been tested with RHOCP 4.2/Kabanero 0.3.0 and RHOCP 4.3/Kabanero 0.6.0.__
 
 
-For application monitoring on RHOCP, you need to set up your own Prometheus and Grafana deployments. Prometheus and Grafana can be set up via *Operator Lifecycle Manager (OLM)* or through the *Common Services* installation. If you are using the Common Services Prometheus and Grafana monitoring stack, skip to https://kabanero.io/guides/app-monitoring-ocp4.2/#configure-prometheus-operator-to-detect-service-monitors-in-other-namespaces[Configure Prometheus Operator to Detect Service Monitors in Other Namespaces].
+For application monitoring on RHOCP, you need to set up your own Prometheus and Grafana deployments. Prometheus and Grafana can be set up via *Operator Lifecycle Manager (OLM)* or through the *Common Services* installation.
 
 === Deploy an Application with MP Metrics Endpoint
 Prior to deploying Prometheus, ensure that there is a running application that has a service endpoint for outputting metrics in Prometheus format. 
 
 It is assumed such a running application has been deployed to the RHOCP cluster inside a project/namespace called `myapp`, and that the Prometheus metrics endpoint is exposed on path `/metrics`.
+
+If you are using the Common Services Prometheus and Grafana monitoring stack, skip to https://kabanero.io/guides/app-monitoring-ocp4.2/#configure-prometheus-operator-to-detect-service-monitors-in-other-namespaces[Configure Prometheus Operator to Detect Service Monitors in Other Namespaces].
 
 == Deploy Prometheus - Prometheus Operator
 
