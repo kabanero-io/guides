@@ -99,7 +99,7 @@ To illustrate that point, you can register the Kabanero stack hub entering the f
 
 [source, role='command']
 ```
-appsody repo add kabanero https://github.com/kabanero-io/kabanero-stack-hub/https://github.com/kabanero-io/kabanero-stack-hub/releases/latest/download/kabanero-stack-hub-index.yaml
+appsody repo add kabanero https://github.com/kabanero-io/kabanero-stack-hub/releases/latest/download/kabanero-stack-hub-index.yaml
 
 appsody repo list
 ```
