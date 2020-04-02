@@ -40,9 +40,9 @@ guide-category: stacks
 
 ## What you'll learn
 
-You'll learn how to create and run a simple cloud native microservice based on the Eclipse MicroProfile application stack. You’ll learn how to configure your development environment, update the microservice that you created and deploy it to Kubernetes or serverless. Deployment to serverless is optional depending on whether you want to Scale to Zero.
+Application stacks enable the development and optimization of microservice applications. With application stacks, developers don’t need to manage the full software development stack or be experts on underlying container technologies or Kubernetes. Application stacks are customized for specific enterprises to incorporate their company standards and technology choices. Developers access these stacks by configuring their development environment to point to a stack configuration.
 
-The Eclipse MicroProfile application stack enables the development and optimization of microservices. With application stacks, developers don't need to manage full software development stacks or be experts on underlying container technologies or Kubernetes. Application stacks are customized for specific enterprises to incorporate their company standards and technology choices.
+In this guide, you’ll learn how to configure your development environment, then create and run a simple cloud native microservice based on the Eclipse MicroProfile application stack. Finally, you’ll update the microservice that you created and deploy it to Kubernetes or serverless. Deployment to serverless is optional depending on whether you want to Scale to Zero.
 
 Applications in this guide are written based on the Eclipse MicroProfile API specifications, built and run with the [Open Liberty](https://openliberty.io/) runtime, and deployed to Kubernetes through a modern DevOps toolchain that is triggered in Git.
 
@@ -54,12 +54,9 @@ Applications in this guide are written based on the Eclipse MicroProfile API spe
 
 ## Prerequisites
 
-- [Docker](https://docs.docker.com/get-started/) must be installed.
+- [Docker](https://docs.docker.com/get-started/) must be installed. If you are using Docker Desktop, you can enable Kubernetes from the menu by selecting *Preferences* -> *Kubernetes* -> *Enable Kubernetes*.
+Other options include [Minishift](https://www.okd.io/minishift/) or [Minikube](https://kubernetes.io/docs/setup/learning-environment/minikube/).
 - [Appsody](https://appsody.dev/docs/getting-started/installation) must be installed.
-- *Optional:* If your organisation has customized application stacks, you need the URL that points to the `index.yaml` file for the stack hub.
-- *Optional*: If you are testing multiple microservices together, you must have access to a local Kubernetes cluster for local development.
-If you are using Docker Desktop, you can enable Kubernetes from the menu by selecting *Preferences* -> *Kubernetes* -> *Enable Kubernetes*.
-Other options include [Minishift](https://www.okd.io/minishift/) or [Minikube](https://kubernetes.io/docs/setup/learning-environment/minikube/). If you want to use remote cluster development, use Codewind.
 
 <!--
 // =================================================================================================
@@ -68,6 +65,8 @@ Other options include [Minishift](https://www.okd.io/minishift/) or [Minikube](h
 -->
 
 ## Getting started
+
+You are going to create an application that is based on a public stack from the Kabanero project. After configuring your local development environment, you are going to initialize a new project that is based on the Eclipse Microprofile stack.
 
 <!--
 // =================================================================================================
@@ -90,33 +89,24 @@ NAME        URL
 *incubator https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
 ```
 
-Next, run the following command to add the URL for your stack hub index file:
+Next, run the following command to add the URL for the public Kabanero stack hub:
 
 ```shell
-appsody repo add <my-org-stack> <URL>
+appsody repo add kabanero https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.7.0/kabanero-stack-hub-index.yaml
 ```
 
-where `<my-org-stack>` is the repository name for your stack hub and `<URL>` is the URL for
-your stack hub index file.
-
-**Note:** If you do not have a stack hub that contains customized, pre-configured application stacks, you can skip to
-[Initializing your project](#initializing-your-project) and develop your app based on the public application stack
-for Eclipse MicroProfile.
-
-Check the repositories again by running `appsody repo list` to see that your stack hub was added. In the
-following examples, the stack hub is called `acme-stacks` and the URL is `https://github.com/acme.inc/stacks/index.yaml`:
+Check the repositories again by running `appsody repo list` to see that your repository was added. The output is similar to the following example:
 
 ```shell
 NAME        URL
 *incubator https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
-acme-stacks https://github.com/acme.inc/stacks/index.yaml
+kabanero   https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.7.0/kabanero-stack-hub-index.yaml
 ```
 
-In this example, the asterisk (\*) shows that `incubator` is the default repository. Run the following command to set `acme-stacks`
-as the default repository:
+In this example, the asterisk (\*) shows that `incubator` is the default repository. Run the following command to set `kabanero` as the default repository:
 
 ```shell
-appsody repo set-default acme-stacks
+appsody repo set-default kabanero
 ```
 
 Check the available repositories again by running `appsody repo list` to see that the default is updated:
@@ -124,7 +114,7 @@ Check the available repositories again by running `appsody repo list` to see tha
 ```shell
 NAME        URL
 incubator https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
-*acme-stacks https://github.com/acme.inc/stacks/index.yaml
+*kabanero   https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.7.0/kabanero-stack-hub-index.yaml
 ```
 
 **Recommendation**: To avoid initializing projects that are based on the public application stacks, it's best
@@ -137,11 +127,14 @@ appsody repo remove incubator
 Check the available repositories again by running `appsody repo list` to see that `incubator` is removed:
 
 ```shell
-NAME     	URL
-*acme-stacks https://github.com/acme.inc/stacks/index.yaml
+NAME        URL
+*kabanero   https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.7.0/kabanero-stack-hub-index.yaml
 ```
 
-Your development environment is now configured to use your customized application stacks. Next, you need to initialize your project.
+Your development environment is now configured to use the Kabanero application stacks. Next, you need to initialize your project.
+
+**Note:** If your organization has created a stack hub that contains customized application stacks, you must configure your development environment to access them. After you have completed this guide, you can step through this section again to update your configuration to point to the URL for your organization's stack hub. This configuration process is also described in [Developing microservice applications with the CLI](../use-appsody-cli).
+
 
 <!--
 // =================================================================================================
@@ -167,22 +160,50 @@ appsody init java-microprofile
 The output from the command varies depending on whether you have an installation of Java and Maven on your system. If Java and Maven are installed on your system, you see an output similar to the following example:
 
 ```shell
+Checking stack requirements...
+Appsody requirements met
+Running appsody init...
+Downloading java-microprofile template project from https://github.com/kabanero-io/collections/releases/download/0.6.3/java-microprofile.v0.2.26.templates.default.tar.gz
+Download complete. Extracting files from /Users/myuser/appsody/java-microprofile/java-microprofile.tar.gz
+Setting up the development environment
+Your Appsody project name has been set to java-microprofile
+Pulling docker image docker.io/kabanero/java-microprofile:0.2
+Running command: docker pull docker.io/kabanero/java-microprofile:0.2
+0.2: Pulling from kabanero/java-microprofile
+..
+..
+Status: Downloaded newer image for kabanero/java-microprofile:0.2
+docker.io/kabanero/java-microprofile:0.2
+Running command: docker run --rm --entrypoint /bin/bash docker.io/kabanero/java-microprofile:0.2 -c "find /project -type f -name .appsody-init.sh"
+Extracting project from development environment
+Running command: docker create --name java-microprofile-extract -v /Users/myuser/appsody/java-microprofile/:/project/user-app -v /Users/myuser/.m2/repository:/mvn/repository docker.io/kabanero/java-microprofile:0.2
+Running command: docker cp java-microprofile-extract:/project /Users/myuser/.appsody/extract/java-microprofile
+Project extracted to /Users/myuser/appsody/java-microprofile/.appsody_init
+Running command: docker rm java-microprofile-extract -f
+Running command: ./.appsody-init.sh
+[InitScript] [INFO] Scanning for projects...
+[InitScript] Downloading from central: https://repo.maven.apache.org/maven2/net/wasdev/wlp/maven/parent/liberty-maven-app-parent/2.7/liberty-maven-app-parent-2.7.pom
+..
+..
+[InitScript] [INFO]
 [InitScript] [INFO] -------------------< dev.appsody:java-microprofile >--------------------
-[InitScript] [INFO] Building java-microprofile 0.2.11
+[InitScript] [INFO] Building java-microprofile 0.2.26
 [InitScript] [INFO] --------------------------------[ pom ]---------------------------------
 [InitScript] [INFO]
 [InitScript] [INFO] --- maven-enforcer-plugin:3.0.0-M2:enforce (enforce-versions) @ java-microprofile ---
 [InitScript] [INFO] Skipping Rule Enforcement.
 [InitScript] [INFO]
 [InitScript] [INFO] --- maven-install-plugin:2.4:install (default-install) @ java-microprofile ---
-[InitScript] [INFO] Installing /Users/myuser/projects/simple-microprofile/.appsody_init/pom.xml to /Users/myuser/.m2/repository/dev/appsody/java-microprofile/0.2.11/java-microprofile-0.2.11.pom
+[InitScript] [INFO] Installing /Users/myuser/appsody/java-microprofile/.appsody_init/pom.xml to /Users/myuser/.m2/repository/dev/appsody/java-microprofile/0.2.26/java-microprofile-0.2.26.pom
 [InitScript] [INFO] ------------------------------------------------------------------------
 [InitScript] [INFO] BUILD SUCCESS
 [InitScript] [INFO] ------------------------------------------------------------------------
-[InitScript] [INFO] Total time:  0.648 s
-[InitScript] [INFO] Finished at: 2019-09-13T10:17:55+01:00
+[InitScript] [INFO] Total time:  1.385 s
+[InitScript] [INFO] Finished at: 2020-04-02T14:38:29+01:00
 [InitScript] [INFO] ------------------------------------------------------------------------
-Successfully initialized Appsody project
+Successfully added your project to /Users/myuser/.appsody/project.yaml
+Your Appsody project ID has been set to 20200402143830.02524700
+Successfully initialized Appsody project with the java-microprofile stack and the default template.
 ```
 
 If Java and Maven are not installed on your system, you see an output similar to the following example:
@@ -248,13 +269,6 @@ This message indicates that the server is started and you are ready to begin dev
 
 ## Creating and updating the application
 
-<!--
-// Now you can create your business logic. The first thing to do is to add a REST endpoint. Navigate to the JAX-RS application endpoint to confirm that there are no JAX-RS resources //available. Go to the http://localhost:9080/starter URL. You see the following `HTTP 500` error that states that there are no provider or resource classes that are associated with the application:
-//
-// ```shell
-// Error 500: javax.servlet.ServletException: At least one provider or resource class should be specified for application class "dev.appsody.starter.StarterApplication
-// ```
--->
 Now you can create your business logic. Typically, you put your business logic in a JAX-RS resource. First, you need to add a REST endpoint.
 
 Create a `StarterResource.java` class in the `src/main/java/dev/appsody/starter` directory. Open the file, populate it with the following code, and save it:
@@ -382,4 +396,4 @@ After you develop and test your application in your local environment, it’s ti
 
 When Kabanero is installed, deploying applications to a Kubernetes cluster always occurs through the DevOps pipeline that is triggered in Git. Using DevOps pipelines to deploy applications ensures that developers can focus on application code, not on containers or Kubernetes infrastructure. From an enterprise perspective, this deployment process ensures that both the container image build and the deployment to Kubernetes or Knative happen in a secure and consistent way that meets company standards.
 
-To deliver your application to the pipeline, push the project to the pre-configured Git repository that has a configured webhook. This configured webhook triggers the enterprise build and deploy pipeline.
+To deliver your application to the pipeline, push the project to the pre-configured Git repository that has a configured webhook. This configured webhook triggers the enterprise build and deploy pipeline. For more information, see [Working with pipelines](../working-with-pipelines).
