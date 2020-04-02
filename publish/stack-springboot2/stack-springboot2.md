@@ -39,9 +39,9 @@ guide-category: stacks
 
 ## What you'll learn
 
-In this guide, you’ll learn how to create and run a simple cloud native microservice based on the Spring Boot application stack. You’ll learn how to configure your development environment, update the microservice that you created and deploy it to Kubernetes or serverless. Deployment to serverless is optional depending on whether you want to Scale to Zero.
+Application stacks enable the development and optimization of microservice applications. With application stacks, developers don’t need to manage the full software development stack or be experts on underlying container technologies or Kubernetes. Application stacks are customized for specific enterprises to incorporate their company standards and technology choices. Developers access these stacks by configuring their development environment to point to a stack configuration.
 
-The Spring Boot application stack enables the development and optimization of microservices. With application stacks, developers don’t need to manage full software development stacks or be experts on underlying container technologies or Kubernetes. Application stacks are customized for specific enterprises to incorporate their company standards and technology choices.
+In this guide, you’ll learn how to configure your development environment, then create and run a simple cloud native microservice based on the Java&trade; Spring Boot application stack. Finally, you’ll update the microservice that you created and deploy it to Kubernetes or serverless. Deployment to serverless is optional depending on whether you want to Scale to Zero.
 
 Applications in this guide are written based on the Spring Boot API specifications, built and run with [Apache Tomcat](http://tomcat.apache.org/), and deployed to Kubernetes through a modern DevOps toolchain that is triggered in Git.
 
@@ -55,7 +55,6 @@ Applications in this guide are written based on the Spring Boot API specificatio
 
 - [Docker](https://docs.docker.com/get-started/) must be installed.
 - [Appsody](https://appsody.dev/docs/getting-started/installation) must be installed.
-- *Optional:* If your organisation has customized application stacks, you need the URL that points to the `index.yaml` configuration file.
 - *Optional*: If you are testing multiple microservices together, you must have access to a local Kubernetes cluster for local development.
 If you are using Docker Desktop, you can enable Kubernetes from the menu by selecting *Preferences* -> *Kubernetes* -> *Enable Kubernetes*. Other options include [Minishift](https://www.okd.io/minishift/) or [Minikube](https://kubernetes.io/docs/setup/learning-environment/minikube/). If you want to use remote cluster development, use Codewind.
 
@@ -66,6 +65,8 @@ If you are using Docker Desktop, you can enable Kubernetes from the menu by sele
 -->
 
 ## Getting started
+
+You are going to create an application that is based on a public stack from the Kabanero project. After configuring your local development environment, you are going to initialize a new project that is based on the Spring Boot stack.
 
 <!--
 // =================================================================================================
@@ -88,42 +89,36 @@ NAME        URL
 *incubator https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
 ```
 
-Next, run the following command to add the URL for your stack configuration file:
+Next, run the following command to add the URL for the public Kabanero stack hub:
 
 ```shell
-appsody repo add <my-org-stack> <URL>
+appsody repo add kabanero https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.7.0/kabanero-stack-hub-index.yaml
 ```
 
-where `<my-org-stack>` is the repository name for your stack hub and `<URL>` is the URL for
-your stack hub index file.
-
-**Note:** If you do not have a stack hub that contains customized, pre-configured application stacks, you can skip to
-[Initializing your project](#initializing-your-project) and develop your app based on the public application stack
-for Spring Boot.
-
-Check the repositories again by running `appsody repo list` to see that your stack hub was added. In the following examples, the stack hub is called `acme-stacks` and the URL is `https://github.com/acme.inc/stacks/index.yaml`:
+Check the repositories again by running `appsody repo list` to see that your repository was added. The output is similar to the following example:
 
 ```shell
 NAME        URL
 *incubator https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
-acme-stacks https://github.com/acme.inc/stacks/index.yaml
+kabanero   https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.7.0/kabanero-stack-hub-index.yaml
 ```
 
-In this example, the asterisk (\*) shows that `incubator` is the default repository. Run the following command to set `acme-stacks` as the default repository:
+In this example, the asterisk (\*) shows that `incubator` is the default repository. Run the following command to set `kabanero` as the default repository:
 
 ```shell
-appsody repo set-default acme-stacks
+appsody repo set-default kabanero
 ```
 
 Check the available repositories again by running `appsody repo list` to see that the default is updated:
 
 ```shell
 NAME        URL
-incubator   https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
-*acme-stacks https://github.com/acme.inc/stacks/index.yaml
+incubator https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
+*kabanero   https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.7.0/kabanero-stack-hub-index.yaml
 ```
 
-**Recommendation**: To avoid initializing projects that are based on the public application stacks, it's best to remove `incubator` from the list. Run the following command to remove the `incubator` repository:
+**Recommendation**: To avoid initializing projects that are based on the public application stacks, it's best
+to remove `incubator` from the list. Run the following command to remove the `incubator` repository:
 
 ```shell
 appsody repo remove incubator
@@ -133,10 +128,12 @@ Check the available repositories again by running `appsody repo list` to see tha
 
 ```shell
 NAME        URL
-*acme-stacks https://github.com/acme.inc/stacks/index.yaml
+*kabanero   https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.7.0/kabanero-stack-hub-index.yaml
 ```
 
-Your development environment is now configured to use your customized application stacks. Next, you need to initialize your project.
+Your development environment is now configured to use the Kabanero application stacks. Next, you need to initialize your project.
+
+**Note:** If your organization has created a stack hub that contains customized application stacks, you must configure your development environment to access them. After you have completed this guide, you can step through this section again to update your configuration to point to the URL for your organization's stack hub. This configuration process is also described in [Developing microservice applications with the CLI](../use-appsody-cli).
 
 <!--
 // =================================================================================================
@@ -162,20 +159,31 @@ appsody init java-spring-boot2
 The output from the command varies depending on whether you have an installation of Java on your system. The following output is from a system that has Java installed:
 
 ```shell
+Checking stack requirements...
+Docker requirements met
+Appsody requirements met
 Running appsody init...
-Downloading java-spring-boot2 template project from https://github.com/kabanero-io/collections/releases/download/0.5.0/incubator.java-spring-boot2.v0.3.9.templates.default.tar.gz
-Download complete. Extracting files from java-spring-boot2.tar.gz
+Downloading java-spring-boot2 template project from https://github.com/kabanero-io/collections/releases/download/0.6.3/java-spring-boot2.v0.3.24.templates.default.tar.gz
+Download complete. Extracting files from /Users/myuser/appsody/simple-spring-boot2/java-spring-boot2.tar.gz
 Setting up the development environment
-Running command: docker[pull kabanero/java-spring-boot2:0.3]
-Running command: docker[run --rm --entrypoint /bin/bash kabanero/java-spring-boot2:0.3 -c find /project -type f -name .appsody-init.sh]
+Your Appsody project name has been set to simple-spring-boot2
+Pulling docker image docker.io/kabanero/java-spring-boot2:0.3
+Running command: docker pull docker.io/kabanero/java-spring-boot2:0.3
+0.3: Pulling from kabanero/java-spring-boot2
+..
+..
+Running command: docker run --rm --entrypoint /bin/bash docker.io/kabanero/java-spring-boot2:0.3 -c "find /project -type f -name .appsody-init.sh"
 Extracting project from development environment
-Running command: docker[create --name my-project-extract -v /home/username/projects/simple-spring-boot2/.:/project/user-app -v /home/username/.m2/repository:/mvn/repository kabanero/java-spring-boot2:0.3]
-Running command: docker[cp my-project-extract:/project /home/username/.appsody/extract/simple-spring-boot2]
-Running command: docker[rm my-project-extract -f]
-Project extracted to /home/username/projects/simple-spring-boot2/.appsody_init
-Running command: ./.appsody-init.sh[]
-Successfully initialized Appsody project
+Running command: docker create --name simple-spring-boot2-extract -v /Users/suechaplain/appsody/simple-spring-boot2/:/project/user-app -v /Users/suechaplain/.m2/repository:/mvn/repository docker.io/kabanero/java-spring-boot2:0.3
+Running command: docker cp simple-spring-boot2-extract:/project /Users/suechaplain/.appsody/extract/simple-spring-boot2
+Project extracted to /Users/suechaplain/appsody/simple-spring-boot2/.appsody_init
+Running command: docker rm simple-spring-boot2-extract -f
+Running command: ./.appsody-init.sh
+Successfully added your project to /Users/suechaplain/.appsody/project.yaml
+Your Appsody project ID has been set to 20200402135452.72255400
+Successfully initialized Appsody project with the java-spring-boot2 stack and the default template.
 ```
+**Note:** Some lines (..) are removed for clarity.
 
 Your project is now initialized.
 
@@ -217,9 +225,9 @@ appsody run
 The CLI launches a local Docker image that contains an Apache Tomcat server that hosts the microservice. After some time, you see a message similar to the following example:
 
 ```shell
-[Container] 2019-09-12 17:28:44.066  INFO 171 --- [  restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 4 endpoint(s) beneath base path '/actuator'
-[Container] 2019-09-12 17:28:44.205  INFO 171 --- [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
-[Container] 2019-09-12 17:28:44.209  INFO 171 --- [  restartedMain] application.Main                         : Started Main in 6.051 seconds (JVM running for 6.923)
+[Container] 2020-04-02 17:28:44.066  INFO 171 --- [  restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 4 endpoint(s) beneath base path '/actuator'
+[Container] 2020-04-02 17:28:44.205  INFO 171 --- [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+[Container] 2020-04-02 17:28:44.209  INFO 171 --- [  restartedMain] application.Main                         : Started Main in 6.051 seconds (JVM running for 6.923)
 ```
 
 This message indicates that the Tomcat server is started. Browse to `http://localhost:8080` and you can see the splash screen.
@@ -284,9 +292,9 @@ After you save, the source compiles and the application updates. You see message
 [Container] [INFO] BUILD SUCCESS
 [Container] [INFO] ------------------------------------------------------------------------
 [Container] [INFO] Total time:  3.585 s
-[Container] [INFO] Finished at: 2019-09-12T17:34:37Z
+[Container] [INFO] Finished at: 2020-04-02T17:34:37Z
 [Container] [INFO] ------------------------------------------------------------------------
-[Container] 2019-09-12 17:34:38.316  INFO 171 --- [      Thread-15] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+[Container] 2020-04-02 17:34:38.316  INFO 171 --- [      Thread-15] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
 [Container]
 [Container]   .   ____          _            __ _ _
 [Container]  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -296,10 +304,10 @@ After you save, the source compiles and the application updates. You see message
 [Container]  =========|_|==============|___/=/_/_/_/
 [Container]  :: Spring Boot ::        (v2.1.6.RELEASE)
 ...
-[Container] 2019-09-12 17:34:39.711  INFO 171 --- [  restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 4 endpoint(s) beneath base path '/actuator'
-[Container] 2019-09-12 17:34:39.772  INFO 171 --- [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
-[Container] 2019-09-12 17:34:39.773  INFO 171 --- [  restartedMain] application.Main                         : Started Main in 1.403 seconds (JVM running for 362.487)
-[Container] 2019-09-12 17:34:39.788  INFO 171 --- [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+[Container] 2020-04-02 17:34:39.711  INFO 171 --- [  restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 4 endpoint(s) beneath base path '/actuator'
+[Container] 2020-04-02 17:34:39.772  INFO 171 --- [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+[Container] 2020-04-02 17:34:39.773  INFO 171 --- [  restartedMain] application.Main                         : Started Main in 1.403 seconds (JVM running for 362.487)
+[Container] 2020-04-02 17:34:39.788  INFO 171 --- [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
 ```
 
 If you browse to the `http://localhost:8080/example` URL, the endpoint response is displayed, as shown in the following image:
@@ -394,4 +402,4 @@ After you develop and test your application in your local environment, it’s ti
 
 When Kabanero is installed, deploying applications to a Kubernetes cluster always occurs through the DevOps pipeline that is triggered in Git. Using DevOps pipelines to deploy applications ensures that developers can focus on application code, not on containers or Kubernetes infrastructure. From an enterprise perspective, this deployment process ensures that both the container image build and the deployment to Kubernetes or Knative happen in a secure and consistent way that meets company standards.
 
-To deliver your application to the pipeline, push the project to the pre-configured Git repository that has a configured webhook. This configured webhook triggers the enterprise build and deploy pipeline.
+To deliver your application to the pipeline, push the project to the pre-configured Git repository that has a configured webhook. This configured webhook triggers the enterprise build and deploy pipeline.  For more information, see [Working with pipelines](../working-with-pipelines).
