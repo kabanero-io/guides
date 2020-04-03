@@ -16,25 +16,25 @@ guide-category: pipelines
 
 <!--
 //
-//	Copyright 2019, 2020 IBM Corporation and others.
+//    Copyright 2019, 2020 IBM Corporation and others.
 //
-//	Licensed under the Apache License, Version 2.0 (the "License");
-//	you may not use this file except in compliance with the License.
-//	You may obtain a copy of the License at
+//    Licensed under the Apache License, Version 2.0 (the "License");
+//    you may not use this file except in compliance with the License.
+//    You may obtain a copy of the License at
 //
-//	http://www.apache.org/licenses/LICENSE-2.0
+//    http://www.apache.org/licenses/LICENSE-2.0
 //
-//	Unless required by applicable law or agreed to in writing, software
-//	distributed under the License is distributed on an "AS IS" BASIS,
-//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//	See the License for the specific language governing permissions and
-//	limitations under the License.
+//    Unless required by applicable law or agreed to in writing, software
+//    distributed under the License is distributed on an "AS IS" BASIS,
+//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//    See the License for the specific language governing permissions and
+//    limitations under the License.
 //
 -->
 
 <!-- # Creating and updating tasks and pipelines -->
 ## Intro
-A default set of tasks and pipelines are provided that perform a variety of CI/CD functions.  These tasks and pipelines include validating the application stack is active on the cluster, building applications stacks using appsody, pushing the built image to an image repository, and deploying the application to the cluster. These tasks and pipelines operate with the default application stacks and operate as is for new application stacks you might create. Also, there are cases where you can update the tasks or pipelines or create new ones. This guide explains the steps you follow to make updates to tasks or pipelines and how you can update your Kabanero CR to use your new pipeline release.
+A default set of tasks and pipelines are provided that perform a variety of CI/CD functions.  These tasks and pipelines include validating the application stack is active on the cluster, building applications stacks using appsody, pushing the built image to an image repository, and deploying the application to the cluster. These tasks and pipelines operate with the default application stacks and operate as-is for new application stacks you might create. Also, there are cases where you can update the tasks or pipelines or create new ones. This guide explains the steps you follow to make updates to tasks or pipelines and how you can update your Kabanero CR to use your new pipeline release.
 
 ## Setting up a pipelines repo
 {: #settingup}
@@ -61,7 +61,7 @@ The product operator expects all the pipeline's artifacts to be packaged in an a
 ### Creating the pipelines release artifacts locally 
 {: #createartifacts}
 
-You can build your pipeline repo locally and generate the necessary pipeline archive that is used in the Kabanero CR. The archive file can then be hosted some place of your choosing and used in the Kabanero CR. To generate the archive file locally:
+You can build your pipeline repo locally and generate the necessary pipeline archive that is used in the Kabanero CR. The archive file can then be hosted in some place of your choosing and used in the Kabanero CR. To generate the archive file locally:
 
 1. Run the following command from the root directory of your local copy of the pipelines repo:
 
@@ -69,21 +69,21 @@ You can build your pipeline repo locally and generate the necessary pipeline arc
     . ./ci/package.sh
     ```
 
-2. Locate the archive file under the `ci/assests` directory.
+2. Locate the archive file under the `ci/assets` directory.
 
 3. Upload the archive file to your preferred hosting location and use the URL in the Kabanero CR as described in the next section.
 
-### Creating the pipelines release artifacts from your public Github pipelines repo using travis
+### Creating the pipelines release artifacts from your public Github pipelines repo using Travis
 {: #createfromgit}
 
-If your pipelines are hosted on a public github repo, you can set up a travis build against a release of your pipelines repo, which generates the archive file and attaches it to your release. The kabanro-piplelines repo provides a sample `.travis.yml` file.
+If your pipelines are hosted on a public GitHub repo, you can set up a Travis build against a release of your pipelines repo, which generates the archive file and attaches it to your release. The kabanero-pipelines repo provides a sample `.travis.yml` file.
 
 Use the location of the archive file under the release in the Kabanero CR as described in the next section. 
 
 ### Creating the pipelines release artifacts from your GHE pipelines repo using a pipeline on the OpenShift cluster
 {: #createfromghe}
 
-Use the following steps to trigger a pipeline build of your pipelines repository. The pipeline will build the pipelines and deploy a `pipelines-index` container into your cluster. The `pipelines-index` container will host the pipeline archive on a NGINX server.
+Use the following steps to trigger a pipeline build of your pipelines repository. The pipeline will build the pipelines and deploy a `pipelines-index` container into your cluster. The `pipelines-index` container will host the pipeline archive on an NGINX server.
 
 1. Login to your OpenShift cluster.
 
@@ -178,7 +178,7 @@ Use the following steps to trigger a pipeline build of your pipelines repository
 ### Updating the Kabanero CR to use the new release
 {: #update}
 
-Follow the [configuring a Kabanero CR instance](/docs/ref/general/configuration/kabanero-cr-config.html) documentation to configure or deploy a product instance with the pipeline archive URL obtained in the previous step. Then, generate the digest of the pipelines archive contained at this URL and specify it in the Kabanero CR. You can use  a command like `sha256sum` to obtain the digest.
+Follow the [configuring a Kabanero CR instance](/docs/ref/general/configuration/kabanero-cr-config.html) documentation to configure or deploy a product instance with the pipeline archive URL obtained in the previous step. Then, generate the digest of the pipelines archive contained at this URL and specify it in the Kabanero CR. You can use a command like `sha256sum` to obtain the digest.
 
 See the following example where the pipelines that are published in the `https://github.com/kabanero-io/kabanero-pipelines/releases/download/0.6.0/default-kabanero-pipelines.tar.gz` archive are associated with each of the stacks that exist in the stack repository.
 
