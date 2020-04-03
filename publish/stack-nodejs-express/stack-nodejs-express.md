@@ -57,10 +57,9 @@ Kubernetes through a modern DevOps toolchain that is triggered in Git.
 
 ## Prerequisites
 
-- [Docker](https://docs.docker.com/get-started/) must be installed.
+- [Docker](https://docs.docker.com/get-started/) must be installed. For local cluster development on Docker Desktop, you can enable Kubernetes from the menu by selecting *Preferences* -> *Kubernetes* -> *Enable Kubernetes*. Other options include [Minishift](https://www.okd.io/minishift/) or [Minikube](https://kubernetes.io/docs/setup/learning-environment/minikube/).
 - [Appsody](https://appsody.dev/docs/getting-started/installation) must be installed.
-- *Optional:* If your organisation has customized application stacks, you need the URL that points to an `index.yaml` configuration  file.
-- *Optional*: If you are testing multiple microservices together, you must have access to a Kubernetes cluster for development. For local cluster development on Docker Desktop, you can enable Kubernetes from the menu by selecting *Preferences* -> *Kubernetes* -> *Enable Kubernetes*. Other options include [Minishift](https://www.okd.io/minishift/) or [Minikube](https://kubernetes.io/docs/setup/learning-environment/minikube/). If you want to use remote cluster development, use Codewind.
+
 
 <!--
 // =================================================================================================
@@ -69,6 +68,9 @@ Kubernetes through a modern DevOps toolchain that is triggered in Git.
 -->
 
 ## Getting started
+
+You are going to create an application that is based on a public stack from the Kabanero project. After configuring your
+local development environment, you are going to initialize a new project that is based on the nodejs-express stack.
 
 <!--
 // =================================================================================================
@@ -92,32 +94,24 @@ NAME        URL
 *incubator https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
 ```
 
-Next, run the following command to add the URL for your stack configuration file:
+Next, run the following command to add the URL for the public Kabanero stack hub:
 
 ```
-appsody repo add <my-org-stack> <URL>
+appsody repo add kabanero https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.7.0/kabanero-stack-hub-index.yaml
 ```
 
-where `<my-org-stack>` is your chosen repository name and `<URL>` is the URL for your stack `index.yaml` configuration file.
-
-**Note:** If you do not have customized, pre-configured application stacks, you can skip to
-[Initializing your project](#initializing-your-project) and develop your app based on the public application stack
-for Node.js Express.
-
-Check the repositories again by running `appsody repo list` to see that your repository was added. In the
-following examples, the repository is called `acme-stacks` and the URL is `https://github.com/acme.inc/stacks/index.yaml`:
+Check the repositories again by running `appsody repo list` to see that your repository was added. The output is similar to the following example:
 
 ```
 NAME        URL
 *incubator https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
-acme-stacks https://github.com/acme.inc/stacks/index.yaml
+kabanero   https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.7.0/kabanero-stack-hub-index.yaml
 ```
 
-In this example, the asterisk (\*) shows that `incubator` is the default repository. Run the following command to set `acme-stacks`
-as the default repository:
+In this example, the asterisk (\*) shows that `incubator` is the default repository. Run the following command to set `kabanero` as the default repository:
 
 ```
-appsody repo set-default acme-stacks
+appsody repo set-default kabanero
 ```
 
 Check the available repositories again by running `appsody repo list` to see that the default is updated:
@@ -125,11 +119,10 @@ Check the available repositories again by running `appsody repo list` to see tha
 ```
 NAME        URL
 incubator https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
-*acme-stacks https://github.com/acme.inc/stacks/index.yaml
+*kabanero https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.7.0/kabanero-stack-hub-index.yaml
 ```
 
-**Recommendation**: To avoid initializing projects that are based on the public application stacks, it's best
-to remove `incubator` from the list. Run the following command to remove the `incubator` repository:
+**Recommendation**: To avoid initializing projects that are based on the Appsody application stacks, it's best to remove `incubator` from the list. Run the following command to remove the `incubator` repository:
 
 
 ```
@@ -141,10 +134,14 @@ Check the available repositories again by running `appsody repo list` to see tha
 
 ```
 NAME     	URL
-*acme-stacks https://github.com/acme.inc/stacks/index.yaml
+*kabanero https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.7.0/kabanero-stack-hub-index.yaml
 ```
 
-Your development environment is now configured to use your customized application stacks. Next, you need to initialize your project.
+Your development environment is now configured to use the Kabanero application stacks. Next, you need to initialize your project.
+
+**Note:** If your organization has created a stack hub that contains customized application stacks, you must configure your
+development environment to access them. After you have completed this guide, you can step through this section again to update your
+configuration to point to the URL for your organization's stack hub. This configuration process is also described in [Developing microservice applications with the CLI](../use-appsody-cli/).  
 
 <!--
 // =================================================================================================
@@ -170,18 +167,22 @@ appsody init nodejs-express
 The output from the command is similar to the following example:
 
 ```
-Downloading nodejs-express template project from https://github.com/appsody/stacks/releases/download/nodejs-express-v0.4.2/incubator.nodejs-express.v0.4.2.templates.simple.tar.gz
-Download complete. Extracting files from /Users/user1/appsody/test6/nodejs-express.tar.gz
+Downloading nodejs-express template project from https://github.com/kabanero-io/collections/releases/download/0.6.3/nodejs-express.v0.2.10.templates.simple.tar.gz
+Download complete. Extracting files from /Users/myuser/projects/simple-nodejs-express/nodejs-express.tar.gz
 Setting up the development environment
-Your Appsody project name has been set to test6
-Pulling docker image docker.io/appsody/nodejs-express:0.4
-Running command: docker pull docker.io/appsody/nodejs-express:0.4
-0.4: Pulling from appsody/nodejs-express
-Status: Downloaded newer image for appsody/nodejs-express:0.4
-docker.io/appsody/nodejs-express:0.4
-Running command: docker run --rm --entrypoint /bin/bash docker.io/appsody/nodejs-express:0.4 -c find /project -type f -name .appsody-init.sh
-Successfully initialized Appsody project with the incubator/nodejs-express stack and the default template.
+Your Appsody project name has been set to simple-nodejs-express
+Pulling docker image docker.io/kabanero/nodejs-express:0.2
+Running command: docker pull docker.io/kabanero/nodejs-express:0.2
+0.2: Pulling from kabanero/nodejs-express
+..
+..
+Status: Downloaded newer image for kabanero/nodejs-express:0.2
+docker.io/kabanero/nodejs-express:0.2
+Running command: docker run --rm --entrypoint /bin/bash docker.io/kabanero/nodejs-express:0.2 -c "find /project -type f -name .appsody-init.sh"
+Successfully initialized Appsody project with the nodejs-express stack and the default template.
 ```
+
+**Note:** Some lines (..) are removed for clarity
 
 Your new project is created, built, and started inside a container.
 
@@ -218,11 +219,11 @@ After some time, you see a message similar to the following example:
 ```
 [Container] Running command:  npm start
 [Container]
-[Container] > nodejs-express@0.4 start /project
+[Container] > nodejs-express@0.2.10 start /project
 [Container] > node server.js
 [Container]
-[Container] [Mon Nov 18 10:46:35 2019] com.ibm.diagnostics.healthcenter.loader INFO: Node Application Metrics 5.1.1.201911141807 (Agent Core 4.0.5)
-[Container] [Mon Nov 18 10:46:35 2019] com.ibm.diagnostics.healthcenter.mqtt INFO: Connecting to broker localhost:1883
+[Container] [Mon Mar 30 12:58:44 2020] com.ibm.diagnostics.healthcenter.loader INFO: Node Application Metrics 5.1.1.202003121616 (Agent Core 4.0.5)
+[Container] [Mon Mar 30 12:58:45 2020] com.ibm.diagnostics.healthcenter.mqtt INFO: Connecting to broker localhost:1883
 [Container] App started on PORT 3000
 ```
 
@@ -346,4 +347,5 @@ After you develop and test your application in your local environment, it’s ti
 
 When Kabanero is installed, deploying applications to a Kubernetes cluster always occurs through the DevOps pipeline that is triggered in Git. Using DevOps pipelines to deploy applications ensures that developers can focus on application code, not on containers or Kubernetes infrastructure. From an enterprise perspective, this deployment process ensures that both the container image build and the deployment to Kubernetes or serverless happen in a secure and consistent way that meets company standards.
 
-To deliver your application to the pipeline, push the project to the pre-configured Git repository that has a configured webhook. This configured webhook triggers the enterprise build and deploy pipeline.
+To deliver your application to the pipeline, push the project to the pre-configured Git repository that has a configured webhook. This configured webhook triggers the enterprise build and deploy pipeline. For more
+information, see [Working with pipelines](../working-with-pipelines/).
