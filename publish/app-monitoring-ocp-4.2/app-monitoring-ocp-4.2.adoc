@@ -82,7 +82,7 @@ oc apply -f service_account.yaml
 
 . Click on Overview and create a Prometheus instance. A Prometheus resource can scrape the targets defined in the ServiceMonitor resource.
 
-. Inside the Prometheus YAML file, make sure *metadata.namespace* is prometheus-operator. Ensure *spec.serviceAccountName* is the Service Account's name that you have applied in the previous step. You can set the match expression to select which Service Monitors you are interested in under *spec.serviceMonitorSelector.matchExpressions* as in [hotspot file=2]`prometheus.yaml` file.
+. Inside the Prometheus YAML file, make sure *metadata.namespace* is prometheus-operator. Ensure *spec.serviceAccountName* is the Service Account's name that you have applied in the previous step. You can set the match expression to select which service monitors you are interested in under *spec.serviceMonitorSelector.matchExpressions* as in [hotspot file=2]`prometheus.yaml` file.
 +
 [role="code_command hotspot file=2", subs="quotes"]
 ----
