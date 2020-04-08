@@ -4,18 +4,18 @@ permalink: /guides/app-monitoring-ocp4.2/
 :projectid: ocp-app-monitoring
 :page-layout: guide-multipane
 :page-duration: 60 minutes
-:page-releasedate: 2020-02-02
+:page-releasedate: 2020-03-26
 :page-guide-category: basic
 :page-description: Learn how to monitor applications on RHOCP 4.2 with Prometheus and Grafana.
 :page-tags: ['monitoring', 'prometheus', 'grafana']
-= Application Monitoring on Red Hat OpenShift Container Platform (RHOCP) 4.2 with Prometheus and Grafana
+= Application Monitoring on Red Hat OpenShift Container Platform (RHOCP) 4.3 with Prometheus and Grafana
 
 == Introduction
 
-__The following guide has been tested with RHOCP 4.2/Kabanero 0.3.0.__
+__The following guide has been tested with RHOCP 4.2/Kabanero 0.3.0 and RHOCP 4.3/Kabanero 0.6.0.__
 
 
-For application monitoring on RHOCP, you need to set up your own Prometheus and Grafana deployments. Both Prometheus and Grafana can be set up via Operator Lifecycle Manager (OLM). 
+For application monitoring on RHOCP, you need to set up your own Prometheus and Grafana deployments. Both Prometheus and Grafana can be set up via Operator Lifecycle Manager (OLM).
 
 === Deploy an Application with MP Metrics Endpoint
 Prior to deploying Prometheus, ensure that there is a running application that has a service endpoint for outputting metrics in Prometheus format. 
@@ -43,11 +43,11 @@ include::code/prometheus.yaml[]
 ----
 
 
-The Prometheus Operator is an open-source project originating from CoreOS and exists as a part of their Kubernetes Operator framework. The Kubernetes Operator framework is the preferred way to deploy Prometheus on a Kubernetes system. When the Prometheus Operator is installed on the Kubernetes system, you no longer need to hand-configure the Prometheus configuration. Instead, you create CoreOS ServiceMonitor resources for each of the service endpoints that needs to be monitored: this makes daily maintenance of the Prometheus server a lot easier. An architecture overview of the Prometheus Operator is shown below:
+The Prometheus Operator is an open-source project originating from CoreOS and exists as a part of their Kubernetes Operator framework. When the Prometheus Operator is installed on the Kubernetes system, you no longer need to hand-configure the Prometheus configuration. Instead, you create CoreOS ServiceMonitor resources for each of the service endpoints that needs to be monitored: this makes daily maintenance of the Prometheus server a lot easier. An architecture overview of the Prometheus Operator is shown below:
 
 image::/img/guide/prometheusOperator.png[link="/img/guide/prometheusOperator.png" alt="Prometheus Operator"]
 
-Using Operator Lifecycle Manager (OLM), Prometheus operator can be easily installed and configured in RHOCP Web Console.
+Using Operator Lifecycle Manager (OLM), Prometheus operator can be easily installed and configured in RHOCP Web Console. 
 
 === Install Prometheus Operator Using Operator Lifecycle Manager (OLM)
 
@@ -72,7 +72,7 @@ Refer to the `service_monitor.yaml` file
 ----
 +
 
-. Create a Service Account with Cluster role and Cluster role binding to ensure you have the permission to get nodes and pods in other namespaces at the cluster scope. Refer to [hotspot file=1]`service_account.yaml`. Create the YAML file and apply it.
+. Create a Prometheus Service Account and Cluster Role, and define a Cluster Role Binding to bind the two together. This is to ensure Prometheus has cluster-wide access to the metrics endpoint on pods in other namespaces. Refer to [hotspot file=1]`service_account.yaml`. Create the YAML file and apply it.
 +
 [role=command]
 ----
@@ -82,7 +82,7 @@ oc apply -f service_account.yaml
 
 . Click on Overview and create a Prometheus instance. A Prometheus resource can scrape the targets defined in the ServiceMonitor resource.
 
-. Inside the Prometheus YAML file, make sure *metadata.namespace* is prometheus-operator. Ensure *spec.serviceAccountName* is the Service Account's name that you have applied in the previous step. You can set the match expression to select which Service Monitors you are interested in under *spec.serviceMonitorSelector.matchExpressions* as in [hotspot file=2]`prometheus.yaml` file.
+. Inside the Prometheus YAML file, make sure *metadata.namespace* is prometheus-operator. Ensure *spec.serviceAccountName* is the Service Account's name that you have applied in the previous step. You can set the match expression to select which service monitors you are interested in under *spec.serviceMonitorSelector.matchExpressions* as in [hotspot file=2]`prometheus.yaml` file.
 +
 [role="code_command hotspot file=2", subs="quotes"]
 ----
@@ -157,11 +157,11 @@ Use Grafana dashboards to visualize the metrics. Perform the following steps to 
 oc project prometheus-operator
 ----
 +
-. Go to OpenShift Container Platform web console and Click on Operators > OperatorHub. Search for Grafana Operator and install it. Choose prometheus-operator under __A specific namespace on the cluster__ and subscribe.
+. Go to OpenShift Container Platform web console and click Operators > OperatorHub. Search for Grafana Operator and install it. For __A specific namespace on the cluster__, choose prometheus-operator, and subscribe.
 
-. Click on Overview and create a Grafana Data Source instance.
+. Click Overview and create a Grafana Data Source instance.
 
-. Inside the Grafana Data Source YAML file, make sure *metadata.namespace* is prometheus-operator. Set *spec.datasources.url* to the url of the target datasource. For example, inside [hotspot file=0]`grafana_datasource.yaml` file, the Prometheus service is *prometheus-operated* on port *9090*, so the url is set to __'http://prometheus-operated:9090'__.
+. In the Grafana Data Source YAML file, make sure *metadata.namespace* is prometheus-operator. Set *spec.datasources.url* to the URL of the target datasource. For example, inside [hotspot file=0]`grafana_datasource.yaml` file, the Prometheus service is *prometheus-operated* on port *9090*, so the URL is set to __'http://prometheus-operated:9090'__.
 +
 [role="code_command hotspot file=0", subs="quotes"]
 ----
@@ -169,9 +169,9 @@ Refer to the `grafana_datasource.yaml` file
 ----
 +
 
-. Click on Overview and create a Grafana instance.
+. Click Overview and create a Grafana instance.
 
-. Inside the Grafana YAML file, make sure *metadata.namespace* is prometheus-operator. You can define the match expression to select which Dashboards you are interested in under *spec.dashboardLabelSelector.matchExpressions*. For example, inside [hotspot file=1]`grafana.yaml` file, the Grafana will discover dashboards with app labels having a value of *grafana*.
+. In the Grafana YAML file, make sure *metadata.namespace* is prometheus-operator. You can define the match expression to select which Dashboards you are interested in under *spec.dashboardLabelSelector.matchExpressions*. For example, inside [hotspot file=1]`grafana.yaml` file, the Grafana will discover dashboards with app labels having a value of *grafana*.
 +
 [role="code_command hotspot file=1", subs="quotes"]
 ----
@@ -179,7 +179,7 @@ Refer to the `grafana.yaml` file
 ----
 +
 
-. Click on Overview and create a Grafana Dashboard instance.
+. Click Overview and create a Grafana Dashboard instance.
 
 . Copy [hotspot file=2]`grafana_dashboard.yaml` to Grafana Dashboard YAML file to check the Data Source is connected and Prometheus endpoints are discoverable.
 
@@ -190,7 +190,7 @@ Apply `grafana_dashboard.yaml` file to check
 ----
 +
 
-. Click on Networking > Routes and go to Grafana's location to see the template dashboard. You can now consume all the application metrics gathered by Prometheus on the Grafana dashboard.
+. Click on Networking > Routes and go to Grafana's location to see the sample dashboard. You can now consume all the application metrics gathered by Prometheus on the Grafana dashboard.
 
 image::/img/guide/template_grafana_dashboard.png[link="/img/guide/template_grafana_dashboard.png" alt="Template Dashboard"]
 
@@ -198,3 +198,79 @@ image::/img/guide/template_grafana_dashboard.png[link="/img/guide/template_grafa
 
 . When importing your own Grafana dashboard, your dashboard should be configured under *spec.json* in Grafana Dashboard YAML file. Make sure under *"__inputs"*, the name matches with your Grafana Data Source's *spec.datasources*. For example, inside [hotspot file=2]`grafana_dashboard.yaml` file, *name* is set to "Prometheus".
 
+
+== Configure Prometheus Operator to Detect Service Monitors in Other Namespaces
+
+By default, the Prometheus Operator only watches the namespace it currently resides in, so in order to get the Prometheus Operator to detect service monitors created in other namespaces, you must apply the following configuration changes.
+
+. In your monitoring namespace - in this case, the monitoring namespace is `prometheus-operator` - edit the OperatorGroup to add your application's namespace, for example, `myapp`, to the list of targeted namesaces to be watched. This will change the *olm.targetNamespaces* variable that the Prometheus Operator uses for detecting namespaces to include your `myapp` namespace.
++
+[role="command"]
+----
+oc edit operatorgroup
+----
++
+
++
+[source,role="no_copy"]
+----
+spec:
+  targetNamespaces:
+  - prometheus-operator
+  - myapp
+----
++
+
+. Since we have changed the `prometheus-operator` namespace's OperatorGroup to monitor more than one namespace, the operators in this namespace must have the *MultiNamespace* installMode set to *true*. Prometheus Operator installed via OLM has the *MultiNamespace* installMode set to *false* by default, disabling monitoring for more than one namespace, so this must be changed to *true*.
++
+[role="command"]
+----
+oc edit csv prometheusoperator.0.32.0
+----
++
+
++
+[source,role="no_copy"]
+----
+spec:
+  installModes:
+  - supported: true
+    type: OwnNamespace
+  - supported: true
+    type: SingleNamespace
+  - supported: true       # this line should be true
+    type: MultiNamespace
+  - supported: false
+    type: AllNamespaces
+----
++
+
+. The same goes for the Grafana Operator, the *MultiNamespace* installMode should be set to *true*; edit the operator using:
++
+[role="command"]
+----
+oc edit csv grafana-operator.v2.0.0 
+----
++
+
+. Edit the Prometheus instance to add the *serviceMonitorNamespaceSelector* definition. The empty brackets *{}* allow Prometheus to scrape from *all* namespaces:
++
+[role="command"]
+----
+oc edit prometheuses.monitoring.coreos.com prometheus
+----
++
+
++
+[source,role="no_copy"]
+----
+spec:
+  serviceMonitorNamespaceSelector: {}
+----
++
+
+. Restart the Prometheus Operator and Grafana Operator pods to see the changes.
+
+== Installation Complete
+
+You now have the Prometheus and Grafana stack installed and configured to monitor your applications. Import custom dashboards and visit the Grafana route to see your metrics visualized.

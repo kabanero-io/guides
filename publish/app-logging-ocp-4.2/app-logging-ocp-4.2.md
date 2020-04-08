@@ -1,9 +1,9 @@
 ---
 permalink: /guides/app-logging-ocp-4-2/
 layout: guide-markdown
-title: Application Logging with Elasticsearch, Fluentd, and Kibana
+title: Application Logging on Red Hat OpenShift Container Platform (RHOCP) 4.3 with Elasticsearch, Fluentd, and Kibana
 duration: 30 minutes
-releasedate: 2020-02-19
+releasedate: 2020-03-26
 description: Learn how to do application logging with Elasticsearch, Fluentd, and Kibana.
 tags: ['logging', 'Elasticsearch', 'Fluentd', 'Kibana']
 guide-category: basic
@@ -32,7 +32,7 @@ guide-category: basic
 //
 -->
 
-**The following guide has been tested with Red Hat OpenShift Container Platform (RHOCP) 4.2/Kabanero 0.3.0.**
+**The following guide has been tested with Red Hat OpenShift Container Platform (RHOCP) 4.2/Kabanero 0.3.0 and RHOCP 4.3/Kabanero 0.6.0.**
 
 Pod processes running in Kubernetes frequently produce logs. To effectively manage this log data and ensure no loss of log data occurs when a pod terminates, a log aggregation tool should be deployed on the Kubernetes cluster. Log aggregation tools help users persist, search, and visualize the log data that is gathered from the pods across the cluster. Log aggregation tools in the market today include:  EFK, LogDNA, Splunk, Datadog, IBM Operations Analytics, etc.  When considering log aggregation tools, enterprises will make choices that are inclusive of their journey to cloud, both new cloud native applications running in Kubernetes and their existing traditional IT choices.
 
@@ -46,7 +46,7 @@ One choice for application logging with log aggregation, based on open source, i
 
 ## Install cluster logging
 
-To install the cluster logging component, follow the OpenShift guide [Deploying cluster logging](https://docs.openshift.com/container-platform/4.2/logging/cluster-logging-deploying.html)
+To install the cluster logging component, follow the OpenShift guide [Deploying cluster logging](https://docs.openshift.com/container-platform/4.3/logging/cluster-logging-deploying.html)
 
 After the installation completes without any error, you can see the following pods that are running in the *openshift-logging* namespace. The exact number of pods running for each of the EFK components can vary depending on the configuration specified in the ClusterLogging Custom Resource (CR).
 
@@ -74,7 +74,7 @@ kibana   kibana-openshift-logging.apps.host.kabanero.com                kibana  
 
 <!--
 // =================================================================================================
-// Configure Fluentd to merge JSON log message body 
+// Configure Fluentd to merge JSON log message body
 // =================================================================================================
 -->
 
@@ -120,9 +120,9 @@ See the Kibana dashboard page by using the routes URL <https://kibana-openshift-
 
 The **project.\*** index contains only a set of default fields at the start, which does not include all of the fields from the deployed application's JSON log object. Therefore, the index needs to be refreshed to have all the fields from the application's log object available to Kibana.
 
-To refresh the index, click on the **Management** option on the left pane.
+To refresh the index, click the **Management** option from the Kibana menu.
 
-Click **Index Pattern**, and find the **project.pass:[*]**  index in Index Pattern. Then, click the refresh fields button, which is on the right. After Kibana is updated with all the available fields in the **project.pass:[*]** index, import any preconfigured dashboards to view the application's logs.
+Click **Index Pattern**, and find the **project.pass:[*]**  index in Index Pattern. Then, click the refresh fields button. After Kibana is updated with all the available fields in the **project.pass:[*]** index, import any preconfigured dashboards to view the application's logs.
 
 ![Index refresh button on Kibana](/img/guide/app-logging-ocp-refresh-index.png)
 
