@@ -6,7 +6,7 @@ permalink: /guides/app-monitoring-ocp4.2/
 :page-duration: 60 minutes
 :page-releasedate: 2020-03-26
 :page-guide-category: basic
-:page-description: Learn how to monitor applications on RHOCP 4.2 with Prometheus and Grafana.
+:page-description: Learn how to monitor applications on RHOCP 4.2 or RHOCP 4.3 with Prometheus and Grafana.
 :page-tags: ['monitoring', 'prometheus', 'grafana']
 = Application Monitoring on Red Hat OpenShift Container Platform (RHOCP) 4.3 with Prometheus and Grafana
 
