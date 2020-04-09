@@ -102,7 +102,7 @@ Other tools, including Jenkins, can use this file for development application de
 +
 ----
 metadata:
-  name: java-microprofile
+  name: java-openliberty
 spec:
 ----
 +
