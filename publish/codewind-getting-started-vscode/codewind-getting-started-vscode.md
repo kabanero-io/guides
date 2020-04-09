@@ -5,7 +5,7 @@ title: Getting Started with Codewind and VS Code
 duration: 30 minutes
 description: Take advantage of Codewind's tools to help build high quality cloud native applications with the VS Code IDE.
 tags: ['kabanero', 'appsody', 'codewind', 'microservice']
-guide-category: stacks
+guide-category: basic
 ---
 
 ## Objectives

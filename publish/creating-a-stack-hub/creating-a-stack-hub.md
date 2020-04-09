@@ -6,7 +6,7 @@ duration: 20 minutes
 releasedate: 2020-03-23
 description: How to create and configure an application stack hub
 tags: ['Stack']
-guide-category: stacks
+guide-category: basic
 ---
 
 <!--
