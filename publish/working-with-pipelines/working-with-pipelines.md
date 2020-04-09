@@ -60,6 +60,10 @@ This task validates the stack is allowed to build and deploy on the cluster.  It
 - [deploy-task.yaml](https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/incubator/deploy-task.yaml)
 
    `Deploy-task` uses the `app-deploy.yaml` file to deploy the application to the cluster by using the application deployment operator. By default, the pipelines run and deploy the application in the `kabanero` namespace. If you want to deploy the application in a different namespace, update the `app-deploy.yaml` file to point to that namespace.
+   
+- [dockerimage-name-lowercase-task.yaml](https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/incubator/dockerimage-name-lowercase-task.yaml)
+
+   This task is needed because Docker requires that a container's imagename be lowercase. This task inputs the `docker-imagename` and `docker-imagetag` parameters and builds the `docker-image` resource URL path with `docker-imagename` as lowercase letters. In the case when the `docker-imagename` parameter is empty or not provided, the `docker-image` URL path is constructed by using the imagename from the existing `app-deploy.yaml` file. This `app-deploy.yaml` file should be present in the git-source project that is provided as an input to the pipeline.
 
 - [image-scan-task.yaml](https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/incubator/image-scan-task.yaml)
 
@@ -83,7 +87,7 @@ spec:
     repositories:
     - name: central
       https:
-        url: https://github.com/kabanero-io/stacks/releases/download/0.5.0/kabanero-index.yaml
+        url: https://github.com/kabanero-io/stacks/releases/download/0.6.0/kabanero-index.yaml
     pipelines:
     - id: default
       sha256: 14d59b7ebae113c18fb815c2ccfd8a846c5fbf91d926ae92e0017ca5caf67c95
@@ -91,7 +95,7 @@ spec:
         url: https://github.com/kabanero-io/kabanero-pipelines/releases/download/0.6.0/default-kabanero-pipelines.tar.gz
 ```
 
-When the product operator activates the CRD, it associates the pipelines in the pipelines archive with each of the stacks in the stack hub.  The default pipelines are intended to work with all the stacks in the stack hub in the previous example. All of the pipeline-related resources (such as the tasks, trigger bindings, and pipelines) prefix the name of the resource with the keyword `StackId`.  When the operator activates these resources, it replaces the keyword with the name of the stack it is activating.
+When the product operator activates the CRD, it associates the pipelines in the pipelines archive with each of the stacks in the stack hub. The default pipelines are intended to work with all the stacks in the stack hub in the previous example. All of the pipeline-related resources (such as the tasks, trigger bindings, and pipelines) prefix the name of the resource with the keyword `StackId`. When the operator activates these resources, it replaces the keyword with the name of the stack it is activating.
 
 ### Creating and updating tasks and pipelines
 
@@ -317,5 +321,5 @@ To find solutions for common issues and troubleshoot problems with pipelines, se
 
 ### Related links
 
-- [Kabanero Pipelines repository](https://github.com/kabanero-io/kabanero-pipelines)
-- [Tekton Pipeline tutorial](https://github.com/tektoncd/pipeline/blob/master/docs/tutorial.md)
+- [Pipelines repository](https://github.com/kabanero-io/kabanero-pipelines)
+- [Pipeline tutorial](https://github.com/tektoncd/pipeline/blob/master/docs/tutorial.md)
