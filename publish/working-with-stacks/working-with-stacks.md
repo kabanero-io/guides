@@ -1,12 +1,12 @@
 ---
 permalink: /guides/working-with-stacks/
 layout: guide-markdown
-title: Working with application stacks
+title: Customizing application stacks
 duration: 40 minutes
 releasedate: 2020-02-06
 description: Learn how to create, update, build, test, and publish application stacks
 tags: ['stack', 'Node.js']
-guide-category: stacks
+guide-category: basic
 ---
 
 
@@ -217,66 +217,94 @@ Now that your stack is available in your local repository, the next step is to r
 3. Create a draft GitHub release for your stack, which places the source code and archives into a download folder. See [Creating releases](https://help.github.com/en/github/administering-a-repository/creating-releases).
 4. From the top level directory of your stack, run the following command to add your stack to the `my-org-repository` repository, referencing the release URL:
 
-```
-appsody stack add-to-repo my-org-repository --release-url https://github.com/myorg/my-org-repository/releases/latest/download/
-```
+    ```
+    appsody stack add-to-repo my-org-repository --release-url https://github.com/myorg/my-org-repository/releases/latest/download/
+    ```
 
-The output from this command is similar to the following example:
+    The output from this command is similar to the following example:
 
-```
-******************************************
-Running appsody stack add-to-repo
-******************************************
-Creating repository index file: /Users/user1/.appsody/stacks/dev.local/my-org-repository-index.yaml
-Repository index file updated successfully
-```
+    ```
+    ******************************************
+    Running appsody stack add-to-repo
+    ******************************************
+    Creating repository index file: /Users/user1/.appsody/stacks/dev.local/my-org-repository-index.yaml
+    Repository index file updated successfully
+    ```
 
 5. Upload the repository index file that is created in your `.appsody/stacks/dev.local` directory to your GitHub repository. Add it to your draft release and then publish the release.
 
-Share your URL for the index file with developers who can add it to their local repository list with the `appsody repo add` command. For example:
 
-```
-appsody repo add https://github.com/myorg/my-org-repository/releases/latest/download/my-org-repository-index.yaml
-```
+Now that you have released your application stack you can share your URL for the index file with developers. Developers must configure their local development environment to access the stack in one of the following ways:
 
-Developers can now create applications based on your customized stack in their local development environment.
+  - Developers who are using the CLI from the Appsody project can add it to their local repository list with the `appsody repo add` command. For more information, see [Developing microservice applications with the CLI](../use-appsody-cli/)
+  - Developers who are using an IDE with the Eclipse Codewind extension can configure their template sources. For more information, see [Getting Started with Codewind and VSCode](../codewind-getting-started-vscode/) or [Getting Started with Codewind and Eclipse](../codewind-getting-started-eclipse/).
 
-## Configuring the Kubernetes operator custom resource definition
+Developers can now create applications based on your customized stack in their local development environment. If you plan to make more than one  application stack available to developers, you might want to consider creating a stack hub. For more information, see [Creating a stack hub](../creating-a-stack-hub/).
 
-In order to deploy containerized applications that have been developed using your application stack, you must configure Kubernetes with information about the application stack and the deployment container that must be used. This configuration forms part of the operator custom resource definition (CRD).
+## Configuring your Kubernetes environment
 
-The following section shows the configuration for stack repositories:
+In order to deploy containerized applications that have been developed using your application stack, you must configure Kubernetes with information about the application stack and the deployment container that must be used. This configuration forms part of the Kabanero operator custom resource definition (CRD). The process is the same whether your URL defines a single application stack or a stack hub that contains multiple application stacks.
 
-```
-stacks:
-  repositories:
-  - name:
-    https:
-      url:
-      skipCertVerification: [true|false]
-  - name:
-    https:
-      url:
-      skipCertVerification: [true|false]
-```
+Follow these steps:
 
-Where:
+1. Obtain a copy of your current Kabanero CR instance configuration.
 
-- `repositories` lists the repositories to search for stacks
-- `name` is the name of your repository
-- `url` contains the URL string for the `index.yaml` file
-- `skipCertVerification` determines whether to verify the certificate before activating (default is `false`)
+    To obtain a list of all Kabanero CR instances in the kabanero namespace, run the following command:
 
-To change the desired state for a repository after the instance is deployed, you must edit each resource manually.
+    ```
+    oc get kabaneros -n kabanero
+    ```
 
-The following configuration can be used for the repository you created earlier:
+    To obtain the configuration for a specific CR instance, run the following command, substituting `<name>` for the instance you are targeting:
 
-```
-stacks:
-  repositories:
-  - name: my-org-repository
-    https:
-      url: https://github.com/myorg/my-org-repository/releases/latest/download/my-org-repository-index.yaml
-```
+    ```
+    oc get kabanero <name> -n kabanero -o yaml > kabanero.yaml
+    ```
 
-Edit your Kabanero CR instance to include the stack configuration and deploy it. Applications that have been developed using your stack can now be deployed to your Kubernetes cluster.
+    This example assumes that you kept the default `<name>`, which is `kabanero`.
+
+2. Edit the `kabanero.yaml` file that you generated in the last step.
+
+    Update the following section, which shows the configuration for stack repositories:
+
+    ```
+    stacks:
+      repositories:
+      - name:
+        https:
+          url:
+          skipCertVerification: [true|false]
+      - name:
+        https:
+          url:
+          skipCertVerification: [true|false]
+    ```
+
+    Where:
+
+    - `repositories` lists the repositories to search for stacks
+    - `name` is the name of your repository
+    - `url` contains the URL string for the `index.yaml` file
+    - `skipCertVerification` determines whether to verify the certificate before activating (default is `false`)
+
+    To change the desired state for a repository after the instance is deployed, you must edit each resource manually.
+
+    The following configuration can be used for the repository you created earlier:
+
+    ```
+    stacks:
+      repositories:
+      - name: my-org-repository
+        https:
+          url: https://github.com/myorg/my-org-repository/releases/latest/download/my-org-repository-index.yaml
+    ```
+
+3. Save the file.
+
+4. Apply the changes to your Kabanero CR instance with the following command:
+
+    ```
+    oc apply -f kabanero.yaml -n kabanero
+    ```
+
+Applications that have been developed using your stack can now be deployed to your Kubernetes cluster.

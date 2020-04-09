@@ -4,7 +4,7 @@ layout: guide-markdown
 title: Developing cloud native microservice applications with the Open Liberty application stack
 duration: 40 minutes
 releasedate: 2020-03-20
-description: Explore how to use the Open Liberty application stack to create, run, update, deploy, and deliver cloud native microservices. 
+description: Explore how to use the Open Liberty application stack to create, run, update, deploy, and deliver cloud native microservices.
 tags: ['Java', 'Open Liberty', 'Stack']
 guide-category: stacks
 ---
@@ -40,9 +40,9 @@ guide-category: stacks
 
 ## What you'll learn
 
-You'll learn how to create and run a simple cloud native microservice using the Open Liberty application stack. You’ll learn how to configure your development environment, update the microservice that you created and deploy it to Kubernetes or serverless. Deployment to serverless is optional depending on whether you want to Scale to Zero.
+Application stacks enable the development and optimization of microservice applications. With application stacks, developers don’t need to manage the full software development stack or be experts on underlying container technologies or Kubernetes. Application stacks are customized for specific enterprises to incorporate their company standards and technology choices. Developers access these stacks by configuring their development environment to point to a stack configuration.
 
-The Open Liberty application stack enables the development and optimization of microservices. With application stacks, developers don't need to manage full software development stacks or be experts on underlying container technologies or Kubernetes. Application stacks are customized for specific enterprises to incorporate their company standards and technology choices.
+In this guide, you’ll learn how to configure your development environment, then create and run a simple cloud native microservice based on the Java&trade; Open Liberty application stack. Finally, you’ll update the microservice that you created and deploy it to Kubernetes or serverless. Deployment to serverless is optional depending on whether you want to Scale to Zero.
 
 Applications in this guide are written based on the Jakarta EE and Eclipse MicroProfile API specifications, built and run with the [Open Liberty](https://openliberty.io/) runtime, and deployed to Kubernetes through a modern DevOps toolchain that is triggered in Git.
 
@@ -54,12 +54,9 @@ Applications in this guide are written based on the Jakarta EE and Eclipse Micro
 
 ## Prerequisites
 
-- [Docker](https://docs.docker.com/get-started/) must be installed.
+- [Docker](https://docs.docker.com/get-started/) must be installed. If you are using Docker Desktop, you can enable Kubernetes from the menu by selecting *Preferences* -> *Kubernetes* -> *Enable Kubernetes*. Other options include [Minishift](https://www.okd.io/minishift/) or [Minikube](https://kubernetes.io/docs/setup/learning-environment/minikube/).
 - [Appsody](https://appsody.dev/docs/getting-started/installation) must be installed.
-- *Optional:* If your organisation has customized application stacks, you need the URL that points to the `index.yaml` file for the stack hub.
-- *Optional*: If you are testing multiple microservices together, you must have access to a local Kubernetes cluster for local development.
-If you are using Docker Desktop, you can enable Kubernetes from the menu by selecting *Preferences* -> *Kubernetes* -> *Enable Kubernetes*.
-Other options include [Minishift](https://www.okd.io/minishift/) or [Minikube](https://kubernetes.io/docs/setup/learning-environment/minikube/). If you want to use remote cluster development, use Codewind.
+
 
 <!--
 // =================================================================================================
@@ -68,6 +65,8 @@ Other options include [Minishift](https://www.okd.io/minishift/) or [Minikube](h
 -->
 
 ## Getting started
+
+You are going to create an application that is based on a public stack from the Kabanero project. After configuring your local development environment, you are going to initialize a new project that is based on the Open Liberty stack.
 
 <!--
 // =================================================================================================
@@ -90,33 +89,24 @@ NAME        URL
 *incubator https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
 ```
 
-Next, run the following command to add the URL for your stack hub index file:
+Next, run the following command to add the URL for the public Kabanero stack hub:
 
 ```shell
-appsody repo add <my-org-stack> <URL>
+appsody repo add kabanero https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.7.0/kabanero-stack-hub-index.yaml
 ```
 
-where `<my-org-stack>` is the repository name for your stack hub and `<URL>` is the URL for
-your stack hub index file.
-
-**Note:** If you do not have a stack hub that contains customized, pre-configured application stacks, you can skip to
-[Initializing your project](#initializing-your-project) and develop your app based on the public application stack
-for Open Liberty.
-
-Check the repositories again by running `appsody repo list` to see that your stack hub was added. In the
-following examples, the stack hub is called `abc-stacks` and the URL is `https://github.com/abc.inc/stacks/index.yaml`:
+Check the repositories again by running `appsody repo list` to see that your repository was added. The output is similar to the following example:
 
 ```shell
 NAME        URL
 *incubator https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
-abc-stacks https://github.com/abc.inc/stacks/index.yaml
+kabanero   https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.7.0/kabanero-stack-hub-index.yaml
 ```
 
-In this example, the asterisk (\*) shows that `incubator` is the default repository. Run the following command to set `abc-stacks`
-as the default repository:
+In this example, the asterisk (\*) shows that `incubator` is the default repository. Run the following command to set `kabanero` as the default repository:
 
 ```shell
-appsody repo set-default abc-stacks
+appsody repo set-default kabanero
 ```
 
 Check the available repositories again by running `appsody repo list` to see that the default is updated:
@@ -124,7 +114,7 @@ Check the available repositories again by running `appsody repo list` to see tha
 ```shell
 NAME        URL
 incubator https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
-*abc-stacks https://github.com/abc.inc/stacks/index.yaml
+*kabanero   https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.7.0/kabanero-stack-hub-index.yaml
 ```
 
 **Recommendation**: To avoid initializing projects that are based on the public application stacks, it's best
@@ -138,10 +128,12 @@ Check the available repositories again by running `appsody repo list` to see tha
 
 ```shell
 NAME        URL
-*abc-stacks https://github.com/abc.inc/stacks/index.yaml
+*kabanero   https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.7.0/kabanero-stack-hub-index.yaml
 ```
 
-Your development environment is now configured to use your customized application stacks. Next, you need to initialize your project.
+Your development environment is now configured to use the Kabanero application stacks. Next, you need to initialize your project.
+
+**Note:** If your organization has created a stack hub that contains customized application stacks, you must configure your development environment to access them. After you have completed this guide, you can step through this section again to update your configuration to point to the URL for your organization's stack hub. This configuration process is also described in [Developing microservice applications with the CLI](../use-appsody-cli).
 
 <!--
 // =================================================================================================
@@ -167,31 +159,48 @@ appsody init java-openliberty
 The output from the command is similar to the following example:
 
 ```shell
+Checking stack requirements...
+Docker requirements met
+Appsody requirements met
+Running appsody init...
+Downloading java-openliberty template project from https://github.com/kabanero-io/collections/releases/download/0.6.3/java-openliberty.v0.2.3.templates.default.tar.gz
+Download complete. Extracting files from /Users/myuser/appsody/java-openliberty/java-openliberty.tar.gz
+Setting up the development environment
+Your Appsody project name has been set to java-openliberty
+Pulling docker image docker.io/kabanero/java-openliberty:0.2
+Running command: docker pull docker.io/kabanero/java-openliberty:0.2
+0.2: Pulling from kabanero/java-openliberty
+..
+..
 [InitScript] [INFO] Scanning for projects...
-[InitScript] [INFO] 
+[InitScript] [INFO]
 [InitScript] [INFO] --------------------< dev.appsody:java-openliberty >--------------------
-[InitScript] [INFO] Building java-openliberty 0.2.2
+[InitScript] [INFO] Building java-openliberty 0.2.3
 [InitScript] [INFO] --------------------------------[ pom ]---------------------------------
-[InitScript] [INFO] 
-[InitScript] [INFO] --- maven-enforcer-plugin:3.0.0-M3:enforce (default-cli) @ java-openliberty ---
-[InitScript] [INFO] Skipping Rule Enforcement.
-[InitScript] [INFO] 
+[InitScript] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-enforcer-plugin/3.0.0-M3/maven-enforcer-plugin-3.0.0-M3.pom
+..
+..
+[InitScript] [INFO]
 [InitScript] [INFO] --- maven-install-plugin:2.4:install (default-install) @ java-openliberty ---
-[InitScript] [INFO] Installing /Users/myuser/appsody/java-openliberty-new/.appsody_init/pom.xml to /Users/myuser/.m2/repository/dev/appsody/java-openliberty/0.2.2/java-openliberty-0.2.2.pom
+[InitScript] [INFO] Installing /Users/myuser/appsody/java-openliberty/.appsody_init/pom.xml to /Users/myuser/.m2/repository/dev/appsody/java-openliberty/0.2.3/java-openliberty-0.2.3.pom
 [InitScript] [INFO] ------------------------------------------------------------------------
 [InitScript] [INFO] BUILD SUCCESS
 [InitScript] [INFO] ------------------------------------------------------------------------
-[InitScript] [INFO] Total time:  0.606 s
-[InitScript] [INFO] Finished at: 2020-03-02T10:46:36Z
+[InitScript] [INFO] Total time:  2.556 s
+[InitScript] [INFO] Finished at: 2020-04-02T13:19:45+01:00
 [InitScript] [INFO] ------------------------------------------------------------------------
+Successfully added your project to /Users/myuser/.appsody/project.yaml
+Your Appsody project ID has been set to 20200402131945.49100100
 Successfully initialized Appsody project with the java-openliberty stack and the default template.
 ```
+
+**Note:** Some lines (..) are removed for clarity.
 
 Your project is now initialized.
 
 <!--
 // =================================================================================================
-// Understanding the project layout 
+// Understanding the project layout
 // =================================================================================================
 -->
 
@@ -269,7 +278,7 @@ public class StarterResource {
 The development environment watches for file changes and automatically updates your application. After you save, the source compiles and the application updates. You see messages similar to the following example:
 
 ```shell
-Container] [INFO] [AUDIT   ] CWWKT0017I: Web application removed (default_host): http://c795e8d0b51c:9080/
+[Container] [INFO] [AUDIT   ] CWWKT0017I: Web application removed (default_host): http://c795e8d0b51c:9080/
 [Container] [INFO] [AUDIT   ] CWWKZ0009I: The application starter-app has stopped successfully.
 [Container] [INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://c795e8d0b51c:9080/
 [Container] [INFO] [AUDIT   ] CWWKZ0003I: The application starter-app updated in 1.052 seconds.
@@ -287,7 +296,7 @@ Use `Ctrl+C` to stop the development environment, or run the command `appsody st
 
 <!--
 // =================================================================================================
-// Testing the application 
+// Testing the application
 // =================================================================================================
 -->
 
@@ -357,7 +366,7 @@ Deployment deleted
 
 <!--
 // =================================================================================================
-// Testing with serverless 
+// Testing with serverless
 // =================================================================================================
 -->
 
@@ -377,4 +386,4 @@ After you develop and test your application in your local environment, it’s ti
 
 When Kabanero is installed, deploying applications to a Kubernetes cluster always occurs through the DevOps pipeline that is triggered in Git. Using DevOps pipelines to deploy applications ensures that developers can focus on application code, not on containers or Kubernetes infrastructure. From an enterprise perspective, this deployment process ensures that both the container image build and the deployment to Kubernetes or Knative happen in a secure and consistent way that meets company standards.
 
-To deliver your application to the pipeline, push the project to the pre-configured Git repository that has a configured webhook. This configured webhook triggers the enterprise build and deploy pipeline.
+To deliver your application to the pipeline, push the project to the pre-configured Git repository that has a configured webhook. This configured webhook triggers the enterprise build and deploy pipeline. For more information, see [Working with pipelines](../working-with-pipelines).

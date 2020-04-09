@@ -6,7 +6,7 @@ duration: 20 minutes
 releasedate: 2020-03-23
 description: How to create and configure an application stack hub
 tags: ['Stack']
-guide-category: stacks
+guide-category: basic
 ---
 
 <!--
@@ -36,7 +36,7 @@ A stack hub is the central control point for application stacks that you want to
 be clones of public stacks or they might be customized to meet local requirements. For example, you might want to include
 templates with unique starter applications, specify a different test framework, or ensure that your applications are developed on specific software levels.
 
-Before building a stack hub you should identify the stacks that you want to use for developing your microservice applications. Clone the available stacks and make any modifications that are needed. How to customize, package, and publish stacks is covered in the [Working with stacks](../working-with-stacks/) guide.
+Before building a stack hub you should identify the stacks that you want to use for developing your microservice applications. Clone the available stacks and make any modifications that are needed. How to customize, package, and publish stacks is covered in the [Customizing applications stacks](../working-with-stacks/) guide.
 
 In this guide we will cover how to build a stack hub that consolidates multiple application stacks for use in your organization and how to use the assets in your deployment environment.
 
@@ -53,7 +53,7 @@ The following prerequisites apply to your local system:
 Stack hubs are created from a configuration file. For a suitable starting point, clone the following repository, which contains example files:
 
 ```
-git clone https://github.com/kabanero/kabanero-stack-hub.git
+git clone https://github.com/kabanero-io/kabanero-stack-hub.git
 ```
 In this repository, you can find the following key files:
 
@@ -113,34 +113,34 @@ In this guide, you will change the example configuration file and use it build a
 
 1. Edit the `example_config/example_repo_config.yaml` file to include the following values for your stack hub:
 
-```
-# File: example_repo_config.yaml
-# My organization stack hub
-name: My.org Stack Hub
-description: Test configuration to build 2 index files for the default and incubator repos.
-version: 0.1.0
-stacks:
-  - name: default
-    repos:
-      - url: https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
-        exclude:
-          - kitura
-          - node-red
-          - python-flask
-          - starter
-          - swift
-          - java-microprofile
-          - nodejs
-      - url: https://github.com/kabanero-io/collections/releases/download/0.6.0/kabanero-index.yaml
-        include:
-          - java-microprofile
-image-org:
-image-registry:
-nginx-image-name:
-```
+    ```
+    # File: example_repo_config.yaml
+    # My organization stack hub
+    name: My.org Stack Hub
+    description: Test configuration to build 2 index files for the default and incubator repos.
+    version: 0.1.0
+    stacks:
+      - name: default
+        repos:
+          - url: https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
+            exclude:
+              - kitura
+              - node-red
+              - python-flask
+              - starter
+              - swift
+              - java-microprofile
+              - nodejs
+          - url: https://github.com/kabanero-io/collections/releases/download/0.6.0/kabanero-index.yaml
+            include:
+              - java-microprofile
+    image-org:
+    image-registry:
+    nginx-image-name:
+    ```
 
-This example configuration file builds a single stack hub index file for your `default` hub. The `default` hub points to two index files, `https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml` and `https://github.com/kabanero-io/collections/releases/download/0.6.0/kabanero-index.yaml`. The `include:` and `exclude:` options are used
-to filter from the available application stacks.
+    This example configuration file builds a single stack hub index file for your `default` hub. The `default` hub points to two index files, `https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml` and `https://github.com/kabanero-io/collections/releases/download/0.6.0/kabanero-index.yaml`. The `include:` and `exclude:` options are used
+    to filter from the available application stacks.
 
 2. Save your changes.
 
@@ -220,18 +220,71 @@ Creating consolidated index for default
 Congratulations! You have built your first stack hub index file that defines a set of filtered application stacks from multiple source repositories. This index file should be hosted somewhere that is accessible to developers, such as a GitHub repository. Typically, you would create a release for a final version of the index file, and reference the index file from a URL that is similar to `https://github.com/myorg/my-org-repository/releases/latest/download/default-index.yaml`.
 
 
-## Configuring your deployment environment
+## Configuring your Kubernetes environment
 
-Your deployment environment also needs to know about the application stacks that should be used to build deployment containers. You  must update your Kubernetes operator custom resource (CR) definition file to reference your stack hub index file.
+Your deployment environment also needs to know about the application stacks that should be used to build deployment containers. You must update your Kabanero operator custom resource definition (CRD) file to reference your stack hub index file.
 
-Edit the `stacks:` section of your Kubernetes operator CR definition file to include the URL for your stack hub index file.
 
-For example:
+Follow these steps:
 
-```
-stacks:
-  repositories:
-  - name: default
-    https:
-      url: https://github.com/myorg/my-org-repository/releases/latest/download/default-index.yaml
-```
+1. Obtain a copy of your current Kabanero CR instance configuration.
+
+    To obtain a list of all Kabanero CR instances in the kabanero namespace, run the following command:
+
+    ```
+    oc get kabaneros -n kabanero
+    ```
+
+    To obtain the configuration for a specific CR instance, run the following command, substituting `<name>` for the instance you are targeting:
+
+    ```
+    oc get kabanero <name> -n kabanero -o yaml > kabanero.yaml
+    ```
+
+    This example assumes that you kept the default `<name>`, which is `kabanero`.
+
+2. Edit the `kabanero.yaml` file that you generated in the last step.
+
+    Update the following section, which shows the configuration for stack repositories:
+
+    ```
+    stacks:
+      repositories:
+      - name:
+        https:
+          url:
+          skipCertVerification: [true|false]
+      - name:
+        https:
+          url:
+          skipCertVerification: [true|false]
+    ```
+
+    Where:
+
+    - `repositories` lists the repositories to search for stacks
+    - `name` is the name of your repository
+    - `url` contains the URL string for the `index.yaml` file
+    - `skipCertVerification` determines whether to verify the certificate before activating (default is `false`)
+
+    To change the desired state for a repository after the instance is deployed, you must edit each resource manually.
+
+    The following configuration can be used for the repository you created earlier:
+
+    ```
+    stacks:
+      repositories:
+      - name: my-org-repository
+        https:
+          url: https://github.com/myorg/my-org-repository/releases/latest/download/my-org-repository-index.yaml
+    ```
+
+3. Save the file.
+
+4. Apply the changes to your Kabanero CR instance with the following command:
+
+    ```
+    oc apply -f kabanero.yaml -n kabanero
+    ```
+
+Applications that are developed using the stacks defined in your stack hub can now be deployed to your Kubernetes cluster.

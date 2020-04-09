@@ -5,7 +5,7 @@ permalink: /guides/using-kAppNav/
 :page-duration: 25 minutes
 :page-releasedate: 2019-10-18
 :page-description: Learn how to organize cloud native microservices into a single view
-:page-guide-category: basic
+:page-guide-category: manage
 :page-tags: ['kAppNav']
 = Using Kubernetes Application Navigator (kAppNav)
 
