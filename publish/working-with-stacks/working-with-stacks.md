@@ -6,7 +6,7 @@ duration: 40 minutes
 releasedate: 2020-02-06
 description: Learn how to create, update, build, test, and publish application stacks
 tags: ['stack', 'Node.js']
-guide-category: stacks
+guide-category: basic
 ---
 
 
