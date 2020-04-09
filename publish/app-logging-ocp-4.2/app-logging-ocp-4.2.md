@@ -4,7 +4,7 @@ layout: guide-markdown
 title: Application Logging on Red Hat OpenShift Container Platform (RHOCP) 4.3 with Elasticsearch, Fluentd, and Kibana
 duration: 30 minutes
 releasedate: 2020-04-09
-description: Learn how to do application logging with Elasticsearch, Fluentd, and Kibana.
+description: Learn how to do application logging on RHOCP 4.2 or RHOCP 4.3 with Elasticsearch, Fluentd, and Kibana.
 tags: ['logging', 'Elasticsearch', 'Fluentd', 'Kibana']
 guide-category: manage
 ---
