@@ -82,8 +82,9 @@ tekton-dashboard   tekton-dashboard-tekton-pipelines.apps.kabanero.os.fyre.ibm.c
 . From **Target Pipeline Settings**, select `Kabanero` namespace, `java-microprofile-build-push-jk-pl` Pipeline, `kabanero-pipeline` Service Account, and your OpenShift Registry URL in `image-registry.openshift-image-registry.svc:5000/<projectname>` form.
 . Go to the **PipelineRuns** tab. If you didn't already create PipelineRuns, the list is empty.
 . In GitHub, go to **Settings** -> **Webhooks**. You can see your new webhook, which was created by the the pipelines dashboard.
-. Now make any code change in your repository and push the change. Wait a few moments and you can see a PipelineRun start under the **PipelineRuns** tab on your the pipelines dashboard.
-. After the PipelineRun finishes successfully, log in to your OpenShift Registry and find the new image. The image resides under a repository with the same name as your GitHub repository.
+. Now make any code change in your repository and push the change. Wait a few moments and you can see a PipelineRun start under the **PipelineRuns** tab on your pipelines dashboard.
+. After the PipelineRun finishes successfully, log in to your OpenShift Registry and find the new image. The image resides under a repository with the same name as your GitHub repository. Note: Kabanero Pipelines will use Project Name as the image name and latest git commit id as the tag; by design.
+* Note: If you use an external image registry, you'll have to configure the secrets in the pipelines dashboard and you'll find the image under that external image registry.
 
 == Deploy an image with Jenkins
 
@@ -97,7 +98,14 @@ On your local environment where your development application is installed, go to
 appsody build
 ----
 +
-Other tools, including Jenkins, can use this file for development application deployment. Commit and push this file to the root of your project. Jenkins creates the `AppsodyApplication` resource in the OpenShift cluster and uses your application to deploy the application by using the `app-deploy.yaml` file.
+Other tools, including Jenkins, can use this file for development application deployment. Commit and push this file to the root of your project. Jenkins creates the `AppsodyApplication` resource in the OpenShift cluster and uses your application to deploy the application by using the `app-deploy.yaml` file.  Update `app-deploy.yaml` file with your desired image name to match the `IMAGENAME` envVar in the Jenkinsfile you will create below.
++
+----
+metadata:
+  name: java-microprofile
+spec:
+----
++
 
 . **Create a Jenkins project and pipeline**:
 Create a Jenkins (Ephemeral) instance by running the following command:

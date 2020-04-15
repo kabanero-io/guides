@@ -6,7 +6,7 @@ duration: 20 minutes
 releasedate: 2020-03-23
 description: How to create and configure an application stack hub
 tags: ['Stack']
-guide-category: stacks
+guide-category: basic
 ---
 
 <!--
@@ -38,7 +38,7 @@ templates with unique starter applications, specify a different test framework, 
 
 Before building a stack hub you should identify the stacks that you want to use for developing your microservice applications. Clone the available stacks and make any modifications that are needed. How to customize, package, and publish stacks is covered in the [Customizing applications stacks](../working-with-stacks/) guide.
 
-In this guide we will cover how to build a stack hub that consolidates multiple application stacks for use in your organization and how to use the assets in your deployment environment.
+This guide will cover how to build a stack hub that consolidates multiple application stacks for use in your organization, how to release your stack hub in GitHub, and how to use the assets in your deployment environment.
 
 ### Prerequisites
 
@@ -217,7 +217,19 @@ Creating consolidated index for default
   version: 0.4.3
   ```
 
-Congratulations! You have built your first stack hub index file that defines a set of filtered application stacks from multiple source repositories. This index file should be hosted somewhere that is accessible to developers, such as a GitHub repository. Typically, you would create a release for a final version of the index file, and reference the index file from a URL that is similar to `https://github.com/myorg/my-org-repository/releases/latest/download/default-index.yaml`.
+Congratulations! You have built your first stack hub index file that defines a set of filtered application stacks from multiple source repositories.  
+
+## Releasing your stack hub
+
+The next step is to host your index file somewhere that is accessible to developers and then create a release. To host the index file in a GitHub repository, follow these steps:
+
+1. When you are happy with the content of your stack hub, push your repository to your GitHub organization.
+
+2. In GitHub, click **Releases**, then click **Draft a new release** to create a release for your stack hub. Complete the information fields and upload your `default-index.yaml` file from your `/assets` folder into the box indicated by **Attach binaries by dropping them here or selecting them**. For more information, see [Creating releases](https://help.github.com/en/github/administering-a-repository/creating-releases).
+
+3. Publish your release.
+
+4. Finally, share the URL with your developers so that they can access the stack hub index file from their development environment. You can copy the URL from the **Assets** section of your release by right-clicking on the `default-index.yaml` file and choosing **Copy Link Address**. The URL containing the index file will be similar to `https://github.com/myorg/my-org-repository/releases/latest/download/default-index.yaml`.
 
 
 ## Configuring your Kubernetes environment

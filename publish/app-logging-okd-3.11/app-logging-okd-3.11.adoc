@@ -5,7 +5,7 @@ permalink: /guides/app-logging/
 :page-layout: guide
 :page-duration: 30 minutes
 :page-releasedate: 2019-09-03
-:page-guide-category: basic
+:page-guide-category: manage
 :page-essential: true
 :page-essential-order: 1
 :page-description: Learn how to do application logging with Kabanero on OKD with Elasticsearch, FluentD, and Kibana.
