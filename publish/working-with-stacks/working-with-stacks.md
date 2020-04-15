@@ -40,7 +40,7 @@ GitHub repository for developers to use in their local development environment. 
 
 - [Docker](https://docs.docker.com/get-started/) must be installed.
 - [Appsody](https://appsody.dev/docs/getting-started/installation) must be installed.
-(Optional) To deploy your customized stack, you must have access to the OpenShift Container Platform (OCP) v4.3 cluster.
+- (Optional) To deploy your customized stack, you must have access to the OpenShift Container Platform (OCP) v4.3 cluster.
 
 ## Getting started
 
@@ -58,20 +58,24 @@ Where `my-nodejs-express-stack` is the name you give your application stack.
 
 A new `my-nodejs-express-stack` directory is created that is based on the originating stack, which contains the following key files and directories:
 
-- `README.md`
+- `README.md`:
     Contains detailed information about the stack and the available templates. Use this file to record any unique aspects of your stack for users.
-- `stack.yaml`
+- `stack.yaml`:
     Contains the basic definition for the stack. Here you can uniquely identify your stack, configure the default template that is used when you initialize a project, or control the versions of software components that can be used with the stack, including the Appsody CLI.
-- `image/config/app-deploy.yaml`
+- `image/config/app-deploy.yaml`:
     Contains configuration information that is used by an operator for deploying a project to Kubernetes or serverless.
-- `image/project/Dockerfile-stack`
+- `image/project/Dockerfile-stack`:
     Creates a stack image that is used to generate a development container. You can modify environment variables in the `Dockerfile-stack` file that change the container environment for local development. For example, you can adjust the mount points for local application code, update the files or directories that are monitored for source code changes, and configure the caching of software dependencies. These dependencies are stored in volumes that can be mounted
     when a development container is restarted to reduce the startup time.
-- `image/project/Dockerfile`
+- `image/project/Dockerfile`:
     Creates the final image that is used to generate the deployment container.
-- `templates/simple/`
+- `image/project/package.json`:
+    Contains the Node.js Express project build information, such as which NPM modules and dependencies are required.
+- `image/project/server.js`:
+    Contains the startup configuration for the Express server application.
+- `templates/simple/`:
     Files in this folder comprise a simple starter Express application and a sample test.
-- `templates/scaffold/`
+- `templates/scaffold/`:
     Files in this folder comprise a more complex Express application with routes and views.
 
 You can add or remove template directories to provide different starting points for developers.
@@ -81,24 +85,65 @@ In addition to updating the files in your stack directory, you can also set file
 
 ## Updating a stack
 
-Although there are many aspects that you can modify for an application stack, in this guide we will make a very simple change. Edit the `stack.yaml` definition file to change the default template from `simple` to `scaffold`:
-
+Application stacks can be customized in many different ways. In this guide we will customize the `nodejs-express` stack to improve the security for Express applications by including the
+[Helmet](https://www.npmjs.com/package/helmet) package. Helmet consists of a set of functions that set security-related HTTP response headers. The first step is to add the module to the
+list of `"dependencies":` in the `image/project/package.json` file. In the following example, Helmet version 3.21.0 is defined as the minimum level to be installed as a part of the project.  
 
 ```
-name: Node.js Express
-version: 0.4.1
-description: Express web framework for Node.js
-license: Apache-2.0
-language: nodejs
-maintainers:
-  - name: Sam Roberts
-    email: vieuxtech@gmail.com
-    github-id: sam-github
-default-template: scaffold
-requirements:
-  docker-version: ">= 17.09.0"
-  appsody-version: ">= 0.2.7"
-  ```
+{
+  "name": "nodejs-express",
+  "version": "0.4.6",
+  "description": "Node.js Express Stack",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/appsody/stacks.git",
+    "directory": "incubator/nodejs-express/image/project"
+  },
+  "scripts": {
+    "debug": "node --inspect=0.0.0.0 server.js",
+    "start": "node server.js",
+    "test": "mocha"
+  },
+  "dependencies": {
+    "@cloudnative/health-connect": "^2.0.0",
+    "appmetrics-prometheus": "~3.1.0",
+    "express": "~4.17.1",
+    "express-pino-logger": "^4.0.0",
+    "pino": "^5.14.0",
+    "helmet": "^3.21.0"
+  },
+  "devDependencies": {
+    "appmetrics-dash": "^5.3.0",
+    "chai": "^4.2.0",
+    "mocha": "~6.1.0",
+    "request": "^2.88.0"
+  }
+}
+```
+
+Update and save the changes to your `image/project/package.json` file.
+
+Now that Helmet is defined as a dependency, you must update your `image/project/server.js` file to import the package and instruct the Express application to use it. Make the following changes:
+
+1. Add `const helmet = require('helmet'); ` to the list of packages that are required.
+2. Add the line `app.use(helmet());` to ensure that the package is used for HTTP header security.
+
+Here are the first few lines of the `image/project/server.js` file to show the updates:
+
+```
+const express = require('express');
+const helmet = require('helmet');
+const health = require('@cloudnative/health-connect');
+const metrics = require('appmetrics-prometheus')
+const fs = require('fs');
+const http = require('http');
+
+const app = express();
+app.use(helmet());
+app.use('/metrics', metrics.endpoint());
+const server = http.createServer(app)
+```
 
 Save your changes.
 
@@ -145,10 +190,9 @@ The output should be similar to the following example:
 
 ```
 REPO     	ID                    	VERSION  	TEMPLATES        	DESCRIPTION                      
-dev.local	my-nodejs-express-stack	0.4.1    	*scaffold, simple	Express web framework for Node.js
+dev.local	my-nodejs-express-stack	0.4.6    	scaffold, *simple	Express web framework for Node.js
 ```
 
-The asterisk (\*) indicates the default template. Your stack updates were a success!
 
 ## Testing your stack
 
@@ -158,9 +202,9 @@ The first check is to validate your stack by running the following command:
 appsody stack validate
 ```
 
-The validation process steps through a number of test operations that check the structure of your
-application stack before packaging and initializing a project. The project is then run and tested against any generic tests that are defined in stack. Finally a production image is generated for
-deployment. A summary of the results is printed, similar to the  following example output:
+The validation process steps through a number of test operations that check the structure of your application stack before packaging and initializing a project.
+The project is then run and tested against any generic tests that are defined in the stack. Finally a production image is generated for deployment.
+At the end of the validation process a summary is printed, similar to the  following example output:
 
 ```
 @@@@@@@@@@@@@@@ Validate Summary Start @@@@@@@@@@@@@@@@
@@ -179,34 +223,62 @@ Total FAILED: 0
 @@@@@@@@@@@@@@@  Validate Summary End  @@@@@@@@@@@@@@@@
 ```
 
-The next step is to test the changes you made to the stack. In this guide, the changes are very minor and can be checked very easily by initializing a project from the application stack.
 
-Run the following command:
+To test the changes that you made to the stack dependencies you can initialize a project based on your updated stack.
+
+First create a directory for your new project and then initialize a new project from your updated stack. Run the commands shown in the following example:
 
 ```
+mkdir my-nodejs-express-project
+cd my-nodejs-express-project
 appsody init my-nodejs-express-stack
 ```
 
-You see output similar to the following example:
+Next, run your new project with the following command:
 
 ```
-...
-Checking stack requirements...
-Docker requirements met
-Appsody requirements met
-Running appsody init...
-Downloading my-nodejs-express-stack template project from file:///Users/user1/.appsody/stacks/dev.local/my-nodejs-express.v0.4.1.templates.scaffold.tar.gz
-Download complete. Extracting files from /Users/user1/appsody/my-nodejs-express/test/my-nodejs-express.tar.gz
-Setting up the development environment
-Your Appsody project name has been set to test
-Using local cache for image dev.local/appsody/my-nodejs-express:0.4
-Running command: docker run --rm --entrypoint /bin/bash dev.local/appsody/my-nodejs-express:0.4 -c find /project -type f -name .appsody-init.sh
-Successfully initialized Appsody project with the my-nodejs-express-stack stack and the default template.
+appsody run
 ```
 
-When you view the contents of your project folder you can see the `routes` and `views` directories, which are only included in the `scaffold` template.
+The CLI launches a local Docker image that contains the Node.js Express runtime environment and starts your microservice app. You can check that the app is running by browsing to
+http://localhost:3000 where you see the message "Hello from Appsody!".
 
-Major changes to the stack will require more detailed testing before your stack is ready to be released.
+To verify that Express is using Helmet to secure HTTP headers, run the following command from a different terminal window:
+
+```
+curl -v localhost:3000
+```
+
+In the response from the application you can see the `X-` security-related headers. The output looks similar to the following example:
+
+```
+*   Trying ::1...
+* TCP_NODELAY set
+* Connected to localhost (::1) port 3000 (#0)
+> GET / HTTP/1.1
+> Host: localhost:3000
+> User-Agent: curl/7.64.1
+> Accept: */*
+>
+< HTTP/1.1 200 OK
+< X-DNS-Prefetch-Control: off
+< X-Frame-Options: SAMEORIGIN
+< Strict-Transport-Security: max-age=15552000; includeSubDomains
+< X-Download-Options: noopen
+< X-Content-Type-Options: nosniff
+< X-XSS-Protection: 1; mode=block
+< X-Powered-By: Express
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 19
+< ETag: W/"13-0ErcqB22cNteJ3vXrBgUhlCj8os"
+< Date: Wed, 15 Apr 2020 08:34:57 GMT
+< Connection: keep-alive
+<
+* Connection #0 to host localhost left intact
+Hello from Appsody!* Closing connection 0
+```
+
+Your stack changes to include the Helmet package were a success!
 
 ## Releasing your stack
 
