@@ -97,7 +97,7 @@ NAME        URL
 Next, run the following command to add the URL for the public Kabanero stack hub:
 
 ```
-appsody repo add kabanero https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.7.0/kabanero-stack-hub-index.yaml
+appsody repo add kabanero https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.8.0/kabanero-stack-hub-index.yaml
 ```
 
 Check the repositories again by running `appsody repo list` to see that your repository was added. The output is similar to the following example:
@@ -105,7 +105,7 @@ Check the repositories again by running `appsody repo list` to see that your rep
 ```
 NAME        URL
 *incubator https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
-kabanero   https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.7.0/kabanero-stack-hub-index.yaml
+kabanero   https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.8.0/kabanero-stack-hub-index.yaml
 ```
 
 In this example, the asterisk (\*) shows that `incubator` is the default repository. Run the following command to set `kabanero` as the default repository:
@@ -119,7 +119,7 @@ Check the available repositories again by running `appsody repo list` to see tha
 ```
 NAME        URL
 incubator https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
-*kabanero https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.7.0/kabanero-stack-hub-index.yaml
+*kabanero https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.8.0/kabanero-stack-hub-index.yaml
 ```
 
 **Recommendation**: To avoid initializing projects that are based on the Appsody application stacks, it's best to remove `incubator` from the list. Run the following command to remove the `incubator` repository:
@@ -134,7 +134,7 @@ Check the available repositories again by running `appsody repo list` to see tha
 
 ```
 NAME     	URL
-*kabanero https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.7.0/kabanero-stack-hub-index.yaml
+*kabanero https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.8.0/kabanero-stack-hub-index.yaml
 ```
 
 Your development environment is now configured to use the Kabanero application stacks. Next, you need to initialize your project.
@@ -167,18 +167,20 @@ appsody init nodejs-express
 The output from the command is similar to the following example:
 
 ```
-Downloading nodejs-express template project from https://github.com/kabanero-io/collections/releases/download/0.6.3/nodejs-express.v0.2.10.templates.simple.tar.gz
-Download complete. Extracting files from /Users/myuser/projects/simple-nodejs-express/nodejs-express.tar.gz
+Downloading nodejs-express template project from https://github.com/kabanero-io/collections/releases/download/0.6.4/nodejs-express.v0.2.10.templates.simple.tar.gz
+Download complete. Extracting files from /Users/myuser/appsody/simple-nodejs-express/nodejs-express.tar.gz
 Setting up the development environment
 Your Appsody project name has been set to simple-nodejs-express
-Pulling docker image docker.io/kabanero/nodejs-express:0.2
-Running command: docker pull docker.io/kabanero/nodejs-express:0.2
-0.2: Pulling from kabanero/nodejs-express
+Pulling docker image docker.io/kabanerobeta/nodejs-express:0.2
+Running command: docker pull docker.io/kabanerobeta/nodejs-express:0.2
+0.2: Pulling from kabanerobeta/nodejs-express
 ..
 ..
-Status: Downloaded newer image for kabanero/nodejs-express:0.2
-docker.io/kabanero/nodejs-express:0.2
-Running command: docker run --rm --entrypoint /bin/bash docker.io/kabanero/nodejs-express:0.2 -c "find /project -type f -name .appsody-init.sh"
+Status: Downloaded newer image for kabanerobeta/nodejs-express:0.2
+docker.io/kabanerobeta/nodejs-express:0.2
+Running command: docker run --rm --entrypoint /bin/bash docker.io/kabanerobeta/nodejs-express:0.2 -c "find /project -type f -name .appsody-init.sh"
+Successfully added your project to /Users/myuser/.appsody/project.yaml
+Your Appsody project ID has been set to 20200407090805.07014400
 Successfully initialized Appsody project with the nodejs-express stack and the default template.
 ```
 
@@ -222,8 +224,8 @@ After some time, you see a message similar to the following example:
 [Container] > nodejs-express@0.2.10 start /project
 [Container] > node server.js
 [Container]
-[Container] [Mon Mar 30 12:58:44 2020] com.ibm.diagnostics.healthcenter.loader INFO: Node Application Metrics 5.1.1.202003121616 (Agent Core 4.0.5)
-[Container] [Mon Mar 30 12:58:45 2020] com.ibm.diagnostics.healthcenter.mqtt INFO: Connecting to broker localhost:1883
+[Container] [Tue Apr 07 12:58:44 2020] com.ibm.diagnostics.healthcenter.loader INFO: Node Application Metrics 5.1.1.202003121616 (Agent Core 4.0.5)
+[Container] [Tue Apr 07 12:58:45 2020] com.ibm.diagnostics.healthcenter.mqtt INFO: Connecting to broker localhost:1883
 [Container] App started on PORT 3000
 ```
 

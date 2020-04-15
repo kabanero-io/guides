@@ -92,7 +92,7 @@ NAME        URL
 Next, run the following command to add the URL for the public Kabanero stack hub:
 
 ```shell
-appsody repo add kabanero https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.7.0/kabanero-stack-hub-index.yaml
+appsody repo add kabanero https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.8.0/kabanero-stack-hub-index.yaml
 ```
 
 Check the repositories again by running `appsody repo list` to see that your repository was added. The output is similar to the following example:
@@ -100,7 +100,7 @@ Check the repositories again by running `appsody repo list` to see that your rep
 ```shell
 NAME        URL
 *incubator https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
-kabanero   https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.7.0/kabanero-stack-hub-index.yaml
+kabanero   https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.8.0/kabanero-stack-hub-index.yaml
 ```
 
 In this example, the asterisk (\*) shows that `incubator` is the default repository. Run the following command to set `kabanero` as the default repository:
@@ -114,7 +114,7 @@ Check the available repositories again by running `appsody repo list` to see tha
 ```shell
 NAME        URL
 incubator https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
-*kabanero   https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.7.0/kabanero-stack-hub-index.yaml
+*kabanero   https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.8.0/kabanero-stack-hub-index.yaml
 ```
 
 **Recommendation**: To avoid initializing projects that are based on the public application stacks, it's best
@@ -128,7 +128,7 @@ Check the available repositories again by running `appsody repo list` to see tha
 
 ```shell
 NAME        URL
-*kabanero   https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.7.0/kabanero-stack-hub-index.yaml
+*kabanero   https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.8.0/kabanero-stack-hub-index.yaml
 ```
 
 Your development environment is now configured to use the Kabanero application stacks. Next, you need to initialize your project.
@@ -160,16 +160,16 @@ The output from the command is similar to the following example:
 
 ```shell
 Checking stack requirements...
-Docker requirements met
 Appsody requirements met
+Docker requirements met
 Running appsody init...
-Downloading java-openliberty template project from https://github.com/kabanero-io/collections/releases/download/0.6.3/java-openliberty.v0.2.3.templates.default.tar.gz
+Downloading java-openliberty template project from https://github.com/kabanero-io/collections/releases/download/0.6.4/java-openliberty.v0.2.3.templates.default.tar.gz
 Download complete. Extracting files from /Users/myuser/appsody/java-openliberty/java-openliberty.tar.gz
 Setting up the development environment
 Your Appsody project name has been set to java-openliberty
-Pulling docker image docker.io/kabanero/java-openliberty:0.2
-Running command: docker pull docker.io/kabanero/java-openliberty:0.2
-0.2: Pulling from kabanero/java-openliberty
+Pulling docker image docker.io/kabanerobeta/java-openliberty:0.2
+Running command: docker pull docker.io/kabanerobeta/java-openliberty:0.2
+0.2: Pulling from kabanerobeta/java-openliberty
 ..
 ..
 [InitScript] [INFO] Scanning for projects...
@@ -187,10 +187,10 @@ Running command: docker pull docker.io/kabanero/java-openliberty:0.2
 [InitScript] [INFO] BUILD SUCCESS
 [InitScript] [INFO] ------------------------------------------------------------------------
 [InitScript] [INFO] Total time:  2.556 s
-[InitScript] [INFO] Finished at: 2020-04-02T13:19:45+01:00
+[InitScript] [INFO] Finished at: 2020-04-07T13:19:45+01:00
 [InitScript] [INFO] ------------------------------------------------------------------------
 Successfully added your project to /Users/myuser/.appsody/project.yaml
-Your Appsody project ID has been set to 20200402131945.49100100
+Your Appsody project ID has been set to 20200407131945.49100100
 Successfully initialized Appsody project with the java-openliberty stack and the default template.
 ```
 
