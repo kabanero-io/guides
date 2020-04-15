@@ -40,7 +40,7 @@ You will learn how to use the Command Line Interface (CLI) to configure your loc
 Application stacks enable applications to be built and tested inside a container. When built, the container can be deployed into a Kubernetes or serverless environment.
 
 When you install Appsody, the default configuration references the public open source repositories, which contain all the available application stacks from the Appsody project. Although you can use the content in a public repository, an organization typically
-customizes a subset of these application stacks to suit their own requirements. To develop microservice applications from customized application stacks, you must modify your local configuration to point to these stacks before creating a project.
+customizes a set of application stacks to suit their own requirements. To develop microservice applications from customized application stacks, you must modify your local configuration to point to these stacks before creating a project.
 
 ## Discovering repositories and stacks
 
@@ -56,20 +56,20 @@ experimental    https://github.com/appsody/stacks/releases/latest/download/exper
 
 By default, your local development environment can access the `incubator` and `experimental` public repositories.
 
-### Adding a customized application stack repository
+### Adding a customized application stack hub
 
 **CLI command:** `appsody repo add <repo-name> <URL>`
 
-As a developer, your enterprise architect might provide you with a URL that points to a set of customized application stacks for your organization. This configuration is defined by an `index.yaml` file.
+As a developer, your enterprise architect might provide you with a URL that points to a stack hub, which contains a set of customized application stacks for your organization. The stack hub configuration is contained in a repository and defined by an `index.yaml` file.
 
 To add this configuration information to your local development environment, use the `appsody repo add <repo-name> <URL>` command, supplying a name for the repository and the URL that contains the `index.yaml` file.
 
-In this example, you will add a new repository `acme-stacks` that has a stack configuration URL https://github.com/acme.inc/stacks/index.yaml.
+In this example, you will add the public Kabanero stack hub, which has the URL `https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.8.0/kabanero-stack-hub-index.yaml`.
 
 - Run the following command:
 
 ```
-appsody repo add acme-stacks https://github.com/acme.inc/stacks/index.yaml
+appsody repo add kabanero https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.8.0/kabanero-stack-hub-index.yaml
 ```
 
 - Check that the repository changes are added successfully by running the `appsody repo list` command
@@ -79,7 +79,7 @@ again. The output should be similar to the following example:
 NAME          URL
 *incubator    https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
 experimental  https://github.com/appsody/stacks/releases/latest/download/experimental-index.yaml
-acme-stacks    https://github.com/acme.inc/stacks/index.yaml
+kabanero      https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.8.0/kabanero-stack-hub-index.yaml
 ```
 
 ### Setting your default repository
@@ -88,47 +88,47 @@ acme-stacks    https://github.com/acme.inc/stacks/index.yaml
 
 You can change the default repository by using the `appsody repo set-default <repo-name>` command.
 
-- Set `acme-stacks` as your default repository by running the following command:
+- Set `kabanero` as your default repository by running the following command:
 
 ```
-appsody repo set-default acme-stacks
+appsody repo set-default kabanero
 ```
 
-- Run `appsody repo list` again to check that `acme-stacks` is now the default repository:
+- Run `appsody repo list` again to check that `kabanero` is now the default repository:
 
 ```
 NAME            URL
-*acme-stacks     https://github.com/acme.inc/stacks/index.yaml
+*kabanero       https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.8.0/kabanero-stack-hub-index.yaml
 incubator       https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
 experimental    https://github.com/appsody/stacks/releases/latest/download/experimental-index.yaml
 ```
 
-The asterisk indicates that `acme-stacks` is now the default repository.
+The asterisk indicates that `kabanero` is now the default repository.
 
 ### Viewing the available stacks
 
 **CLI command:** `appsody list <repo-name>`
 
-Now that you have set up your repository you can view the available application stacks with the `appsody list` command. To limit the output to only one repository, specify the repository name. Run the following command to limit the list of available stacks to the `acme-stacks` repository:
+Now that you have set up your repository you can view the available application stacks with the `appsody list` command. To limit the output to only one repository, specify the repository name. Run the following command to limit the list of available stacks to the `kabanero` repository:
 
 - Run the appsody list command:
 
 ```
-appsody list acme-stacks
+appsody list kabanero
 ```
 
 The output is similar to the following example, which provides detailed information for each stack:
 
 ```
-REPO             ID                       VERSION    TEMPLATES           DESCRIPTION
-acme-stacks      java-microprofile        0.2.11     *default            Eclipse MicroProfile on Open Liberty & OpenJ9 using Maven
-acme-stacks      java-spring-boot2        0.3.9      *default, kotlin    Spring Boot using OpenJ9 and Maven
-acme-stacks      nodejs                   0.2.5      *simple             Runtime for Node.js applications
-acme-stacks      nodejs-express           0.2.5      *simple, scaffold   Express web framework for Node.js
-acme-stacks      nodejs-loopback          0.1.4      *scaffold           LoopBack 4 API Framework for Node.js
+REPO          	ID               	VERSION  	TEMPLATES        	DESCRIPTION                                              
+kabanero      	java-microprofile	0.2.26   	*default         	Eclipse MicroProfile on Open Liberty & OpenJ9 using Maven
+kabanero      	java-openliberty 	0.2.3    	*default         	Open Liberty & OpenJ9 using Maven                        
+kabanero      	java-spring-boot2	0.3.28   	*default, kotlin 	Spring Boot using OpenJ9 and Maven                       
+kabanero      	nodejs           	0.3.3    	*simple          	Runtime for Node.js applications                         
+kabanero      	nodejs-express   	0.2.10   	scaffold, *simple	Express web framework for Node.js
 ```
 
-In the output you can see multiple application stacks (IDs) in the `acme-stacks` repository. Each stack includes a version number, one or more templates (an asterisk (\*) indicates the default template), and a description.
+In the output you can see multiple application stacks (IDs) in the `kabanero` repository. Each stack includes a version number, one or more templates (an asterisk (\*) indicates the default template), and a description.
 
 ## Developing an application
 
@@ -143,7 +143,7 @@ mkdir my-project
 cd my-project
 ```
 
-- Then, run the `appsody init` command to set up your project, which downloads the template for your chosen stack. Because you already set `acme-stacks` as your default repository in the last section, run the following command to create a `nodejs-express` project with the default (`simple`) template:
+- Then, run the `appsody init` command to set up your project, which downloads the template for your chosen stack. Because you already set `kabanero` as your default repository in the last section, run the following command to create a `nodejs-express` project with the default (`simple`) template:
 
 ```
 appsody init nodejs-express
@@ -181,7 +181,7 @@ To list all the stack-based containers that are running in your local environmen
 
 ```
 CONTAINER ID	NAME            IMAGE                       	STATUS
-f20ec098a612	my-project-dev	acme-stacks/nodejs-express:0.2	Up 8 minutes
+f20ec098a612	my-project-dev	kabanero/nodejs-express:0.2	  Up 8 minutes
 ```
 
 ### Stopping your Appsody container
