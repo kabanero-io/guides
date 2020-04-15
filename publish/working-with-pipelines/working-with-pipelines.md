@@ -309,6 +309,76 @@ You can also see pods for the pipeline runs, for which you can specify `oc descr
 
 If the pipeline run was successful, you can see a Docker image in our Docker registry and a pod that’s running your application.
 
+## Transport layer security (TLS) verification for image registry access in pipelines
+
+when accessing image registries to pull and push images, pipelines enable the configuration creation of the cluster resource, [image.config.openshift.io/cluster](https://docs.openshift.com/container-platform/4.2/openshift_images/image-configuration.html#images-configuration-file_image-configuration).  Scenarios are presented of image registries that can be used and the setup steps required.
+
+### Enable TLS verification for image registry access:
+
+#### Private image registries:
+ 
+If you use a private image registry and your registry uses certificates that are signed by trusted CA authorities, no further configuration is needed to enable TLS verification. Review the default truststore on the nodes of your cluster to ensure that you have the CA of your certificate in the list. With a self-signed certificates or a certificate that is signed by a CA, you must ensure that either certificate is listed in the default truststore. Steps are presented to add the CA to the trusted list so that when you run the pipelines, these CA certificates in the list are used.
+
+ - Ensure that you have access to the ca.crt files for your private registries.
+
+ - Use the instructions for [adding certificate authorities to the cluster](https://docs.openshift.com/container-platform/4.3/builds/setting-up-trusted-ca.html#configmap-adding-ca_setting-up-trusted-ca) to create a configmap with the `key` as your private registry `hostname` and value as the content of your private registry `ca.crt` file. This configmap must be present in the `openshift-config` namespace.
+
+#### Internal OpenShift image registry external route
+
+When you use the internal OpenShift image registry that is provided in your OCP cluster and want to access it using the external route,
+
+- Run an `oc patch` command to enable the default external route when you do not have the external route setup for your internal image registry on your cluster. 
+
+```
+oc patch configs.imageregistry.operator.openshift.io/cluster --type merge -p '{"spec":{"defaultRoute":true}}'
+```
+
+- Run the `oc get` command to verify that you have the external route and check `externalRegistryHostnames` in the output.
+
+```
+oc get image.config.openshift.io/cluster -o yaml 
+```
+Sample output
+```
+# oc get image.config.openshift.io/cluster -o yaml 
+apiVersion: config.openshift.io/v1
+kind: Image
+metadata:
+  annotations:
+    release.openshift.io/create-only: "true"
+  creationTimestamp: "2020-03-24T16:34:58Z"
+  generation: 11
+  name: cluster
+  resourceVersion: "8570660"
+  selfLink: /apis/config.openshift.io/v1/images/cluster
+  uid: 7ba0dae1-c579-4adf-828d-44b0c3652bae
+spec: {}
+status:
+  externalRegistryHostnames:
+  - default-route-openshift-image-registry.apps.incult.os.fyre.ibm.com
+  internalRegistryHostname: image-registry.openshift-image-registry.svc:5000
+```
+
+- Once you have the external route and the `ca.crt` for the internal image registry external route, use the steps in section, `Private image registries`.  @aadeshpa how do you get the ca.crt?  can we add a pointer here?
+
+### Disable TLS verification for image registry access:
+
+If your private or internal registry does not have a valid TLS certificate or supports only HTTP connections, you must configure your cluster differently by disabling TLS verification first to allow pulling images from this registry. Use the `oc patch` command with your registry to accomplish this. If you use the `oc path` command for multiple image registries, the registry URL entries must be separated by commas.
+
+```
+oc patch --type=merge --patch='{
+ "spec": {
+   "registrySources": {
+     "insecureRegistries": [
+       "<registry>", "abc.com" , "pqr.com"
+     ]
+   }
+ }
+}' image.config.openshift.io/cluster
+
+```
+
+**NOTE:** When accessing the internal registry using the internal route, the pipelines disable TLS verification by default.
 <!--
 // =================================================================================================
 // Troubleshooting
