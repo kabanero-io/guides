@@ -103,7 +103,7 @@ The default tasks and pipelines can be updated by forking the pipelines repo and
 
 Alternatively, you can run the Travis build against a release of your pipelines repo, which also generates the archive file with a `manifest.yaml` file and attaches it to your release.
 
-For more detailed instructions, see [Curating Pipelines](https://github.com/kabanero-io/guides/blob/master/publish/curating-pipelines/curating-pipelines.md)
+For more detailed instructions, see [Curating Pipelines](../curating-pipelines/curating-pipelines.html)
 
 <!--
 // =================================================================================================
