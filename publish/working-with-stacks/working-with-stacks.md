@@ -147,6 +147,27 @@ const server = http.createServer(app)
 
 Save your changes.
 
+Now that you have customized this stack to work in the way you want it to, you should also update the `stack.yaml` file to uniquely identify your stack. In particular, you should consider versioning your
+stack according to [Semantic versioning best practices](https://semver.org/). Adopting these best practices can simplify the governance of your stack artifacts in your deployment environment. For more information, see [Governing stacks with semantic versioning](../../docs/ref/general/reference/semver-governance.html).
+
+The following example shows an updated `stack.yaml`  file for Node.js  Express:  
+
+```
+name: My Node.js Express
+version: 1.0.0
+description: Express web framework for Node.js with Helmet
+license: Apache-2.0
+language: nodejs
+maintainers:
+  - name: My_name
+    email: My_email
+    github-id: My_Github_ID
+default-template: simple
+requirements:
+  docker-version: ">= 17.09.0"
+  appsody-version: ">= 0.2.7"
+```
+
 When you've configured a stack to suit your requirements, it must be packaged before it can be used for application development.
 
 ## Packaging a stack
