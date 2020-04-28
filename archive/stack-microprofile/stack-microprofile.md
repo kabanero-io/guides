@@ -40,6 +40,8 @@ guide-category: stacks
 
 ## What you'll learn
 
+**NOTE:** The Java MicroProfile Stack is deprecated. Use the Java Open Liberty stack instead.
+
 Application stacks enable the development and optimization of microservice applications. With application stacks, developers don’t need to manage the full software development stack or be experts on underlying container technologies or Kubernetes. Application stacks are customized for specific enterprises to incorporate their company standards and technology choices. Developers access these stacks by configuring their development environment to point to a stack configuration.
 
 In this guide, you’ll learn how to configure your development environment, then create and run a simple cloud native microservice based on the Eclipse MicroProfile application stack. Finally, you’ll update the microservice that you created and deploy it to Kubernetes or serverless. Deployment to serverless is optional depending on whether you want to Scale to Zero.
