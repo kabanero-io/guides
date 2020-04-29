@@ -210,7 +210,21 @@ status:
   internalRegistryHostname: image-registry.openshift-image-registry.svc:5000
 ```
 
-- Once you have the external route and the `ca.crt` for the internal image registry external route, use the steps in section, `Private image registries`.  @aadeshpa how do you get the ca.crt?  can we add a pointer here?
+- Once you have the external route setup you can find the ca.crt value for the external route as below from the cluster
+
+```
+oc get configmap  -n openshift-image-registry
+
+NAME                          DATA   AGE
+image-registry-certificates   2      7d
+serviceca                     1      7d
+trusted-ca                    1      7d
+[root@rugger-inf ~]# 
+
+```
+  From the above command results try to search the content of configmap `image-registry-certificates` and find relevant external route certificate.
+  
+- Once you get the certifiate value for internal image registry external route from previous step, use the steps in section, [Private image registries](https://github.com/kabanero-io/guides/blob/master/publish/working-with-pipelines/working-with-pipelines.md#private-image-registries) to create a configmap in `openshift-config` namespace with the `key` as your internal registry external route as `hostname` and value as the content of your external route certificate value.
 
 ### Disable TLS verification for image registry access:
 
