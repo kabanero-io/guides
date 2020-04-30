@@ -32,6 +32,8 @@ guide-category: pipelines
 //
 -->
 
+## Intro
+
 [Pipelines](https://github.com/tektoncd/pipeline/tree/master/docs#usage) enable a continuous input and continuous delivery (CI/CD) workflow. A set of default tasks and pipelines are provided that can be associated with application stacks.  These pipelines validate the application stack is active, build the application stack, publish the image to a container registry, scan the published image, and then deploy the application to the Kubernetes cluster. You can also create your own tasks and pipelines and customize the pre-built pipelines and tasks. All tasks and pipelines are activated by the product operator.
 
 To learn more about pipelines and creating new tasks, see [the pipeline tutorial](https://github.com/tektoncd/pipeline/blob/master/docs/tutorial.md).
@@ -299,13 +301,13 @@ If you are developing a new pipeline and want to test it in a tight loop, you mi
    - The following example is configured to use the dockerhub container registry:
 
       ```shell
-       ./manual-pipeline-run-script.sh -r https://github.com/mygitid/appsody-test-project -i index.docker.io/mydockeid/my-java-microprofile-image -c java-microprofile"
+       ./manual-pipeline-run-script.sh -r https://github.com/mygitid/appsody-test-project -i index.docker.io/mydockeid/my-java-openliberty-image -c java-openliberty"
       ```
 
    - The following example is configured to use the local OpenShift container registry:
 
       ```shell
-       ./manual-pipeline-run-script.sh -r https://github.com/mygitid/appsody-test-project -i docker-registry.default.svc:5000/kabanero/my-java-microprofile-image -c java-microprofile"
+       ./manual-pipeline-run-script.sh -r https://github.com/mygitid/appsody-test-project -i docker-registry.default.svc:5000/kabanero/my-java-openliberty-image -c java-openliberty"
       ```
 
 ### Running pipelines manually from the command line
