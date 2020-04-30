@@ -90,7 +90,7 @@ Note that in this example, the match for the Java OpenLiberty project (**project
 
 ## Getting started
 
-When following this guide, use the configuration files provided inline. Ensure that you review and edit each `yaml` file when directed.
+When following this guide, use the configuration files provided inline. Ensure that you create and edit each `yaml` file when directed.
 
 
 ### Create Kabanero CRD with events-operator enabled
