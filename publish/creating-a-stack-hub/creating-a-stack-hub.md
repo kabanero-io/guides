@@ -130,10 +130,11 @@ In this guide, you will change the example configuration file and use it build a
               - starter
               - swift
               - java-microprofile
+              - java-openliberty
               - nodejs
           - url: https://github.com/kabanero-io/collections/releases/download/0.6.0/kabanero-index.yaml
             include:
-              - java-microprofile
+              - java-openliberty
     image-org:
     image-registry:
     nginx-image-name:
@@ -173,13 +174,13 @@ Creating consolidated index for default
 ==== Excluding stack java-microprofile 0.2.24
 ==== Adding stack java-spring-boot2 0.3.26
 ==== Excluding stack kitura 0.2.5
-==== Adding stack java-openliberty 0.2.2
+==== Excluding stack java-openliberty 0.2.2
 ==== Excluding stack nodejs 0.3.4
 ==== Adding stack nodejs-express 0.4.3
 == fetching https://github.com/kabanero-io/collections/releases/download/0.6.0/kabanero-index.yaml
 == Adding stacks from index https://github.com/kabanero-io/collections/releases/download/0.6.0/kabanero-index.yaml
-==== Adding stack java-microprofile 0.2.25
-==== Excluding stack java-openliberty 0.2.1
+==== Excluding stack java-microprofile 0.2.25
+==== Adding stack java-openliberty 0.2.1
 ==== Excluding stack java-spring-boot2 0.3.23
 ==== Excluding stack nodejs-express 0.2.8
 ==== Excluding stack nodejs-loopback 0.1.8
