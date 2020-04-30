@@ -60,15 +60,11 @@ This task validates the stack is allowed to build and deploy on the cluster.  It
 - [deploy-task.yaml](https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/incubator/deploy-task.yaml)
 
    `Deploy-task` uses the `app-deploy.yaml` file to deploy the application to the cluster by using the application deployment operator. By default, the pipelines run and deploy the application in the `kabanero` namespace. If you want to deploy the application in a different namespace, update the `app-deploy.yaml` file to point to that namespace.
-   
-- [dockerimage-name-lowercase-task.yaml](https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/incubator/dockerimage-name-lowercase-task.yaml)
-
-   This task is needed because Docker requires that a container's imagename be lowercase. This task inputs the `docker-imagename` and `docker-imagetag` parameters and builds the `docker-image` resource URL path with `docker-imagename` as lowercase letters. In the case when the `docker-imagename` parameter is empty or not provided, the `docker-image` URL path is constructed by using the imagename from the existing `app-deploy.yaml` file. This `app-deploy.yaml` file should be present in the git-source project that is provided as an input to the pipeline.
 
 - [image-scan-task.yaml](https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/incubator/image-scan-task.yaml)
 
   The `image-scan-task` task will initiate a container scan of the image published by the `build-push-task` using OpenSCAP.  The results of the scan are published in the logs of the task.
-  
+
 For more tasks and pipelines, see [the pipelines repo](https://github.com/kabanero-io/kabanero-pipelines).
 
 ### Associating pipelines with applications stacks in Kabanero CRD
@@ -167,7 +163,7 @@ When accessing image registries to pull and push images, pipelines use the confi
 ### Enable TLS verification for image registry access:
 
 #### Private image registries:
- 
+
 If you use a private image registry and your registry uses certificates that are signed by trusted CA authorities, no further configuration is needed to enable TLS verification. Review the default truststore on the nodes of your cluster to ensure that you have the CA of your certificate in the list. With self-signed certificates, you must ensure that the CA certificate is added to the appropriate config map. Use the steps that follow to add the CA to the appropriate configmap.
 
  - Ensure that you have access to the ca.crt files for your private registries.
@@ -178,7 +174,7 @@ If you use a private image registry and your registry uses certificates that are
 
 When you use the internal OpenShift image registry that is provided in your OCP cluster and want to access it using the external route,
 
-- Run an `oc patch` command to enable the default external route when you do not have the external route setup for your internal image registry on your cluster. 
+- Run an `oc patch` command to enable the default external route when you do not have the external route setup for your internal image registry on your cluster.
 
 ```
 oc patch configs.imageregistry.operator.openshift.io/cluster --type merge -p '{"spec":{"defaultRoute":true}}'
@@ -187,11 +183,11 @@ oc patch configs.imageregistry.operator.openshift.io/cluster --type merge -p '{"
 - Run the `oc get` command to verify that you have the external route and check `externalRegistryHostnames` in the output.
 
 ```
-oc get image.config.openshift.io/cluster -o yaml 
+oc get image.config.openshift.io/cluster -o yaml
 ```
 Sample output
 ```
-# oc get image.config.openshift.io/cluster -o yaml 
+# oc get image.config.openshift.io/cluster -o yaml
 apiVersion: config.openshift.io/v1
 kind: Image
 metadata:
