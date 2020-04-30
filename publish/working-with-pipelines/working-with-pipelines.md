@@ -210,8 +210,7 @@ status:
   internalRegistryHostname: image-registry.openshift-image-registry.svc:5000
 ```
 
-- Once you have the external route setup you can find the ca.crt value for the external route as below from the cluster
-
+- Once you have the external route set up, you can find the ca certificate value for the external route hostname by following these steps from the cluster.
 ```
 oc get configmap  -n openshift-image-registry
 
