@@ -90,7 +90,7 @@ NAME        URL
 Next, run the following command to add the URL for the public Kabanero stack hub:
 
 ```shell
-appsody repo add kabanero https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.8.0/kabanero-stack-hub-index.yaml
+appsody repo add kabanero https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.9.0/kabanero-stack-hub-index.yaml
 ```
 
 Check the repositories again by running `appsody repo list` to see that your repository was added. The output is similar to the following example:
@@ -98,7 +98,7 @@ Check the repositories again by running `appsody repo list` to see that your rep
 ```shell
 NAME        URL
 *incubator https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
-kabanero   https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.8.0/kabanero-stack-hub-index.yaml
+kabanero   https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.9.0/kabanero-stack-hub-index.yaml
 ```
 
 In this example, the asterisk (\*) shows that `incubator` is the default repository. Run the following command to set `kabanero` as the default repository:
@@ -112,7 +112,7 @@ Check the available repositories again by running `appsody repo list` to see tha
 ```shell
 NAME        URL
 incubator https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
-*kabanero   https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.8.0/kabanero-stack-hub-index.yaml
+*kabanero   https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.9.0/kabanero-stack-hub-index.yaml
 ```
 
 **Recommendation**: To avoid initializing projects that are based on the public application stacks, it's best
@@ -126,7 +126,7 @@ Check the available repositories again by running `appsody repo list` to see tha
 
 ```shell
 NAME        URL
-*kabanero   https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.8.0/kabanero-stack-hub-index.yaml
+*kabanero   https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.9.0/kabanero-stack-hub-index.yaml
 ```
 
 Your development environment is now configured to use the Kabanero application stacks. Next, you need to initialize your project.
@@ -161,7 +161,7 @@ Checking stack requirements...
 Docker requirements met
 Appsody requirements met
 Running appsody init...
-Downloading java-spring-boot2 template project from https://github.com/kabanero-io/collections/releases/download/0.6.4/java-spring-boot2.v0.3.28.templates.default.tar.gz
+Downloading java-spring-boot2 template project from https://github.com/kabanero-io/collections/releases/download/0.9.0/java-spring-boot2.v0.3.29.templates.default.tar.gz
 Download complete. Extracting files from /Users/myuser/appsody/simple-spring-boot2/java-spring-boot2.tar.gz
 Setting up the development environment
 Your Appsody project name has been set to simple-spring-boot2
@@ -178,7 +178,7 @@ Project extracted to /Users/myuser/appsody/simple-spring-boot2/.appsody_init
 Running command: docker rm simple-spring-boot2-extract -f
 Running command: ./.appsody-init.sh
 Successfully added your project to /Users/myuser/.appsody/project.yaml
-Your Appsody project ID has been set to 20200407092833.06544700
+Your Appsody project ID has been set to 20200515092833.06544700
 Successfully initialized Appsody project with the java-spring-boot2 stack and the default template.
 ```
 **Note:** Some lines (..) are removed for clarity.
@@ -223,9 +223,9 @@ appsody run
 The CLI launches a local Docker image that contains an Apache Tomcat server that hosts the microservice. After some time, you see a message similar to the following example:
 
 ```shell
-[Container] 2020-04-07 17:28:44.066  INFO 171 --- [  restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 4 endpoint(s) beneath base path '/actuator'
-[Container] 2020-04-07 17:28:44.205  INFO 171 --- [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
-[Container] 2020-04-07 17:28:44.209  INFO 171 --- [  restartedMain] application.Main                         : Started Main in 6.051 seconds (JVM running for 6.923)
+[Container] 2020-05-15 17:28:44.066  INFO 171 --- [  restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 4 endpoint(s) beneath base path '/actuator'
+[Container] 2020-05-15 17:28:44.205  INFO 171 --- [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+[Container] 2020-05-15 17:28:44.209  INFO 171 --- [  restartedMain] application.Main                         : Started Main in 6.051 seconds (JVM running for 6.923)
 ```
 
 This message indicates that the Tomcat server is started. Browse to `http://localhost:8080` and you can see the splash screen.
@@ -290,9 +290,9 @@ After you save, the source compiles and the application updates. You see message
 [Container] [INFO] BUILD SUCCESS
 [Container] [INFO] ------------------------------------------------------------------------
 [Container] [INFO] Total time:  3.585 s
-[Container] [INFO] Finished at: 2020-04-02T17:34:37Z
+[Container] [INFO] Finished at: 2020-05-15T17:34:37Z
 [Container] [INFO] ------------------------------------------------------------------------
-[Container] 2020-04-02 17:34:38.316  INFO 171 --- [      Thread-15] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+[Container] 2020-05-15 17:34:38.316  INFO 171 --- [      Thread-15] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
 [Container]
 [Container]   .   ____          _            __ _ _
 [Container]  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -302,10 +302,10 @@ After you save, the source compiles and the application updates. You see message
 [Container]  =========|_|==============|___/=/_/_/_/
 [Container]  :: Spring Boot ::        (v2.1.6.RELEASE)
 ...
-[Container] 2020-04-02 17:34:39.711  INFO 171 --- [  restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 4 endpoint(s) beneath base path '/actuator'
-[Container] 2020-04-02 17:34:39.772  INFO 171 --- [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
-[Container] 2020-04-02 17:34:39.773  INFO 171 --- [  restartedMain] application.Main                         : Started Main in 1.403 seconds (JVM running for 362.487)
-[Container] 2020-04-02 17:34:39.788  INFO 171 --- [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+[Container] 2020-05-15 17:34:39.711  INFO 171 --- [  restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 4 endpoint(s) beneath base path '/actuator'
+[Container] 2020-05-15 17:34:39.772  INFO 171 --- [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+[Container] 2020-05-15 17:34:39.773  INFO 171 --- [  restartedMain] application.Main                         : Started Main in 1.403 seconds (JVM running for 362.487)
+[Container] 2020-05-15 17:34:39.788  INFO 171 --- [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
 ```
 
 If you browse to the `http://localhost:8080/example` URL, the endpoint response is displayed, as shown in the following image:

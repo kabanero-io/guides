@@ -90,7 +90,7 @@ NAME        URL
 Next, run the following command to add the URL for the public Kabanero stack hub:
 
 ```shell
-appsody repo add kabanero https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.8.0/kabanero-stack-hub-index.yaml
+appsody repo add kabanero https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.9.0/kabanero-stack-hub-index.yaml
 ```
 
 Check the repositories again by running `appsody repo list` to see that your repository was added. The output is similar to the following example:
@@ -98,7 +98,7 @@ Check the repositories again by running `appsody repo list` to see that your rep
 ```shell
 NAME        URL
 *incubator https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
-kabanero https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.8.0/kabanero-stack-hub-index.yaml
+kabanero https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.9.0/kabanero-stack-hub-index.yaml
 ```
 
 In this example, the asterisk (\*) shows that `incubator` is the default repository. Run the following command to set `kabanero` as the default repository:
@@ -112,7 +112,7 @@ Check the available repositories again by running `appsody repo list` to see tha
 ```shell
 NAME        URL
 incubator   https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
-*kabanero https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.8.0/kabanero-stack-hub-index.yaml
+*kabanero https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.9.0/kabanero-stack-hub-index.yaml
 ```
 
 **Recommendation**: To avoid initializing projects that are based on the public application stacks, it's best
@@ -126,7 +126,7 @@ Check the available repositories again by running `appsody repo list` to see tha
 
 ```shell
 NAME        URL
-*kabanero https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.8.0/kabanero-stack-hub-index.yaml
+*kabanero https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.9.0/kabanero-stack-hub-index.yaml
 ```
 
 Your development environment is now configured to use your customized application stacks. Next, you need to initialize your project.
@@ -161,7 +161,7 @@ Checking stack requirements...
 Docker requirements met
 Appsody requirements met
 Running appsody init...
-Downloading nodejs template project from https://github.com/kabanero-io/collections/releases/download/0.6.4/nodejs.v0.3.3.templates.simple.tar.gz
+Downloading nodejs template project from https://github.com/kabanero-io/collections/releases/download/0.9.0/nodejs.v0.3.6.templates.simple.tar.gz
 Download complete. Extracting files from /Users/myuser/appsody/simple-nodejs/nodejs.tar.gz
 Setting up the development environment
 Your Appsody project name has been set to simple-nodejs
@@ -175,7 +175,7 @@ docker.io/kabanero/nodejs:0.3
 [Warning] The stack image does not contain APPSODY_PROJECT_DIR. Using /project
 Running command: docker run --rm --entrypoint /bin/bash docker.io/kabanero/nodejs:0.3 -c "find /project -type f -name .appsody-init.sh"
 Successfully added your project to /Users/myuser/.appsody/project.yaml
-Your Appsody project ID has been set to 20200402132709.84166800
+Your Appsody project ID has been set to 20200515132709.84166800
 Successfully initialized Appsody project with the nodejs stack and the default template.
 
 ```
@@ -234,10 +234,10 @@ up to date in 0.733s
 ..
 [Container] Running command:  npm start --node-options --require=appmetrics-dash/attach
 [Container]
-[Container] > nodejs-simple@0.1.0 start /project/user-app
+[Container] > nodejs-simple@0.3.6 start /project/user-app
 [Container] > node app.js
 [Container]
-[Container] [Tue Apr  7 08:03:53 2020] com.ibm.diagnostics.healthcenter.loader INFO: Node Application Metrics 5.1.1.202003102147 (Agent Core 4.0.5)
+[Container] [Tue May 15 08:03:53 2020] com.ibm.diagnostics.healthcenter.loader INFO: Node Application Metrics 5.1.1.202003102147 (Agent Core 4.0.5)
 [Container] Hello from Node.js 12!
 ```
 

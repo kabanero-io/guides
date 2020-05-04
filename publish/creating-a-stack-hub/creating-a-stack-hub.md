@@ -132,7 +132,7 @@ In this guide, you will change the example configuration file and use it build a
               - java-microprofile
               - java-openliberty
               - nodejs
-          - url: https://github.com/kabanero-io/collections/releases/download/0.6.0/kabanero-index.yaml
+          - url: https://github.com/kabanero-io/collections/releases/download/0.9.0/kabanero-index.yaml
             include:
               - java-openliberty
     image-org:
@@ -140,7 +140,7 @@ In this guide, you will change the example configuration file and use it build a
     nginx-image-name:
     ```
 
-    This example configuration file builds a single stack hub index file for your `default` hub. The `default` hub points to two index files, `https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml` and `https://github.com/kabanero-io/collections/releases/download/0.6.0/kabanero-index.yaml`. The `include:` and `exclude:` options are used
+    This example configuration file builds a single stack hub index file for your `default` hub. The `default` hub points to two index files, `https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml` and `https://github.com/kabanero-io/collections/releases/download/0.9.0/kabanero-index.yaml`. The `include:` and `exclude:` options are used
     to filter from the available application stacks.
 
 2. Save your changes.
@@ -166,25 +166,25 @@ Not retrieving or modifying any assets
 Creating consolidated index for default
 == fetching https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
 == Adding stacks from index https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
-==== Adding stack nodejs-loopback 0.2.2
+==== Adding stack nodejs-loopback 0.3.0
 ==== Excluding stack swift 0.2.5
 ==== Excluding stack node-red 0.1.1
-==== Excluding stack python-flask 0.2.2
+==== Excluding stack python-flask 0.2.3
 ==== Excluding stack starter 0.1.2
-==== Excluding stack java-microprofile 0.2.24
-==== Adding stack java-spring-boot2 0.3.26
-==== Excluding stack kitura 0.2.5
-==== Excluding stack java-openliberty 0.2.2
-==== Excluding stack nodejs 0.3.4
-==== Adding stack nodejs-express 0.4.3
-== fetching https://github.com/kabanero-io/collections/releases/download/0.6.0/kabanero-index.yaml
-== Adding stacks from index https://github.com/kabanero-io/collections/releases/download/0.6.0/kabanero-index.yaml
-==== Excluding stack java-microprofile 0.2.25
-==== Adding stack java-openliberty 0.2.1
-==== Excluding stack java-spring-boot2 0.3.23
-==== Excluding stack nodejs-express 0.2.8
-==== Excluding stack nodejs-loopback 0.1.8
-==== Excluding stack nodejs 0.3.1
+==== Excluding stack java-microprofile 0.2.26
+==== Adding stack java-spring-boot2 0.3.29
+==== Excluding stack kitura 0.2.6
+==== Excluding stack java-openliberty 0.2.11
+==== Excluding stack quarkus 0.3.3
+==== Excluding stack nodejs 0.3.5
+==== Adding stack nodejs-express 0.4.8
+== fetching https://github.com/kabanero-io/collections/releases/download/0.9.0/kabanero-index.yaml
+== Adding stacks from index https://github.com/kabanero-io/collections/releases/download/0.9.0/kabanero-index.yaml
+==== Excluding stack java-microprofile 0.2.27
+==== Adding stack java-openliberty 0.2.3
+==== Excluding stack java-spring-boot2 0.3.29
+==== Excluding stack nodejs-express 0.4.8
+==== Excluding stack nodejs 0.3.6
  == Running post_build.d scripts
  ==== Running build_nginx.sh
  == Done post_build.d scripts
@@ -194,29 +194,31 @@ Creating consolidated index for default
 
  Open the `default-index.yaml` file to view the consolidated information for each stack in your configuration. For example, the last stack in the list is `nodejs-express`:
 
- ```
- - default-template: simple
-  description: Express web framework for Node.js
-  id: nodejs-express
-  image: docker.io/appsody/nodejs-express:0.4.3
-  language: nodejs
-  license: Apache-2.0
-  maintainers:
-  - email: vieuxtech@gmail.com
-    github-id: sam-github
-    name: Sam Roberts
-  name: Node.js Express
-  requirements:
-    appsody-version: '>= 0.2.7'
-    docker-version: '>= 17.09.0'
-  src: https://github.com/appsody/stacks/releases/download/nodejs-express-v0.4.3/incubator.nodejs-express.v0.4.3.source.tar.gz
-  templates:
-  - id: simple
-    url: https://github.com/appsody/stacks/releases/download/nodejs-express-v0.4.3/incubator.nodejs-express.v0.4.3.templates.simple.tar.gz
-  - id: scaffold
-    url: https://github.com/appsody/stacks/releases/download/nodejs-express-v0.4.3/incubator.nodejs-express.v0.4.3.templates.scaffold.tar.gz
-  version: 0.4.3
   ```
+  - id: nodejs-express
+    name: Node.js Express
+    version: 0.4.8
+    description: Express web framework for Node.js
+    license: Apache-2.0
+    language: nodejs
+    maintainers:
+    - name: Sam Roberts
+      email: vieuxtech@gmail.com
+      github-id: sam-github
+    default-template: simple
+    src: https://github.com/appsody/stacks/releases/download/nodejs-express-v0.4.8/incubator.nodejs-express.v0.4.8.source.tar.gz
+    templates:
+    - id: kafka
+      url: https://github.com/appsody/stacks/releases/download/nodejs-express-v0.4.8/incubator.nodejs-express.v0.4.8.templates.kafka.tar.gz
+    - id: simple
+      url: https://github.com/appsody/stacks/releases/download/nodejs-express-v0.4.8/incubator.nodejs-express.v0.4.8.templates.simple.tar.gz
+    - id: scaffold
+      url: https://github.com/appsody/stacks/releases/download/nodejs-express-v0.4.8/incubator.nodejs-express.v0.4.8.templates.scaffold.tar.gz
+    requirements:
+      docker-version: '>= 17.09.0'
+      appsody-version: '>= 0.2.7'
+    image: docker.io/appsody/nodejs-express:0.4.8
+```
 
 Congratulations! You have built your first stack hub index file that defines a set of filtered application stacks from multiple source repositories.  
 
