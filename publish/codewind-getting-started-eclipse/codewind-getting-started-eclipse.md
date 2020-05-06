@@ -160,7 +160,7 @@ You could also try a few of the sample calculator functions:
 You have completed a simple microservice using the Eclipse IDE. For further learning:
 
 * Learn more about [Codewind](https://www.eclipse.org/codewind).
-* Review [managing Codewind projects for Eclipse](https://www.eclipse.org/codewind/mdteclipsemanagingprojects.html).
+* Review [managing Codewind projects for Eclipse](https://www.eclipse.org/codewind/eclipse-codechange.html).
 
 ## What you have learned
 
