@@ -153,7 +153,7 @@ You could also try a few of the sample calculator functions:
 You have created a simple microservice using the VS Code IDE. For further learning:
 
 * Learn more about [Codewind](https://www.eclipse.org/codewind/).
-* Review [project commands for Codewind for VS Code](https://www.eclipse.org/codewind/mdt-vsc-commands-project.html).
+* Review [project commands for Codewind for VS Code](https://www.eclipse.org/codewind/vsc-commands-project.html).
 
 ## What you have learned
 
