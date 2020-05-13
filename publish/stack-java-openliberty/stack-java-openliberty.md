@@ -167,9 +167,9 @@ Downloading java-openliberty template project from https://github.com/kabanero-i
 Download complete. Extracting files from /Users/myuser/appsody/java-openliberty/java-openliberty.tar.gz
 Setting up the development environment
 Your Appsody project name has been set to java-openliberty
-Pulling docker image docker.io/kabanerobeta/java-openliberty:0.2
-Running command: docker pull docker.io/kabanerobeta/java-openliberty:0.2
-0.2: Pulling from kabanerobeta/java-openliberty
+Pulling docker image docker.io/appsody/java-openliberty:0.2
+Running command: docker pull docker.io/appsody/java-openliberty:0.2
+0.2: Pulling from appsody/java-openliberty
 ..
 ..
 [InitScript] [INFO] Scanning for projects...
@@ -195,6 +195,8 @@ Successfully initialized Appsody project with the java-openliberty stack and the
 ```
 
 **Note:** Some lines (..) are removed for clarity.
+
+**Note:** In the latest release, the image for `java-openliberty` is in the `/appsody` folder instead of the `/kabanero` folder. To prevent confusion, review the stack hub yaml file for the appropriate path to use in the `appsody-config.yaml` file.
 
 Your project is now initialized.
 
