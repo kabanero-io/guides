@@ -79,8 +79,8 @@ The pipeline invokes the following tasks to accomplish the steps listed:
       name: gitops-map
       namespace: kabanero
     data:
-      gitops-repo-enabled: <true or false>
-      gitops-repo-url: <can be specified here if common for all the pipelines in the cluster or in the event mediator for specific versions of the pipeline> 
+      gitops-repository-url: <can be specified here if common for all the pipelines in the cluster or in the event mediator for specific versions of the pipeline> 
+      gitops-repository-type: <github,gitlab,ghe>
       gitops-commit-user-name: <user_name_to_commit_using>
       gitops-commit-user-email: <user_email_to_commit_using>
     ```
