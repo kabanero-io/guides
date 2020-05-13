@@ -64,12 +64,12 @@ As a developer, your enterprise architect might provide you with a URL that poin
 
 To add this configuration information to your local development environment, use the `appsody repo add <repo-name> <URL>` command, supplying a name for the repository and the URL that contains the `index.yaml` file.
 
-In this example, you will add the public Kabanero stack hub, which has the URL `https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.8.0/kabanero-stack-hub-index.yaml`.
+In this example, you will add the public Kabanero stack hub, which has the URL `https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.9.0/kabanero-stack-hub-index.yaml`.
 
 - Run the following command:
 
 ```
-appsody repo add kabanero https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.8.0/kabanero-stack-hub-index.yaml
+appsody repo add kabanero https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.9.0/kabanero-stack-hub-index.yaml
 ```
 
 - Check that the repository changes are added successfully by running the `appsody repo list` command
@@ -79,7 +79,7 @@ again. The output should be similar to the following example:
 NAME          URL
 *incubator    https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
 experimental  https://github.com/appsody/stacks/releases/latest/download/experimental-index.yaml
-kabanero      https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.8.0/kabanero-stack-hub-index.yaml
+kabanero      https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.9.0/kabanero-stack-hub-index.yaml
 ```
 
 ### Setting your default repository
@@ -98,7 +98,7 @@ appsody repo set-default kabanero
 
 ```
 NAME            URL
-*kabanero       https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.8.0/kabanero-stack-hub-index.yaml
+*kabanero       https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.9.0/kabanero-stack-hub-index.yaml
 incubator       https://github.com/appsody/stacks/releases/latest/download/incubator-index.yaml
 experimental    https://github.com/appsody/stacks/releases/latest/download/experimental-index.yaml
 ```
@@ -120,12 +120,13 @@ appsody list kabanero
 The output is similar to the following example, which provides detailed information for each stack:
 
 ```
-REPO          	ID               	VERSION  	TEMPLATES        	DESCRIPTION                                              
-kabanero      	java-microprofile	0.2.26   	*default         	Eclipse MicroProfile on Open Liberty & OpenJ9 using Maven
-kabanero      	java-openliberty 	0.2.3    	*default         	Open Liberty & OpenJ9 using Maven                        
-kabanero      	java-spring-boot2	0.3.28   	*default, kotlin 	Spring Boot using OpenJ9 and Maven                       
-kabanero      	nodejs           	0.3.3    	*simple          	Runtime for Node.js applications                         
-kabanero      	nodejs-express   	0.2.10   	scaffold, *simple	Express web framework for Node.js
+REPO               ID               	VERSION  	TEMPLATES               	DESCRIPTION                                              
+kabanero	   java-openliberty 	0.2.11   	*default, kafka         	Eclipse MicroProfile & Jakarta EE on Open Liberty & OpenJ9
+           	                 	         	                                using Maven                                                 
+kabanero	   java-spring-boot2	0.3.29   	*default, kafka, kotlin 	Spring Boot using OpenJ9 and Maven                          
+kabanero	   nodejs           	0.3.6    	*simple                 	Runtime for Node.js applications                            
+kabanero	   nodejs-express   	0.4.8    	kafka, scaffold, *simple	Express web framework for Node.js                           
+kabanero           quarkus          	0.3.3    	*default, kafka         	Quarkus runtime for running Java applications
 ```
 
 In the output you can see multiple application stacks (IDs) in the `kabanero` repository. Each stack includes a version number, one or more templates (an asterisk (\*) indicates the default template), and a description.
@@ -181,7 +182,7 @@ To list all the stack-based containers that are running in your local environmen
 
 ```
 CONTAINER ID	NAME            IMAGE                       	STATUS
-f20ec098a612	my-project-dev	kabanero/nodejs-express:0.2	  Up 8 minutes
+f20ec098a612	my-project-dev	kabanero/nodejs-express:0.4	Up 8 minutes
 ```
 
 ### Stopping your Appsody container
