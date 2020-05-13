@@ -32,7 +32,7 @@ guide-category: pipelines
 //
 -->
 
-# Intro
+# Introduction
 
 [Pipelines](https://github.com/tektoncd/pipeline/tree/master/docs#usage) enable a continuous input and continuous delivery (CI/CD) workflow. A set of default tasks and pipelines are provided that can be associated with application stacks. These pipelines leverage steps and tasks that provide the following capabilities:
 - build the application stack
