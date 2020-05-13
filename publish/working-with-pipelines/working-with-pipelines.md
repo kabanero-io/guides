@@ -34,15 +34,15 @@ guide-category: pipelines
 
 # Intro
 
-[Pipelines](https://github.com/tektoncd/pipeline/tree/master/docs#usage) enable a continuous input and continuous delivery (CI/CD) workflow. A set of default tasks and pipelines are provided that can be associated with application stacks.  These pipelines leverage steps & tasks that provide the following capabilities:
+[Pipelines](https://github.com/tektoncd/pipeline/tree/master/docs#usage) enable a continuous input and continuous delivery (CI/CD) workflow. A set of default tasks and pipelines are provided that can be associated with application stacks. These pipelines leverage steps and tasks that provide the following capabilities:
 - build the application stack
-- enforce goverance opolicy
+- enforce the goverance policy
 - publish the image to a container registry
 - scan the published image
 - sign the image
-- Retag an image
+- retag an image
 - deploy the application to the Kubernetes cluster
-- promote service to a gitops repo (This feature is Tech Preview in this release)
+- promote a service to a gitops repo (This feature is Tech Preview in this release)
 - deploy the application using Kustomize (This feature is Tech Preview in this release)
 
 You can also create your own tasks and pipelines and customize the pre-built pipelines and tasks. All tasks and pipelines are activated by the product operator.
@@ -51,25 +51,25 @@ To learn more about pipelines and creating new tasks, see [the pipeline tutorial
 
 ## Kabanero tasks and pipelines
 
-A set of Kabanero tasks and pipelines are provided in the [Kabanero pipelines repository](https://github.com/kabanero-io/kabanero-pipelines/tree/master/pipelines/).  Details of some of the primary pipelines and tasks are described below.
+A set of Kabanero tasks and pipelines are provided in the [Kabanero pipelines repository](https://github.com/kabanero-io/kabanero-pipelines/tree/master/pipelines/). Details of some of the primary pipelines and tasks are described below.
 
 ### Events pipelines
 
-The tasks & pipelines provided in the [Kabanero pipelines repository events directory](https://github.com/kabanero-io/kabanero-pipelines/tree/master/pipelines/incubator/events) are geared to work with the Kabanero events operator.  Please follow the instructions in <TODO: Link to this guide when published: https://github.com/kabanero-io/guides/blob/master/publish/integrating-events-operator/integrating-events-operator.md> to setup the organization webhook and EventMediator to drive these pipelines.
+The tasks and pipelines provided in the [Kabanero pipelines repository events directory](https://github.com/kabanero-io/kabanero-pipelines/tree/master/pipelines/incubator/events) are geared to work with the Kabanero events operator. Follow the instructions in <TODO: Link to this guide when published: https://github.com/kabanero-io/guides/blob/master/publish/integrating-events-operator/integrating-events-operator.md> to set up the organization webhook and EventMediator to drive these pipelines.
 
-There are 4 primary pipelines provided here to help illustrate the following work flow.
+There are four primary pipelines provided here to help illustrate the following work flow.
 
-* **Jane makes an update to the application and creates a new PR**
+* **Jane makes an update to the application and creates a new pull request**
 
-This will trigger the `build-pl` which will build the application code and build the application image using the `build-task`.  The PR will be updated with the results of the build pipeline.
+This action triggers the `build-pl` pipeline which builds the application code and builds the application image using the `build-task`. The pull request (PR) is updated with the results of the build pipeline.
 
-* **The PR is then merged into master**
+* **The pull request is then merged into the master branch**
 
-This will trigger the `build-push-promote-pl` which will enforce governance policy, build the code, optionally sign the image, push it to the image registry, scan the image, optionally deploy the image on the cluster, and optionally promote the service to the configured gitops repo.  
+This action triggers the `build-push-promote-pl` pipeline which enforces the governance policy, builds the code, optionally signs the image, pushes it to the image registry, scans the image, optionally deploys the image on the cluster, and optionally promotes the service to the configured gitops repository.  
 
 The pipeline invokes the following tasks to accomplish the steps listed: 
   * [build-push-promote-task.yaml](https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/incubator/events/build-push-promote-task.yaml)
-    This task first does a pre-build goverance policy check to validate the stack version in the app repo is allowed to build based on the goverance policy that is configured. It then builds a container image from the artifacts in the git-source repository by using `appsody build`. The appsody build command leverages [Buildah](https://github.com/containers/buildah) to build the image. The command also generates the `app-deploy.yaml` that is used for deployment. If there is already a copy of the `app-deploy.yaml` file in the source repository, it is merged with the new one generated by this step. After the image is built, the image is then optionally signed if the necessary configuration is setup. Please refer to the [image signing operator](https://github.com/kabanero-io/kabanero-security/tree/master/pipelines/samples/signing-operator) for more information on configuring image signing.  The image is then pushed to the configured image registry.
+    This task first does a pre-build goverance policy check to validate the stack version in the application repository is allowed to build based on the goverance policy that is configured. It then builds a container image from the artifacts in the git-source repository by using `appsody build`. The appsody build command leverages [Buildah](https://github.com/containers/buildah) to build the image. The command also generates the `app-deploy.yaml` that is used for deployment. If there is already a copy of the `app-deploy.yaml` file in the source repository, it is merged with the new one generated by this step. After the image is built, the image is then optionally signed if the necessary configuration is setup. Refer to the [image signing operator](https://github.com/kabanero-io/kabanero-security/tree/master/pipelines/samples/signing-operator) for more information on configuring image signing. The image is then pushed to the configured image registry.
         
     (Tech preview feature) A configmap called `gitops-map` in the Kabanero namespace can optionally be configured to promote the service to a gitops repo after the build.  The step will invoke the [`services promote`](https://github.com/rhd-gitops-example/services) command to create a PR with the updated `app-deploy.yaml` file in the configured gitops repo.  The following key value pairs should be setup in the configmap:
     ```
