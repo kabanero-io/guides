@@ -6,13 +6,13 @@ permalink: /guides/app-monitoring-ocp4.2/
 :page-duration: 60 minutes
 :page-releasedate: 2020-03-26
 :page-guide-category: manage
-:page-description: Learn how to monitor applications on RHOCP 4.2 or RHOCP 4.3 with Prometheus and Grafana.
+:page-description: Learn how to monitor applications on RHOCP 4.2/RHOCP 4.3/RHOCP 4.4 with Prometheus and Grafana.
 :page-tags: ['monitoring', 'prometheus', 'grafana']
-= Application Monitoring on Red Hat OpenShift Container Platform (RHOCP) 4.3 with Prometheus and Grafana
+= Application Monitoring on Red Hat OpenShift Container Platform (RHOCP) 4.4 with Prometheus and Grafana
 
 == Introduction
 
-__The following guide has been tested with RHOCP 4.2/Kabanero 0.3.0 and RHOCP 4.3/Kabanero 0.6.0.__
+__The following guide has been tested with RHOCP 4.2/Kabanero 0.3.0, RHOCP 4.3/Kabanero 0.6.0, and RHOCP 4.4/Kabanero 0.8.0.__
 
 
 For application monitoring on RHOCP, you need to set up your own Prometheus and Grafana deployments. Both Prometheus and Grafana can be set up via Operator Lifecycle Manager (OLM).
