@@ -61,11 +61,11 @@ There are four primary pipelines provided here to help illustrate the following 
 
 * **A developer makes an update to the application and creates a new pull request**
 
-This action triggers the `build-pl` pipeline which builds the application code and builds the application image using the `build-task`. The pull request (PR) is updated with the results of the build pipeline.
+This action triggers the [build-pl](https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/incubator/events/build-pl.yaml) pipeline which builds the application code and builds the application image using the [build-task](https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/incubator/events/build-task.yaml). The pull request (PR) is updated with the results of the build pipeline.
 
 * **The pull request is then merged into the master branch**
 
-This action triggers the `build-push-promote-pl` pipeline which enforces the governance policy, builds the code, optionally signs the image, pushes it to the image registry, scans the image, optionally deploys the image on the cluster, and optionally promotes the service to the configured GitOps repository.  
+This action triggers the [build-push-promote-pl.yaml](https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/incubator/events/build-push-promote-pl.yaml) pipeline which enforces the governance policy, builds the code, optionally signs the image, pushes it to the image registry, scans the image, optionally deploys the image on the cluster, and optionally promotes the service to the configured GitOps repository.  
 
 The pipeline invokes the following tasks to accomplish the steps listed: 
   * [build-push-promote-task.yaml](https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/incubator/events/build-push-promote-task.yaml)
@@ -108,14 +108,14 @@ The pipeline invokes the following tasks to accomplish the steps listed:
 
 * **A release of the application is created**
 
-This will trigger the `image-retag-pl` pipeline which leverages the [image-retag-task.yaml](https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/incubator/events/image-retag-task.yaml) to create a new tag of the image to match with the git release.
+This will trigger the [image-retag-pl.yaml](https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/incubator/events/image-retag-pl.yaml) pipeline which leverages the [image-retag-task.yaml](https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/incubator/events/image-retag-task.yaml) to create a new tag of the image to match with the git release.
 
 * **The pull request in the gitops repo is merged** (This feature is Tech Preview in this release)
-When the PR that was created by the promote step of the `build-push-promote-pl` is merged in the gitops repo, it will trigger  the `deploy-kustomize-pl` pipeline, which leverages the [deploy-kustomize-task.yaml](https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/incubator/events/deploy-kustomize-task.yaml) to trigger a deployment to the environment configured in the gitops repo.
+When the PR that was created by the promote step of the `build-push-promote-pl` is merged in the gitops repo, it will trigger  the [deploy-kustomize-pl.yaml](https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/incubator/events/deploy-kustomize-pl.yaml) pipeline, which leverages the [deploy-kustomize-task.yaml](https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/incubator/events/deploy-kustomize-task.yaml) to trigger a deployment to the environment configured in the gitops repo.
 
 ### Incubator pipelines
 
-The set of Kabanero tasks and pipelines are provided in the [Kabanero pipelines repository](https://github.com/kabanero-io/kabanero-pipelines/tree/master/pipelines/incubator) illustrate work flows with the Tekton webhooks extension.
+The set of Kabanero tasks and pipelines are provided in the [Kabanero pipelines repository](https://github.com/kabanero-io/kabanero-pipelines/tree/master/pipelines/incubator) illustrate work flows that work best with the Tekton webhooks extension.
 
 Details of some of the primary pipelines and tasks:
 
@@ -138,6 +138,50 @@ This is the primary pipeline that showcases a majority of the tasks supplied in 
    The `image-scan-task` task initiates a container scan of the image published by the `build-push-task` using OpenSCAP. The results of the scan are published in the logs of the task.
   
 For more tasks and pipelines, see [the kabanero-pipelines repo](https://github.com/kabanero-io/kabanero-pipelines).
+
+### Experimental GitOps pipelines (Tech Preview)
+
+There are two pipelines in the the experimental GitOps directory that demonstrate GitOps workflows.
+
+The [build-push-promote-pl.yaml](https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/experimental/gitops/build-push-promote-pl.yaml) pipeline enforces the governance policy, builds the code, optionally signs the image, pushes it to the image registry, scans the image, and optionally promotes the service to the configured GitOps repository.  
+
+The pipeline invokes the following tasks to accomplish the steps listed: 
+  * [build-push-promote-task.yaml](https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/experimental/gitops/build-push-promote-task.yaml)
+    This task first does a pre-build goverance policy check to validate the stack version in the application repository is allowed to build based on the goverance policy that is configured. It then builds a container image from the artifacts in the git-source repository by using `appsody build`. The appsody build command leverages [Buildah](https://github.com/containers/buildah) to build the image.  The image is then optionally signed and pushed to the configured image registry.
+        
+    A configmap called `gitops-map` in the Kabanero namespace can optionally be configured to promote the service to a GitOps repo after the build.  The step will invoke the [`services promote`](https://github.com/rhd-gitops-example/services) command to create a PR with the updated `app-deploy.yaml` file in the configured GitOps repo. The following key value pairs should be setup in the configmap:
+    ```
+    kind: ConfigMap 
+    apiVersion: v1 
+    metadata:
+      name: gitops-map
+      namespace: kabanero
+    data:
+      gitops-repository-url: <can be specified here if common for all the pipelines in the cluster or in the event mediator for specific versions of the pipeline> 
+      gitops-repository-type: <github,gitlab,ghe>
+      gitops-commit-user-name: <user_name_to_commit_using>
+      gitops-commit-user-email: <user_email_to_commit_using>
+    ```
+    
+    A secret called `gitops-token` also has to be created in the Kabanero namspace. This example yaml creates the secret.
+    ```
+    apiVersion: v1
+    kind: Secret
+    metadata:
+      name: gitops-token
+    annotations:
+      tekton.dev/git-0: https://github.com
+    namespace: kabanero
+    type: kubernetes.io/basic-auth
+    stringData:
+      username: <gitops_repo_username>
+      password: <gitops_repo_access_token>
+    ```
+  * [image-scan-task.yaml](https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/experimental/gitops/image-scan-task.yaml)
+
+   The `image-scan-task` task initiates a container scan of the image published by the `build-push-task` using OpenSCAP. The results of the scan are published in the logs of the task.
+
+The [deploy-kustomize-pl.yaml](https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/experimental/gitops/deploy-kustomize-pl.yaml) pipeline, which leverages the [deploy-kustomize-task.yaml](https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/experimental/gitops/deploy-kustomize-task.yaml) to trigger a deployment to the environment configured in the GitOps repo.
 
 # Before running pipelines
 
@@ -166,7 +210,7 @@ spec:
         url: https://github.com/kabanero-io/kabanero-pipelines/releases/download/0.9.0/kabanero-events-pipelines.tar.gz
 ```
 
-When the product operator activates the Kabanero CRD, it associates the pipelines in the pipelines archive with each of the stacks in the stack hub. The default pipelines are intended to work with all the stacks in the stack hub in the previous example. When the operator activates all the pipeline resources (such as the tasks, trigger bindings, and pipelines) in the archive, it will  add a suffix to the name of the resource with the shorted digest of the pipelines archive. This provides an easy way to have multiple versions of the same pipeline active on the cluster.
+When the product operator activates the Kabanero CRD, it associates the pipelines in the pipelines archive with each of the stacks in the stack hub. The default pipelines are intended to work with all the stacks in the stack hub in the previous example. When the operator activates all the pipeline resources (such as the tasks, trigger bindings, and pipelines) in the archive, it will  add a suffix to the name of the resource with the shorted digest of the pipelines archive. This provides an easy way to have multiple versions of the same pipeline to be active on the cluster.
 
 ### Incubator pipelines
 
@@ -179,17 +223,17 @@ metadata:
   name: kabanero
   namespace: kabanero
 spec:
-  version: "0.6.0"
+  version: "0.9.0"
   stacks:
     repositories:
     - name: central
       https:
-        url: https://github.com/kabanero-io/stacks/releases/download/0.6.0/kabanero-index.yaml
+        url: https://github.com/kabanero-io/stacks/releases/download/0.9.0/kabanero-index.yaml
     pipelines:
     - id: default
       sha256: 14d59b7ebae113c18fb815c2ccfd8a846c5fbf91d926ae92e0017ca5caf67c95
       https:
-        url: https://github.com/kabanero-io/kabanero-pipelines/releases/download/0.6.0/default-kabanero-pipelines.tar.gz
+        url: https://github.com/kabanero-io/kabanero-pipelines/releases/download/0.9.0/default-kabanero-pipelines.tar.gz
 ```
 
 When the product operator activates the CRD, it associates the pipelines in the pipelines archive with each of the stacks in the stack hub. The default pipelines are intended to work with all the stacks in the stack hub in the previous example. All of the pipeline-related resources (such as the tasks, trigger bindings, and pipelines) prefix the name of the resource with the keyword `StackId`. When the operator activates these resources, it replaces the keyword with the name of the stack it is activating.
