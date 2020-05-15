@@ -59,7 +59,7 @@ The tasks and pipelines provided in the [Kabanero pipelines repository events di
 
 There are four primary pipelines provided here to help illustrate the following work flow.
 
-* **Jane makes an update to the application and creates a new pull request**
+* **A developer makes an update to the application and creates a new pull request**
 
 This action triggers the `build-pl` pipeline which builds the application code and builds the application image using the `build-task`. The pull request (PR) is updated with the results of the build pipeline.
 
