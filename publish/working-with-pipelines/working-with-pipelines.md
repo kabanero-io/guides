@@ -256,7 +256,7 @@ The pipelines can be associated with an application stack in the Kabanero custom
 
 * Experimental gitops pipelines (Tech Preview)
 
-You can use the experimental GitOps pipelines when you want to use Tekton Webhooks to drive GitOps actions in pipelines. Unlike the other pipelines, the GitOps pipelines are not associated with individual stacks, but are instead scoped to the instance in order to build, promote, and deploy all the stacks. Because they are scoped to the instance, they must be specified in the Kabanero CR, in the gitops / pipelines section.
+You can use the experimental GitOps pipelines when you want to use Tekton Webhooks to drive GitOps actions in pipelines. Unlike the other pipelines, the GitOps pipelines are not associated with individual stacks, but are instead scoped to the instance in order to build, promote, and deploy all the stacks. Because they are scoped to the instance, they must be specified in the Kabanero CR, in the `gitops / pipelines` section.
     
     Example:
 
@@ -431,7 +431,7 @@ Follow these steps:
 
 ### Running pipelines by using the Kabanero events operator webhooks
 
-You can create an organization webhook to automatically drive the pipelines based on events in the Github repo. Events such as commits, tagging, or pull requests can be set up to automatically trigger pipeline runs. Follow the instructions in the [Integrating events operator](integrating-events-operator) to setup your webhook.
+You can create an organization webhook to automatically drive the pipelines based on events in the GitHub repo. Events such as commits, tagging, or pull requests can be set to automatically trigger pipeline runs. Follow the instructions in the Integrating events operator guide to set up your webhook.
 
 ### Running pipelines by using the Tekton pipelines dashboard webhook extension
 
