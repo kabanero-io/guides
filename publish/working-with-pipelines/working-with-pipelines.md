@@ -429,7 +429,11 @@ Follow these steps:
 
    Alternatively, you can [configure secrets in the Kubernetes console or set them up by using the Kubernetes CLI](https://docs.okd.io/latest/dev_guide/secrets.html#creating-secrets).
 
-### Running pipelines by using the pipelines dashboard webhook extension (Deprecated)
+### Running pipelines by using the Kabanero events operator webhooks
+
+You can create an organization webhook to automatically drive the pipelines based on events in the Github repo. Events such as commits, tagging, or pull requests can be set up to automatically trigger pipeline runs. Follow the instructions in the [Integrating events operator](integrating-events-operator) to setup your webhook.
+
+### Running pipelines by using the Tekton pipelines dashboard webhook extension
 
 You can use the [pipelines dashboard webhook extension](https://github.com/tektoncd/experimental/blob/master/webhooks-extension/docs/GettingStarted.md) to drive pipelines that automatically build and deploy an application whenever you update the code in your GitHub repository. Events such as commits or pull requests can be set up to automatically trigger pipeline runs.
 
