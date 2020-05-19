@@ -256,7 +256,7 @@ The pipelines can be associated with an application stack in the Kabanero custom
 
 * Experimental gitops pipelines (Tech Preview)
 
-    The experimental GitOps pipelines are intended to be used when you want to use Tekton Webhooks to drive GitOps actions in pipelines.  They are not associated with the stacks unlike the other two set of pipeline. They are scoped to the Kabanero instance and are meant to build, promote, and deploy all the default stacks.  These are meant to specified under the `gitops / pipelines` section of the Kabanero CR YAML.  These are not activated by default and will have to be added to your Kabanero CR.
+You can use the experimental GitOps pipelines when you want to use Tekton Webhooks to drive GitOps actions in pipelines. Unlike the other pipelines, the GitOps pipelines are not associated with individual stacks, but are instead scoped to the instance in order to build, promote, and deploy all the stacks. Because they are scoped to the instance, they must be specified in the Kabanero CR, in the gitops / pipelines section.
     
     Example:
 
@@ -283,7 +283,7 @@ The pipelines can be associated with an application stack in the Kabanero custom
     
 ### Creating and updating your own tasks and pipelines
 
-The default tasks and pipelines can be updated by forking the Kabanero Pipelines repository and editing the files under `pipelines/`. An easy way to generate the archive for use by the Kabanero CRD is to run the [package.sh](https://github.com/kabanero-io/kabanero-pipelines/blob/master/ci/package.sh) script from the root directory of the pipelines project. The script generates the archive files with the necessary pipeline artifacts and a `manifest.yaml` file that describes the contents of the archive. It generates the pipelines archive file under `ci/assests`. It generates separate archives for the legacy incubator pipelines, events pipelines, and the experimental GitOps pipleines.
+The default tasks and pipelines can be updated by forking the Kabanero Pipelines repository and editing the files under `pipelines/`. An easy way to generate the archive for use by the Kabanero CRD is to run the [package.sh](https://github.com/kabanero-io/kabanero-pipelines/blob/master/ci/package.sh) script from the root directory of the pipelines project. The script generates the archive files with the necessary pipeline artifacts and a `manifest.yaml` file that describes the contents of the archive. It generates the pipelines archive file under `ci/assests`. It generates separate archives for the legacy incubator pipelines, events pipelines, and the experimental GitOps pipelines.
 
 Alternatively, you can run the Travis build against a release of your pipelines repository, which also generates the archive file with a `manifest.yaml` file and attaches it to your release.
 
