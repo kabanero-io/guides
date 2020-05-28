@@ -93,9 +93,9 @@ Note that in this example, the match for the Java OpenLiberty project (**project
 When following this guide, use the configuration files provided inline. Ensure that you create and edit each `yaml` file when directed.
 
 
-### Create Kabanero CRD with events-operator enabled
+### Create a Kabanero CRD with the events operator enabled
 
-Create the file `kabanero-example.yaml` with the following content:
+Create the file `kabanero-example.yaml` with the following content, which specifies the default stacks and events-based pipeline:
 
 ```yaml
 apiVersion: kabanero.io/v1alpha2
@@ -103,24 +103,17 @@ kind: Kabanero
 metadata:
   name: kabanero
 spec:
-  version: "0.8.0"
-  governancePolicy:
-    stackPolicy: none
-  events:
-    enable: true
   stacks:
     repositories:
     - name: central
       https:
-        url: https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.9.0/kabanero-stack-hub-index.yaml    
+        url: https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.9.0/kabanero-stack-hub-index.yaml
     pipelines:
     - id: default
-      sha256: 307976f51bb8fc5b8ca0fa5d7478e7fb1c722811a2135f9c0d1cf900fc27269f
+      sha256: b4ef64ab464941603add8b5c0957b65463dc9bbbbb63b93eb55cf1ba6de733c6
       https:
-        url: https://github.com/kabanero-io/kabanero-pipelines/releases/download/0.9.0/eventing-kabanero-pipelines.tar.gz
+        url: https://github.com/kabanero-io/kabanero-pipelines/releases/download/0.9.0/kabanero-events-pipelines.tar.gz
 ```
-
-Change the `sha256` value to the correct value. The correct value is stored in: https://github.com/kabanero-io/kabanero-pipelines/releases/download/0.9.0/eventing-kabanero-pipelines-tar-gz-sha256.
 
 Apply the file with the following command:
 
@@ -128,7 +121,7 @@ Apply the file with the following command:
 oc apply -f kabanero-example.yaml
 ```
 
-### Create GitHub related secrets
+### Create GitHub-related secrets
 
 #### API token
 
@@ -138,7 +131,7 @@ The mediator needs an API token to access GitHub to read configuration files suc
 apiVersion: v1
 kind: Secret
 metadata:
-  name: ghe-https-secret
+  name: my-github-secret
   namespace: kabanero
   annotations:
     tekton.dev/git-0: https://github.com
@@ -148,22 +141,64 @@ stringData:
   password:  <API token>
 ```
 
-- `tekton.dev/git-0: https://github.ibm.com`: Change the location of the GitHub repository to your organization's GitHub repository.
-- `username`: Update the user name to log in to GitHub. If you are using an organizational webhook, the user must have permissions to access all repositories in the organization.
--  `password`: Add the GitHub API token for the specified user.
+**Notes:**
 
-If you want to use this secret for your pipeline, you might want to associate it with the service account `kabahero-pipeline` by running
-the following command:
-
-```
-oc edit sa kabanero-pipeline githubsecret.yaml
-```
+- `tekton.dev/git-0: https://github.com`: Change the location of the GitHub repository to your organization's GitHub repository.
+- `<user name>`: Update the user name to log in to GitHub. If you are using an organizational webhook, the user must have permissions to access all repositories in the organization.
+-  `<API token>`: Add the GitHub API token for the specified user.
 
 Apply the file with the following command:
 
 ```
 oc apply -f my-githubsecret.yaml
 ```
+
+#### Image registry secret
+
+If you have not yet configured a secret for your Tekton pipeline to access your image registry, create the file `my-registrysecret.yaml` with the following content:
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: my-docker-secret
+  annotations:
+    tekton.dev/docker-0: https://index.docker.io
+type: kubernetes.io/basic-auth
+stringData:
+  username: <user>
+  password: <password>
+  ```
+
+**Notes:**
+
+- Change https://index.docker.io to the URL of your image registry.
+- Change `<user>` to the user account for the image registry.
+- Change `<password>` to the password for the user.
+
+Apply the file with the following command:
+
+```
+oc apply -f my-registrysecret.yaml
+```
+
+#### Update  the Pipeline Service Account:
+
+Associate the secrets you created with your Tekton pipeline service account, which enables the secrets to be used when running the pipelines. Run the following command to associate the secrets with the default service account `kabanero-pipeline`:
+
+```
+oc edit serviceaccount kabanero-pipeline
+```
+
+Add the following entries to the end of the file:
+
+```
+secrets:
+- name: my-github-secret
+- name: my-docker-secret
+```
+
+Save the file.
 
 #### Webhook secret
 
@@ -176,11 +211,11 @@ Create the file `my-webhooksecret.yaml` with the following entries:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: ghe-webhook-secret
+  name: my-webhook-secret
 stringData:
-  secretToken: <my GitHub secret>
+  secretToken: <my-webhook-secret>
   ```
-Change `<my GitHub secret>` to a string of your choice. You'll provide the same string when you configure the webhook secret on GitHub.
+Change `<my-webhook-secret>` to a string of your choice. You'll provide the same string when you configure the webhook secret on GitHub.
 
 Apply the file with the following command:
 
@@ -188,7 +223,7 @@ Apply the file with the following command:
 oc apply -f my-webhooksecret.yaml
 ```
 
-### Create webhook event listener
+### Create webhook event mediator
 
 To create a webhook listener, create a file called `webhook.yaml` with the following content:
 
@@ -202,11 +237,11 @@ spec:
   createRoute: true
   repositories:
     - github:
-        secret: my-githubsecret
-        webhookSecret: my-webhooksecret
+        secret: <my-github-secret>
+        webhookSecret: <my-webhook-secret>
+  mediations:
     - name: webhook
       selector:
-        urlPattern: "webhook"
         repositoryType:
           newVariable: body.webhooks-appsody-config
           file: .appsody-config.yaml
@@ -216,18 +251,27 @@ spec:
         - name: body.webhooks-tekton-service-account
           value: kabanero-pipeline
         - name: body.webhooks-tekton-docker-registry
-          value: <my-docker-registry> docker.io/<myorg>
+          value: <my-docker-registry>
         - name: body.webhooks-tekton-ssl-verify
           value: "false"
         - name: body.webhooks-tekton-insecure-skip-tls-verify
           value: "true"
+        - name: body.webhooks-tekton-local-deploy
+          value: "false"
+        - name: body.webhooks-tekton-monitor-dashboard-url
+          value: <tekton-dashboard>
       sendTo: [ "dest"  ]
       body:
         - = : "sendEvent(dest, body, header)"
 ```
 
-- Ensure `secret`  matches the name of your GitHub secret if you did not need to create the `my-githubsecret.yaml` file earlier.
+**Notes:**
+
+- Ensure `<my-github-secret>`  matches the name of your GitHub secret.
+- Ensure `<my-webhook-secret>` matches the name of the Kubernetes secret that contains your webhook secret.
 - Change `<my-docker-registry>` to the value of the docker registry for your organization, such as `docker.io/myorg`.
+- Set the value of `body.webhooks-tekton-local-deploy` to `true` rather than `false` so that the default is to deploy the application after build. Note that the value must remain `false` if you want to use the GitOps tech preview to deploy the application.
+- Set `<tekton-dashboard>` to the URL for your Tekton dashboard.
 
 Apply the file with the following command:
 
@@ -257,7 +301,9 @@ spec:
               insecure: true
 ```
 
-Note that `body["webhooks-kabanero-tekton-listner"]` is a variable that is generated by the mediator. The value is the pipeline event listener that best matches the semantic version of the incoming application stack.
+**Note:**
+
+- `body["webhooks-kabanero-tekton-listner"]` is a variable that is generated by the mediator. The value is the pipeline event listener that best matches the semantic version of the incoming application stack.
 
 Apply the file with the following command:
 
@@ -283,11 +329,13 @@ learn how to configure your pipelines, see the [Build and deploy applictions wit
 
 ## Test the webhook
 
-In the GitHub organization where you configured your webhook, make a change to an application stack project. Follow these steps:
+In the GitHub organization where you configured your webhook, follow these steps:
 
-- Initiate a pull request
-- Initiate a merge
-- Initiate a tag on the master branch
+- Create an application stack project.  
+- Create a new branch.
+- Initiate a pull request from the branch. Verify that the pipeline runs a build.
+- Initiate a merge to master. Verify that the pipeline runs a build and a deploys the application locally (if the `variable body.webhooks-tekton-local-deploy` is set to `true` in your `webhook.yaml`).
+- Initiate a tag on master. Verify that the pipeline creates a new tag for the image that was previously built. The value of the tag for the image is the same as the value of the tag you supplied when tagging your repository.
 
 
 ## Webhook processing flow for projects
@@ -317,6 +365,8 @@ metadata:
   selfLink: /apis/kabanero.io/v1alpha2/namespaces/kabanero/kabaneros/kabanero
   uid: b217411a-480b-41e4-b01b-8e2aabec165d
 spec:
+  events:
+    enable: true
   stacks:
     repositories:
     - gitRelease: {}
@@ -460,7 +510,7 @@ spec:
       name: build-deploy-pl-push-binding-12345678
     - interceptor:
       - cel:
-          filter: 'has(body.wehbooks-event-type) && body.webhooks-event-type == "push" '
+          filter: 'body["webhooks-event-type"] == "push" '
   - bindings:
     name: kabanero-pullrequest-event
     - apiversion: v1alpha1
@@ -470,7 +520,7 @@ spec:
       name: build-deploy-pl-template-12345678
     interceptors:
       - cel:
-          filter: 'has(body.webhooks-event-type) && body.webhooks-event-type == "pull_request" '
+          filter: 'body["webhooks-event-type"] == "pull_request" '
   - bindings:
     name: kabanero-monitor-task-event
     - apiversion: v1alpha1
@@ -480,7 +530,7 @@ spec:
      name: monitor-task-template-12345678
      interceptors:
       - cel:
-          filter: 'has(body.webhooks-tekton-monitor) && body.webhooks-tekton-monitor" '
+          filter: 'body["webhooks-tekton-monitor"] '
 ```
 
 Congratulations! You have successfully integrated the events operator and can successfully manage events through your pipelines based on the semantic versioning of your application stack projects.
