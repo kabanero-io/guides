@@ -324,7 +324,7 @@ If you are not working within an enterprise, you can also create webhooks for ea
 
 Now that your webhook is configured, you have successfully integrated the events operator in your environment. Provided that you
 have pipelines in place that are semantically versioned to listen for specific events, you can go ahead and test your webhook. To
-learn how to configure your pipelines, see the [Build and deploy applictions with pipelines](../working-with-pipelines/) guide.
+learn how to configure your pipelines, see the [Working with pipelines](../working-with-pipelines/) guide.
 
 
 ## Test the webhook

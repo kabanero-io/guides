@@ -1,7 +1,7 @@
 ---
 permalink: /guides/working-with-pipelines/
 layout: guide-markdown
-title: Build and deploy applications with pipelines
+title: Working with pipelines
 duration: 30 minutes
 releasedate: 2020-02-19
 description: Explore how to use Pipelines with Application Stacks
