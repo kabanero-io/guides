@@ -46,7 +46,7 @@ One choice for application logging with log aggregation, based on open source, i
 
 ## Install cluster logging
 
-To install the cluster logging component, follow the OpenShift guide [Deploying cluster logging](https://docs.openshift.com/container-platform/4.4/logging/cluster-logging-deploying.html)
+To install the cluster logging component, follow the OpenShift guide [Deploying cluster logging](https://docs.openshift.com/container-platform/4.4/logging/cluster-logging-deploying.html). Ensure you set up valid storage for Elasticsearch via Persistent Volumes. When the example Cluster Logging instance YAML from the guide is deployed, the Elasticsearch pods that are created will automatically search for Persistent Volumes to bind to; if there are none available for binding, the Elasticsearch pods will be stuck in a pending state. Using in-memory storage is also possible by removing the `storage` definition from the Cluster Logging instance YAML, but this is not suitable for production.
 
 After the installation completes without any error, you can see the following pods that are running in the *openshift-logging* namespace. The exact number of pods running for each of the EFK components can vary depending on the configuration specified in the ClusterLogging Custom Resource (CR).
 
