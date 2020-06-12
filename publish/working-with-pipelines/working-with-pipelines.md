@@ -150,7 +150,7 @@ For more tasks and pipelines, see the [kabanero-pipelines repository](https://gi
 
 ### Experimental GitOps pipelines (Tech Preview)
 
-There are two pipelines in the the experimental GitOps directory that demonstrate GitOps workflows.
+There are two pipelines in the the experimental GitOps directory that demonstrate GitOps workflows when using the Tekton webhooks extension.
 
 The [build-push-promote-pl.yaml](https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/experimental/gitops/build-push-promote-pl.yaml) pipeline runs the following tasks:
   * enforces the governance policy
@@ -205,6 +205,8 @@ The pipelines can be associated with an application stack in the Kabanero custom
 
 * Events pipelines
 
+    When the product operator activates the Kabanero CRD, it associates the pipelines in the pipelines archive with each of the stacks in the stack hub. The default pipelines are intended to work with all the stacks in the stack hub in the previous example. When the operator activates all the pipeline resources (such as the tasks, trigger bindings, and pipelines) in the archive, it adds a suffix to the name of the resource with the shorted digest of the pipelines archive. This configuration provides an easy way to have multiple versions of the same pipeline to be active on the cluster.
+    
     Example:
 
     ```yaml
@@ -226,10 +228,10 @@ The pipelines can be associated with an application stack in the Kabanero custom
             url: https://github.com/kabanero-io/kabanero-pipelines/releases/download/0.9.0/kabanero-events-pipelines.tar.gz
     ```
 
-    When the product operator activates the Kabanero CRD, it associates the pipelines in the pipelines archive with each of the stacks in the stack hub. The default pipelines are intended to work with all the stacks in the stack hub in the previous example. When the operator activates all the pipeline resources (such as the tasks, trigger bindings, and pipelines) in the archive, it adds a suffix to the name of the resource with the shorted digest of the pipelines archive. This configuration provides an easy way to have multiple versions of the same pipeline to be active on the cluster.
-
 * Incubator pipelines
 
+    When the product operator activates the CRD, it associates the pipelines in the pipelines archive with each of the stacks in the stack hub. The default pipelines are intended to work with all the stacks in the stack hub in the previous example. All of the pipeline-related resources (such as the tasks, trigger bindings, and pipelines) prefix the name of the resource with the keyword `StackId`. When the operator activates these resources, it replaces the keyword with the name of the stack it is activating. These are the default set of pipelines activated when you install the `default.yaml` Kabanero CR.
+    
     Example:
 
     ```yaml
@@ -252,11 +254,36 @@ The pipelines can be associated with an application stack in the Kabanero custom
             url: https://github.com/kabanero-io/kabanero-pipelines/releases/download/0.9.0/default-kabanero-pipelines.tar.gz
     ```
 
-    When the product operator activates the CRD, it associates the pipelines in the pipelines archive with each of the stacks in the stack hub. The default pipelines are intended to work with all the stacks in the stack hub in the previous example. All of the pipeline-related resources (such as the tasks, trigger bindings, and pipelines) prefix the name of the resource with the keyword `StackId`. When the operator activates these resources, it replaces the keyword with the name of the stack it is activating.
+* Experimental gitops pipelines (Tech Preview)
 
+You can use the experimental GitOps pipelines when you want to use Tekton Webhooks to drive GitOps actions in pipelines. Unlike the other pipelines, the GitOps pipelines are not associated with individual stacks, but are instead scoped to the instance in order to build, promote, and deploy all the stacks. Because they are scoped to the instance, they must be specified in the Kabanero CR, in the `gitops / pipelines` section.
+    
+    Example:
+
+    ```yaml
+    apiVersion: kabanero.io/v1alpha2
+    kind: Kabanero
+    metadata:
+      name: kabanero
+      namespace: kabanero
+    spec:
+      version: "0.9.0"
+      gitops:
+        pipelines:
+          - id: gitops-pipelines
+            sha256: 683e8a05482a166ad4d76b6358227d3807a66e7edd8bc80483d6a88bca6c4095
+            https:
+              url: https://github.com/kabanero-io/kabanero-pipelines/releases/download/0.9.0/kabanero-gitops-pipelines.tar.gz
+      stacks:
+        repositories:
+        - name: central
+          https:
+            url: https://github.com/kabanero-io/stacks/releases/download/0.9.0/kabanero-index.yaml
+    ```
+    
 ### Creating and updating your own tasks and pipelines
 
-The default tasks and pipelines can be updated by forking the Kabanero Pipelines repository and editing the files under `pipelines/`. An easy way to generate the archive for use by the Kabanero CRD is to run the [package.sh](https://github.com/kabanero-io/kabanero-pipelines/blob/master/ci/package.sh) script from the root directory of the pipelines project. The script generates the archive files with the necessary pipeline artifacts and a `manifest.yaml` file that describes the contents of the archive. It generates the pipelines archive file under `ci/assests`. It generates separate archives for the legacy incubator pipelines, events pipelines, and the experimental GitOps pipleines.
+The default tasks and pipelines can be updated by forking the Kabanero Pipelines repository and editing the files under `pipelines/`. An easy way to generate the archive for use by the Kabanero CRD is to run the [package.sh](https://github.com/kabanero-io/kabanero-pipelines/blob/master/ci/package.sh) script from the root directory of the pipelines project. The script generates the archive files with the necessary pipeline artifacts and a `manifest.yaml` file that describes the contents of the archive. It generates the pipelines archive file under `ci/assests`. It generates separate archives for the legacy incubator pipelines, events pipelines, and the experimental GitOps pipelines.
 
 Alternatively, you can run the Travis build against a release of your pipelines repository, which also generates the archive file with a `manifest.yaml` file and attaches it to your release.
 
@@ -402,7 +429,11 @@ Follow these steps:
 
    Alternatively, you can [configure secrets in the Kubernetes console or set them up by using the Kubernetes CLI](https://docs.okd.io/latest/dev_guide/secrets.html#creating-secrets).
 
-### Running pipelines by using the pipelines dashboard webhook extension (Deprecated)
+### Running pipelines by using the Kabanero events operator webhooks
+
+You can create an organization webhook to automatically drive the pipelines based on events in the GitHub repo. Events such as commits, tagging, or pull requests can be set to automatically trigger pipeline runs. Follow the instructions in the Integrating events operator guide to set up your webhook.
+
+### Running pipelines by using the Tekton pipelines dashboard webhook extension
 
 You can use the [pipelines dashboard webhook extension](https://github.com/tektoncd/experimental/blob/master/webhooks-extension/docs/GettingStarted.md) to drive pipelines that automatically build and deploy an application whenever you update the code in your GitHub repository. Events such as commits or pull requests can be set up to automatically trigger pipeline runs.
 
