@@ -189,17 +189,17 @@ metadata:
   name: kabanero
   namespace: kabanero
 spec:
-  version: "0.7.0"
+  version: "0.9.1"
   stacks:
     repositories:
     - name: central
       https:
-        url: https://github.com/kabanero-io/collections/releases/download/v0.7.0/kabanero-index.yaml
+        url: https://github.com/kabanero-io/collections/releases/download/v0.9.0/kabanero-index.yaml
     pipelines:
     - id: default
-      sha256: 14d59b7ebae113c18fb815c2ccfd8a846c5fbf91d926ae92e0017ca5caf67c95
+      sha256: deb5162495e1fe60ab52632f0879f9c9b95e943066590574865138791cbe948f
       https:
-        url: https://github.com/kabanero-io/kabanero-pipelines/releases/download/0.7.0/default-kabanero-pipelines.tar.gz
+        url: https://github.com/kabanero-io/kabanero-pipelines/releases/download/0.9.1/default-kabanero-pipelines.tar.gz
 ```
 
 As an alternative, you can specify the pipelines archive under individual stack sections. This configuration associates the pipelines in the archive with these application stacks.
