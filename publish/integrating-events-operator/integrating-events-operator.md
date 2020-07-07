@@ -110,9 +110,9 @@ spec:
         url: https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.9.0/kabanero-stack-hub-index.yaml
     pipelines:
     - id: default
-      sha256: b4ef64ab464941603add8b5c0957b65463dc9bbbbb63b93eb55cf1ba6de733c6
+      sha256: caf603b69095ec3d128f1c2fa964a2964509854e306fb3c5add8addc8f7f7b71
       https:
-        url: https://github.com/kabanero-io/kabanero-pipelines/releases/download/0.9.0/kabanero-events-pipelines.tar.gz
+        url: https://github.com/kabanero-io/kabanero-pipelines/releases/download/0.9.1/kabanero-events-pipelines.tar.gz
 ```
 
 Apply the file with the following command:
@@ -182,7 +182,7 @@ Apply the file with the following command:
 oc apply -f my-registrysecret.yaml
 ```
 
-#### Update  the Pipeline Service Account:
+#### Update the pipeline service account
 
 Associate the secrets you created with your Tekton pipeline service account, which enables the secrets to be used when running the pipelines. Run the following command to associate the secrets with the default service account `kabanero-pipeline`:
 
@@ -392,7 +392,7 @@ spec:
   version: 0.7.0
 ```
 
-After you apply the kabanero CRD, the Stack CRD is created to track the pipeline resources associated with the stack release. For example,
+After you apply the Kabanero CRD, the Stack CRD is created to track the pipeline resources associated with the stack release. For example,
 
 ```yaml
 apiVersion: kabanero.io/v1alpha2

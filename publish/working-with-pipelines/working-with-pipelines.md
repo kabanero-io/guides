@@ -210,12 +210,12 @@ The pipelines can be associated with an application stack in the Kabanero custom
     Example:
 
     ```yaml
-    apiVersion: kabanero.io/v1alpha1
+    apiVersion: kabanero.io/v1alpha2
     kind: Kabanero
     metadata:
       name: kabanero
     spec:
-      version: "0.9.0"
+      version: "0.9.1"
       stacks:
         repositories:
         - name: central
@@ -223,9 +223,9 @@ The pipelines can be associated with an application stack in the Kabanero custom
             url: https://github.com/kabanero-io/collections/releases/download/0.9.0/kabanero-index.yaml
         pipelines:
         - id: default
-          sha256: 14d59b7ebae113c18fb815c2ccfd8a846c5fbf91d926ae92e0017ca5caf67c95
+          sha256: caf603b69095ec3d128f1c2fa964a2964509854e306fb3c5add8addc8f7f7b71
           https:
-            url: https://github.com/kabanero-io/kabanero-pipelines/releases/download/0.9.0/kabanero-events-pipelines.tar.gz
+            url: https://github.com/kabanero-io/kabanero-pipelines/releases/download/0.9.1/kabanero-events-pipelines.tar.gz
     ```
 
 * Incubator pipelines
@@ -241,7 +241,7 @@ The pipelines can be associated with an application stack in the Kabanero custom
       name: kabanero
       namespace: kabanero
     spec:
-      version: "0.9.0"
+      version: "0.9.1"
       stacks:
         repositories:
         - name: central
@@ -249,9 +249,9 @@ The pipelines can be associated with an application stack in the Kabanero custom
             url: https://github.com/kabanero-io/stacks/releases/download/0.9.0/kabanero-index.yaml
         pipelines:
         - id: default
-          sha256: 14d59b7ebae113c18fb815c2ccfd8a846c5fbf91d926ae92e0017ca5caf67c95
+          sha256: deb5162495e1fe60ab52632f0879f9c9b95e943066590574865138791cbe948f
           https:
-            url: https://github.com/kabanero-io/kabanero-pipelines/releases/download/0.9.0/default-kabanero-pipelines.tar.gz
+            url: https://github.com/kabanero-io/kabanero-pipelines/releases/download/0.9.1/default-kabanero-pipelines.tar.gz
     ```
 
 * Experimental gitops pipelines (Tech Preview)
