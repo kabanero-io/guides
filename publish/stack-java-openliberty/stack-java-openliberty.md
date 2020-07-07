@@ -167,9 +167,9 @@ Downloading java-openliberty template project from https://github.com/kabanero-i
 Download complete. Extracting files from /Users/myuser/appsody/java-openliberty/java-openliberty.tar.gz
 Setting up the development environment
 Your Appsody project name has been set to java-openliberty
-Pulling docker image docker.io/appsody/java-openliberty:0.2
-Running command: docker pull docker.io/appsody/java-openliberty:0.2
-0.2: Pulling from appsody/java-openliberty
+Pulling docker image docker.io/kabanerobeta/java-openliberty:0.2
+Running command: docker pull docker.io/kabanerobeta/java-openliberty:0.2
+0.2: Pulling from kabanerobeta/java-openliberty
 ..
 ..
 [InitScript] [INFO] Scanning for projects...

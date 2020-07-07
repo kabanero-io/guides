@@ -318,8 +318,8 @@ simple-nodejs-express-775b655768-lqn6q   1/1     Running   0          3m10s
 
 After the `simple-nodejs-express` pod starts, go to the URL that was returned when you ran the `appsody deploy` command,
 and you see the splash screen. To see the response from your application, point your browser to
-the `<URL_STRING>/example` URL, where `<URL_STRING>` is the URL that was returned. For example, http://localhost:30262
-was returned in the previous example. Go to the http://localhost:30262/example URL to see the deployed application response.
+the `<URL_STRING>/example` URL, where `<URL_STRING>` is the URL that was returned. For example, `http://localhost:30262`
+was returned in the previous example. Go to the `http://localhost:30262/example` URL to see the deployed application response.
 
 Use the following command to stop the deployed application:
 
