@@ -1,5 +1,5 @@
 # Guides
-This repository holds all the guides for Kabanero.io at: https://kabanero.io/guides/
+This repository holds all the guides for Kabanero.io.  
 
 Each new guide should be self-contained in its own directory. The directory's name should be the guides name.
 
